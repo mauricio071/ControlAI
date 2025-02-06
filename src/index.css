@@ -3,3 +3,7 @@
 @theme {
   --color-primary: #eaa221;
 } */
+
+body {
+  font-family: "Inter", sans-serif;
+}

@@ -15,22 +15,22 @@ export const AppRoutes = () => {
   useEffect(() => {
     setDrawerOptions([
       {
-        icon: "teste",
+        icon: "dashboard",
         label: "Dashboard",
-        path: "/",
+        path: "/dashboard",
       },
       {
-        icon: "teste",
+        icon: "person",
         label: "Perfil do usuário",
         path: "/perfil-usuario",
       },
       {
-        icon: "teste",
+        icon: "add_circle",
         label: "Adicionar transação",
         path: "/adicionar-transacao",
       },
       {
-        icon: "teste",
+        icon: "history",
         label: "Histórico",
         path: "/historico",
       },
@@ -39,7 +39,7 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/perfil-usuario" element={<PerfilUsuario />} />
       <Route path="/adicionar-transacao" element={<AdicionarTransacao />} />
       <Route path="/historico" element={<Historico />} />

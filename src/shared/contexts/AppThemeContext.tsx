@@ -20,7 +20,7 @@ interface AppThemeProviderProps {
 
 const ThemeContext = createContext({} as ThemeContextData);
 
-export const useThemeContext = () => {
+export const useAppThemeContext = () => {
   return useContext(ThemeContext);
 };
 
