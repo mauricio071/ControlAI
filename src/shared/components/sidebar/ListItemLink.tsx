@@ -42,10 +42,14 @@ export const ListItemLink = ({
         borderRadius: "0.375rem",
         "&.Mui-selected": {
           background: "linear-gradient(195deg, #49a3f1, #408aeb)",
+          boxShadow:
+            "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         },
       }}
     >
-      <ListItemIcon sx={{ color: theme.palette.primary.contrastText }}>
+      <ListItemIcon
+        sx={{ color: theme.palette.primary.contrastText, marginRight: "-1rem" }}
+      >
         <Icon>{icon}</Icon>
       </ListItemIcon>
       <ListItemText primary={label} />

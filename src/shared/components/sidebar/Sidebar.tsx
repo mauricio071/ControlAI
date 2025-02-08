@@ -87,12 +87,17 @@ export const Sidebar = ({ children }: SidebarProps) => {
                   marginBlock: "0.375rem",
                   marginInline: "1.5rem",
                   paddingBlock: "0.75rem",
-                  borderRadius: "0.375rem",
+                  borderRadius: "0.75rem",
                   background: "linear-gradient(195deg, #49a3f1, #408aeb)",
+                  boxShadow:
+                    "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
                 }}
               >
                 <ListItemIcon
-                  sx={{ color: theme.palette.primary.contrastText }}
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    marginRight: "-1rem",
+                  }}
                 >
                   <Icon>dark_mode</Icon>
                 </ListItemIcon>
@@ -110,9 +115,9 @@ export const Sidebar = ({ children }: SidebarProps) => {
       </Drawer>
 
       <Box
-        height={smDown ? "100vh" : "calc(100vh - 8rem)"}
+        height={smDown ? "100vh" : "calc(100vh - 6rem)"}
         marginLeft={smDown ? 0 : theme.spacing(40)}
-        padding={smDown ? 0 : theme.spacing(8)}
+        padding={smDown ? 0 : theme.spacing(6)}
       >
         {children}
       </Box>
