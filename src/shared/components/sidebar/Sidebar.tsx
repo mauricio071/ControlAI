@@ -60,7 +60,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
             justifyContent="center"
             alignItems="center"
           >
-            <h2>ControlAí</h2>
+            <h2>ControlAÍ</h2>
           </Box>
 
           <Divider sx={{ marginInline: "2rem" }} />

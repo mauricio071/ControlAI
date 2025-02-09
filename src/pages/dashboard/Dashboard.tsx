@@ -73,6 +73,7 @@ export const Dashboard = () => {
                     sx={{
                       background: "linear-gradient(195deg, #49a3f1, #1A73E8)",
                     }}
+                    color="white"
                   >
                     <Icon>account_balance_wallet</Icon>
                   </Box>
