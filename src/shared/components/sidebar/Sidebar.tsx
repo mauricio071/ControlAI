@@ -44,11 +44,12 @@ export const Sidebar = ({ children }: SidebarProps) => {
               "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
             background: "linear-gradient(195deg, #F4A261, #e09b63)",
             color: theme.palette.primary.contrastText,
+            overflowX: "hidden",
           },
         }}
       >
         <Box
-          width={theme.spacing(40)}
+          width={theme.spacing(36)}
           height="100vh"
           display="flex"
           flexDirection="column"
@@ -115,9 +116,8 @@ export const Sidebar = ({ children }: SidebarProps) => {
       </Drawer>
 
       <Box
-        height={smDown ? "100vh" : "calc(100vh - 6rem)"}
-        marginLeft={smDown ? 0 : theme.spacing(40)}
-        padding={smDown ? 0 : theme.spacing(6)}
+        minHeight={smDown ? "100vh" : "calc(100vh - 6rem)"}
+        marginLeft={smDown ? 0 : theme.spacing(38)}
       >
         {children}
       </Box>

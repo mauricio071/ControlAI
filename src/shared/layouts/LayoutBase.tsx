@@ -22,7 +22,15 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const { toggleDrawerOpen } = useDrawerContext();
 
   return (
-    <Box height="100%" display="flex" flexDirection="column" gap={1}>
+    <Box
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      gap={1}
+      paddingInline="2rem"
+      paddingTop="1rem"
+      paddingBottom="4rem"
+    >
       <Box
         height={
           smDown
@@ -31,7 +39,6 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             ? theme.spacing(8)
             : theme.spacing(12)
         }
-        padding={1}
         display="flex"
         alignItems="center"
         gap={1}
@@ -53,8 +60,9 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
         </Typography>
       </Box>
 
-      {/* <Box flex={1} overflow="auto"> */}
-      <Box padding={1}>{children}</Box>
+      <Box flex={1} display="flex" flexDirection="column" gap={4}>
+        {children}
+      </Box>
     </Box>
   );
 };
