@@ -3,9 +3,8 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts";
 import { Link } from "react-router-dom";
 
-import { GridCard } from "../../shared/components";
+import { CustomLink, GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
-import { CustomLink } from "../../shared/components/customLink/CustomLink";
 
 export const Dashboard = () => {
   const gridContents = [
