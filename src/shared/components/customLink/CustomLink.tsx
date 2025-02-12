@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material";
 
-export const CustomLink = styled(Link)({
-  color: "#1976D2",
-  textDecoration: "none",
-  "&:hover": {
-    color: "#1565C0",
-  },
-});
+interface CustomLinkProps {
+  color?: string;
+  hoverColor?: string;
+}
+
+export const CustomLink = styled(Link)<CustomLinkProps>(
+  ({ color = "#fff", hoverColor = "#f8f8f8" }) => ({
+    color: color,
+    textDecoration: "none",
+    transition: "color 300ms ease-in-out",
+    "&:hover": {
+      color: hoverColor,
+    },
+  })
+);

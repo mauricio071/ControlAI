@@ -6,7 +6,7 @@ import {
   AdicionarTransacao,
   Dashboard,
   Historico,
-  PerfilUsuario,
+  MinhasFinancas,
 } from "../pages";
 
 export const AppRoutes = () => {
@@ -20,9 +20,9 @@ export const AppRoutes = () => {
         path: "/dashboard",
       },
       {
-        icon: "person",
-        label: "Perfil do usuário",
-        path: "/perfil-usuario",
+        icon: "account_balance_wallet",
+        label: "Minhas Finanças",
+        path: "/minhas-financas",
       },
       {
         icon: "add_circle",
@@ -40,7 +40,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/perfil-usuario" element={<PerfilUsuario />} />
+      <Route path="/minhas-financas" element={<MinhasFinancas />} />
       <Route path="/adicionar-transacao" element={<AdicionarTransacao />} />
       <Route path="/historico" element={<Historico />} />
       <Route path="*" element={<Navigate to="/" />} />

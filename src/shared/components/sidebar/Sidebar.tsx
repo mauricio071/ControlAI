@@ -10,9 +10,12 @@ import {
   ListItemIcon,
   ListItemText,
   Icon,
+  Typography,
 } from "@mui/material";
 import { useAppThemeContext, useDrawerContext } from "../../contexts";
 import { ListItemLink } from "./ListItemLink";
+import { GraphIcon } from "../icons/GraphIcon";
+import { CustomLink } from "../customLink/CustomLink";
 
 interface SidebarProps {
   children: ReactNode;
@@ -54,15 +57,22 @@ export const Sidebar = ({ children }: SidebarProps) => {
           display="flex"
           flexDirection="column"
         >
-          <Box
-            width="100%"
-            height={theme.spacing(16)}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <h2>ControlAÍ</h2>
-          </Box>
+          <CustomLink to="/dashboard">
+            <Box
+              width="100%"
+              height={theme.spacing(14)}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              gap="0.5rem"
+              paddingTop="0.5rem"
+            >
+              <GraphIcon />
+              <Typography variant="h5" fontWeight="bold">
+                ControlAÍ
+              </Typography>
+            </Box>
+          </CustomLink>
 
           <Divider sx={{ marginInline: "2rem" }} />
 

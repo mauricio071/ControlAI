@@ -13,21 +13,21 @@ export const Dashboard = () => {
       color: "linear-gradient(195deg, #49a3f1, #1A73E8)",
       title: "Saldo",
       value: 300,
-      to: "/perfil-usuario",
+      to: "/minhas-financas",
     },
     {
       icon: "home",
       color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
       title: "Gasto Fixo Mensal",
       value: 1200,
-      to: "/perfil-usuario",
+      to: "/minhas-financas",
     },
     {
       icon: "credit_card",
       color: "linear-gradient(195deg, #FFB6C1, #FF1493)",
       title: "Gasto do Mês",
       value: 1500,
-      to: "/perfil-usuario",
+      to: "/historico",
     },
     {
       icon: "trending_up",
@@ -96,11 +96,7 @@ export const Dashboard = () => {
           {gridContents.map((content) => (
             <Grid size={{ xs: 12, md: 6, lg: 3 }} key={content.title}>
               <GridCard>
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  paddingInline="0.5rem"
-                >
+                <Box display="flex" justifyContent="space-between">
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -111,7 +107,7 @@ export const Dashboard = () => {
                       {content.title}
                     </Typography>
                     <Box display="flex" gap="0.5rem">
-                      <Typography variant="h4" fontWeight="600" color="#222B3A">
+                      <Typography variant="h4" fontWeight="600">
                         R$ {content.value}
                       </Typography>
                       <Box display="flex" alignItems="center" gap="0.25rem">
@@ -199,7 +195,9 @@ export const Dashboard = () => {
           <Typography variant="h6" fontWeight="bold">
             Últimas transações
           </Typography>
-          <CustomLink to="/historico">Histórico completo</CustomLink>
+          <CustomLink to="/historico" color="#1976D2" hoverColor="#1565C0">
+            Histórico completo
+          </CustomLink>
         </Box>
         <Box display="flex" flexDirection="column" gap="1rem">
           {lastTransactions.map((transaction) => (
@@ -209,6 +207,7 @@ export const Dashboard = () => {
                 alignItems="center"
                 justifyContent="space-between"
                 gap="1"
+                paddingInline="0.5rem"
               >
                 <Typography variant="body1" fontWeight="bold">
                   {transaction.date}

@@ -15,7 +15,9 @@ export const GridCard = ({ children }: GridCardProps) => {
         overflow: "visible",
       }}
     >
-      <CardContent sx={{ padding: "1rem !important" }}>{children}</CardContent>
+      <CardContent sx={{ padding: "1.5rem !important" }}>
+        {children}
+      </CardContent>
     </Card>
   );
 };
