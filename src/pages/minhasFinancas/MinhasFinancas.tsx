@@ -1,11 +1,16 @@
 import {
   Box,
   Button,
+  FormControlLabel,
   Grid2 as Grid,
   Icon,
   IconButton,
+  Input,
+  InputAdornment,
   Modal,
   Paper,
+  Radio,
+  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +18,16 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { LayoutBase } from "../../shared/layouts";
-import { GridCard } from "../../shared/components";
+import { CModal, GridCard } from "../../shared/components";
 import { useState } from "react";
 import { CategoriaBadge } from "./components/CategoriaBadge";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useForm } from "react-hook-form";
 
 export const MinhasFinancas = () => {
   // function createData(
@@ -51,9 +59,12 @@ export const MinhasFinancas = () => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
+    borderRadius: "0.5rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
   };
 
   const columns: GridColDef[] = [
@@ -183,6 +194,19 @@ export const MinhasFinancas = () => {
     setAddBalanceModal(true);
   };
 
+  type EditBalanceType = "adicionar" | "descontar";
+
+  const [EditBalance, setEditBalance] = useState<EditBalanceType>("adicionar");
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newEditBalance: EditBalanceType
+  ) => {
+    setEditBalance(newEditBalance);
+  };
+
+  const { register, handleSubmit, setValue, reset } = useForm();
+
   return (
     <LayoutBase titulo="Minhas finanças">
       <Grid container spacing={3}>
@@ -208,28 +232,86 @@ export const MinhasFinancas = () => {
                   </Typography>
                 </Box>
               </Box>
-              <IconButton onClick={openAddBalanceModal} sx={{ padding: 0 }}>
-                <Icon color="secondary" sx={{ fontSize: "3rem" }}>
-                  add_circle
-                </Icon>
-              </IconButton>
+              <Box>
+                <IconButton onClick={openAddBalanceModal}>
+                  <Icon color="secondary" sx={{ fontSize: "2.5rem" }}>
+                    edit
+                  </Icon>
+                </IconButton>
+              </Box>
             </Box>
           </GridCard>
-          <Modal
+          <CModal
+            title="Editar o saldo"
             open={addBalanceModal}
             onClose={() => setAddBalanceModal(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Text in a modal
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-              </Typography>
-            </Box>
-          </Modal>
+            <ToggleButtonGroup
+              color="primary"
+              value={EditBalance}
+              exclusive
+              onChange={handleChange}
+              sx={{ gap: "1rem" }}
+            >
+              <ToggleButton
+                value="adicionar"
+                sx={{
+                  border: "2px solid #ccc ",
+                  borderRadius: "8px !important",
+                  "&.Mui-selected": {
+                    backgroundColor: "#4caf50",
+                    borderColor: "#4caf50",
+                    color: "white",
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: "#4caf50",
+                  },
+                }}
+              >
+                Adicionar
+              </ToggleButton>
+              <ToggleButton
+                value="descontar"
+                sx={{
+                  border: "2px solid #ccc !important",
+                  borderRadius: "8px !important",
+                  "&.Mui-selected": {
+                    backgroundColor: "#f44336",
+                    borderColor: "#f44336 !important",
+                    color: "white",
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: "#f44336",
+                  },
+                }}
+              >
+                Descontar
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <Input
+              sx={{ fontSize: "2rem" }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <Typography fontSize="2rem">
+                    {EditBalance === "adicionar" ? "+" : "-"} R$
+                  </Typography>
+                </InputAdornment>
+              }
+            />
+            <Button
+              size="large"
+              variant="contained"
+              disableElevation
+              sx={{
+                borderRadius: "1rem",
+                maxWidth: "12rem",
+                width: "100%",
+                alignSelf: "center",
+              }}
+            >
+              Salvar
+            </Button>
+          </CModal>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <GridCard>
@@ -244,7 +326,7 @@ export const MinhasFinancas = () => {
                   Renda total
                 </Typography>
                 <Box display="flex" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="600">
+                  <Typography variant="h4" fontWeight="600" color="success">
                     R$ 300
                   </Typography>
                 </Box>
@@ -265,7 +347,7 @@ export const MinhasFinancas = () => {
                   Despesa total
                 </Typography>
                 <Box display="flex" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="600">
+                  <Typography variant="h4" fontWeight="600" color="error">
                     R$ 300
                   </Typography>
                 </Box>

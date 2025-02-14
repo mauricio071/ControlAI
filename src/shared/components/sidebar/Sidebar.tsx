@@ -15,7 +15,7 @@ import {
 import { useAppThemeContext, useDrawerContext } from "../../contexts";
 import { ListItemLink } from "./ListItemLink";
 import { GraphIcon } from "../icons/GraphIcon";
-import { CustomLink } from "../customLink/CustomLink";
+import { CLink } from "../cLink/CLink";
 
 interface SidebarProps {
   children: ReactNode;
@@ -57,7 +57,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
           display="flex"
           flexDirection="column"
         >
-          <CustomLink to="/dashboard">
+          <CLink to="/dashboard">
             <Box
               width="100%"
               height={theme.spacing(14)}
@@ -72,7 +72,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
                 ControlAÍ
               </Typography>
             </Box>
-          </CustomLink>
+          </CLink>
 
           <Divider sx={{ marginInline: "2rem" }} />
 

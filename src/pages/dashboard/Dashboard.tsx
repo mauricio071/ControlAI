@@ -3,7 +3,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts";
 import { Link } from "react-router-dom";
 
-import { CustomLink, GridCard } from "../../shared/components";
+import { CLink, GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 
 export const Dashboard = () => {
@@ -195,9 +195,9 @@ export const Dashboard = () => {
           <Typography variant="h6" fontWeight="bold">
             Últimas transações
           </Typography>
-          <CustomLink to="/historico" color="#1976D2" hoverColor="#1565C0">
+          <CLink to="/historico" color="#1976D2" hoverColor="#1565C0">
             Histórico completo
-          </CustomLink>
+          </CLink>
         </Box>
         <Box display="flex" flexDirection="column" gap="1rem">
           {lastTransactions.map((transaction) => (
