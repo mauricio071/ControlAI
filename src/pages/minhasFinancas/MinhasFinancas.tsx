@@ -27,7 +27,7 @@ import { CModal, GridCard } from "../../shared/components";
 import { useState } from "react";
 import { CategoriaBadge } from "./components/CategoriaBadge";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 export const MinhasFinancas = () => {
   // function createData(
@@ -205,7 +205,17 @@ export const MinhasFinancas = () => {
     setEditBalance(newEditBalance);
   };
 
-  const { register, handleSubmit, setValue, reset } = useForm();
+  interface BalanceFormData {
+    type: string;
+    value: number;
+  }
+
+  const { register, handleSubmit, setValue, reset, control } =
+    useForm<BalanceFormData>();
+
+  const handleSubmitForm = (data) => {
+    console.log(data);
+  };
 
   return (
     <LayoutBase titulo="Minhas finanças">
@@ -246,71 +256,82 @@ export const MinhasFinancas = () => {
             open={addBalanceModal}
             onClose={() => setAddBalanceModal(false)}
           >
-            <ToggleButtonGroup
-              color="primary"
-              value={EditBalance}
-              exclusive
-              onChange={handleChange}
-              sx={{ gap: "1rem" }}
-            >
-              <ToggleButton
-                value="adicionar"
+            <form onSubmit={handleSubmit(handleSubmitForm)}>
+              <Controller
+                name="type"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={field.value}
+                    exclusive
+                    onChange={(_, newValue) => field.onChange(newValue)}
+                    sx={{ gap: "1rem" }}
+                  >
+                    <ToggleButton
+                      value="adicionar"
+                      sx={{
+                        border: "2px solid #ccc ",
+                        borderRadius: "8px !important",
+                        "&.Mui-selected": {
+                          backgroundColor: "#4caf50",
+                          borderColor: "#4caf50",
+                          color: "white",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#4caf50",
+                        },
+                      }}
+                    >
+                      Adicionar
+                    </ToggleButton>
+                    <ToggleButton
+                      value="descontar"
+                      sx={{
+                        border: "2px solid #ccc !important",
+                        borderRadius: "8px !important",
+                        "&.Mui-selected": {
+                          backgroundColor: "#f44336",
+                          borderColor: "#f44336 !important",
+                          color: "white",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#f44336",
+                        },
+                      }}
+                    >
+                      Descontar
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                )}
+              />
+              <Input
+                {...register("value")}
+                sx={{ fontSize: "2rem" }}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography fontSize="2rem">
+                      {EditBalance === "adicionar" ? "+" : "-"} R$
+                    </Typography>
+                  </InputAdornment>
+                }
+              />
+              <Button
+                type="submit"
+                size="large"
+                variant="contained"
+                disableElevation
                 sx={{
-                  border: "2px solid #ccc ",
-                  borderRadius: "8px !important",
-                  "&.Mui-selected": {
-                    backgroundColor: "#4caf50",
-                    borderColor: "#4caf50",
-                    color: "white",
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: "#4caf50",
-                  },
+                  borderRadius: "1rem",
+                  maxWidth: "12rem",
+                  width: "100%",
+                  alignSelf: "center",
                 }}
               >
-                Adicionar
-              </ToggleButton>
-              <ToggleButton
-                value="descontar"
-                sx={{
-                  border: "2px solid #ccc !important",
-                  borderRadius: "8px !important",
-                  "&.Mui-selected": {
-                    backgroundColor: "#f44336",
-                    borderColor: "#f44336 !important",
-                    color: "white",
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: "#f44336",
-                  },
-                }}
-              >
-                Descontar
-              </ToggleButton>
-            </ToggleButtonGroup>
-            <Input
-              sx={{ fontSize: "2rem" }}
-              startAdornment={
-                <InputAdornment position="start">
-                  <Typography fontSize="2rem">
-                    {EditBalance === "adicionar" ? "+" : "-"} R$
-                  </Typography>
-                </InputAdornment>
-              }
-            />
-            <Button
-              size="large"
-              variant="contained"
-              disableElevation
-              sx={{
-                borderRadius: "1rem",
-                maxWidth: "12rem",
-                width: "100%",
-                alignSelf: "center",
-              }}
-            >
-              Salvar
-            </Button>
+                Salvar
+              </Button>
+            </form>
           </CModal>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
