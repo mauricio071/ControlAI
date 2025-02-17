@@ -1,0 +1,152 @@
+import {
+  Fastfood,
+  DirectionsBus,
+  ShoppingCart,
+  LocalHospital,
+  Home,
+  Subscriptions,
+  ShoppingBag,
+  SportsEsports,
+  Build,
+  School,
+  AccountBalance,
+  AttachMoney,
+  Flight,
+  TrendingUp,
+  MoreHoriz,
+  Work,
+  MonetizationOn,
+  LaptopMac,
+} from "@mui/icons-material";
+
+export const CATEGORIAS_RENDA = [
+  {
+    value: "salario",
+    label: "Salário",
+    icon: <Work fontSize="small" />,
+    bgColor: "#4CAF50",
+  },
+  {
+    value: "investimento",
+    label: "Investimento",
+    icon: <MonetizationOn fontSize="small" />,
+    bgColor: "#FBC02D",
+  },
+  {
+    value: "rendaExtra",
+    label: "Renda Extra",
+    icon: <AttachMoney fontSize="small" />,
+    bgColor: "#03A9F4",
+  },
+  {
+    value: "freelance",
+    label: "Freelance",
+    icon: <LaptopMac fontSize="small" />,
+    bgColor: "#FF9800",
+  },
+  {
+    value: "aposentadoria",
+    label: "Aposentadoria",
+    icon: <AccountBalance fontSize="small" />,
+    bgColor: "#9C27B0",
+  },
+  {
+    value: "outros",
+    label: "Outros",
+    icon: <MoreHoriz fontSize="small" />,
+    bgColor: "#9E9E9E",
+  },
+];
+
+export const CATEGORIAS_DESPESA = [
+  {
+    value: "alimentacao",
+    label: "Alimentação",
+    icon: <Fastfood fontSize="small" />,
+    bgColor: "#FBC02D",
+  },
+  {
+    value: "transporte",
+    label: "Transporte",
+    icon: <DirectionsBus fontSize="small" />,
+    bgColor: "#03A9F4",
+  },
+  {
+    value: "supermercado",
+    label: "Supermercado",
+    icon: <ShoppingCart fontSize="small" />,
+    bgColor: "#4CAF50",
+  },
+  {
+    value: "saude",
+    label: "Saúde",
+    icon: <LocalHospital fontSize="small" />,
+    bgColor: "#F44336",
+  },
+  {
+    value: "casa",
+    label: "Casa",
+    icon: <Home fontSize="small" />,
+    bgColor: "#795548",
+  },
+  {
+    value: "assinatura",
+    label: "Assinatura",
+    icon: <Subscriptions fontSize="small" />,
+    bgColor: "#9C27B0",
+  },
+  {
+    value: "compras",
+    label: "Compras",
+    icon: <ShoppingBag fontSize="small" />,
+    bgColor: "#FF9800",
+  },
+  {
+    value: "lazer",
+    label: "Lazer",
+    icon: <SportsEsports fontSize="small" />,
+    bgColor: "#673AB7",
+  },
+  {
+    value: "servicos",
+    label: "Serviços",
+    icon: <Build fontSize="small" />,
+    bgColor: "#607D8B",
+  },
+  {
+    value: "educacao",
+    label: "Educação",
+    icon: <School fontSize="small" />,
+    bgColor: "#FF5722",
+  },
+  {
+    value: "operacaoBancaria",
+    label: "Operação bancária",
+    icon: <AccountBalance fontSize="small" />,
+    bgColor: "#2196F3",
+  },
+  {
+    value: "pix",
+    label: "Pix",
+    icon: <AttachMoney fontSize="small" />,
+    bgColor: "#00C853",
+  },
+  {
+    value: "viagem",
+    label: "Viagem",
+    icon: <Flight fontSize="small" />,
+    bgColor: "#3F51B5",
+  },
+  {
+    value: "investimento",
+    label: "Investimento",
+    icon: <TrendingUp fontSize="small" />,
+    bgColor: "#8BC34A",
+  },
+  {
+    value: "outros",
+    label: "Outros",
+    icon: <MoreHoriz fontSize="small" />,
+    bgColor: "#9E9E9E",
+  },
+];
