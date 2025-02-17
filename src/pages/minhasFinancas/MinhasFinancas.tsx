@@ -1,23 +1,14 @@
 import {
   Box,
   Button,
-  FormControlLabel,
   Grid2 as Grid,
   Icon,
   IconButton,
   Input,
   InputAdornment,
-  Modal,
-  Paper,
-  Radio,
-  RadioGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
+  MenuItem,
+  Select,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -197,13 +188,6 @@ export const MinhasFinancas = () => {
   type EditBalanceType = "adicionar" | "descontar";
 
   const [EditBalance, setEditBalance] = useState<EditBalanceType>("adicionar");
-
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newEditBalance: EditBalanceType
-  ) => {
-    setEditBalance(newEditBalance);
-  };
 
   interface BalanceFormData {
     type: string;
@@ -458,7 +442,7 @@ export const MinhasFinancas = () => {
 
         <Box display="flex" justifyContent="end">
           <Button
-            onClick={handleOpen}
+            onClick={() => setOpen(true)}
             variant="contained"
             disableElevation
             sx={{
@@ -495,21 +479,65 @@ export const MinhasFinancas = () => {
             },
           }}
         />
-        <Modal
+        <CModal
+          title="Adicionar despesa"
           open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+          onClose={() => setOpen(false)}
         >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-          </Box>
-        </Modal>
+          <form onSubmit={handleSubmit(handleSubmitForm)}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              flexDirection="column"
+              gap="2rem"
+            >
+              <TextField
+                {...register("descricao")}
+                label="Descrição"
+                variant="outlined"
+              />
+              <TextField
+                {...register("descricao")}
+                label="Descrição"
+                variant="outlined"
+              />
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={open}
+                label="Age"
+                // onChange={handleChange}
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+              <Input
+                {...register("valor")}
+                sx={{ fontSize: "2rem" }}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography fontSize="2rem">R$</Typography>
+                  </InputAdornment>
+                }
+              />
+              <Button
+                type="submit"
+                size="large"
+                variant="contained"
+                disableElevation
+                sx={{
+                  borderRadius: "1rem",
+                  maxWidth: "12rem",
+                  width: "100%",
+                  alignSelf: "center",
+                }}
+              >
+                Salvar
+              </Button>
+            </Box>
+          </form>
+        </CModal>
       </GridCard>
     </LayoutBase>
   );
