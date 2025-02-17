@@ -6,6 +6,7 @@ import { RendaFormData, RendaFormModal } from "../modals/RendaFormModal";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { GridCard } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 export const RendaTable = () => {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ export const RendaTable = () => {
       headerName: "Valor",
       disableColumnMenu: true,
       flex: 1,
-      renderCell: (params) => <>R$ {params.row.value}</>,
+      renderCell: (params) => <>{FormatarMoeda(params.row.value)}</>,
     },
     {
       field: "actions",

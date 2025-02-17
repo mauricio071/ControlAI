@@ -12,6 +12,7 @@ import { RendaTable } from "./components/tables/RendaTable";
 import { SaldoModal } from "./components/modals/SaldoModal";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
+import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 
 export const MinhasFinancas = () => {
   const [addSaldoModal, setAddSaldoModal] = useState(false);
@@ -37,7 +38,7 @@ export const MinhasFinancas = () => {
                 </Typography>
                 <Box display="flex" gap="0.5rem">
                   <Typography variant="h4" fontWeight="600">
-                    R$ 300
+                    {FormatarMoeda(300)}
                   </Typography>
                 </Box>
               </Box>
@@ -69,7 +70,7 @@ export const MinhasFinancas = () => {
                 </Typography>
                 <Box display="flex" gap="0.5rem">
                   <Typography variant="h4" fontWeight="600" color="success">
-                    R$ 300
+                    {FormatarMoeda(300)}
                   </Typography>
                 </Box>
               </Box>
@@ -90,7 +91,7 @@ export const MinhasFinancas = () => {
                 </Typography>
                 <Box display="flex" gap="0.5rem">
                   <Typography variant="h4" fontWeight="600" color="error">
-                    R$ 300
+                    {FormatarMoeda(300)}
                   </Typography>
                 </Box>
               </Box>

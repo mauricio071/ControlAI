@@ -6,6 +6,7 @@ import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { GridCard } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 export const DespesaTable = () => {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ export const DespesaTable = () => {
       headerName: "Valor",
       disableColumnMenu: true,
       flex: 1,
-      renderCell: (params) => <>R$ {params.row.value}</>,
+      renderCell: (params) => <>{FormatarMoeda(params.row.value)}</>,
     },
     {
       field: "actions",

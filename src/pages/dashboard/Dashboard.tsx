@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { CLink, GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
+import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 
 export const Dashboard = () => {
   const gridContents = [
@@ -96,23 +97,45 @@ export const Dashboard = () => {
           {gridContents.map((content) => (
             <Grid size={{ xs: 12, md: 6, lg: 3 }} key={content.title}>
               <GridCard>
-                <Box display="flex" justifyContent="space-between">
+                <Box>
                   <Box
                     display="flex"
                     flexDirection="column"
                     alignItems="start"
                     gap="0.75rem"
                   >
-                    <Typography textAlign="start" color="gray">
-                      {content.title}
-                    </Typography>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      width="100%"
+                    >
+                      <Typography textAlign="start" color="gray">
+                        {content.title}
+                      </Typography>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height="4rem"
+                        width="4rem"
+                        borderRadius="0.75rem"
+                        boxShadow="0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
+                        marginTop="-2.5rem"
+                        color="white"
+                        sx={{
+                          background: content.color,
+                        }}
+                      >
+                        <Icon sx={{ fontSize: "1.75rem" }}>{content.icon}</Icon>
+                      </Box>
+                    </Box>
                     <Box display="flex" gap="0.5rem">
                       <Typography variant="h4" fontWeight="600">
-                        R$ {content.value}
+                        {FormatarMoeda(content.value)}
                       </Typography>
                       <Box display="flex" alignItems="center" gap="0.25rem">
                         <Icon color="success">arrow_upward</Icon>
-                        <Typography>R$ 300</Typography>
+                        <Typography>{FormatarMoeda(content.value)}</Typography>
                       </Box>
                     </Box>
                     <Link to={content.to}>
@@ -130,22 +153,6 @@ export const Dashboard = () => {
                         Ver
                       </Button>
                     </Link>
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="4rem"
-                    width="4rem"
-                    borderRadius="0.75rem"
-                    boxShadow="0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
-                    marginTop="-2.5rem"
-                    sx={{
-                      background: content.color,
-                    }}
-                    color="white"
-                  >
-                    <Icon sx={{ fontSize: "1.75rem" }}>{content.icon}</Icon>
                   </Box>
                 </Box>
               </GridCard>
@@ -218,7 +225,7 @@ export const Dashboard = () => {
                   ) : (
                     <Icon color="error">arrow_downward</Icon>
                   )}
-                  <Typography>R$ {transaction.value}</Typography>
+                  <Typography>{FormatarMoeda(transaction.value)}</Typography>
                 </Box>
               </Box>
             </GridCard>
