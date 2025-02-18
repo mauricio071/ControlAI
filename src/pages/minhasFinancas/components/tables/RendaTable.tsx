@@ -88,6 +88,12 @@ export const RendaTable = () => {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
+  // const [hasRows, setHasRows] = useState(false);
+
+  // if (rows.length > 0) {
+  //   setHasRows(true);
+  // }
+
   return (
     <GridCard>
       <Typography variant="h4" fontWeight="bold">
@@ -109,6 +115,7 @@ export const RendaTable = () => {
           Adicionar renda
         </Button>
       </Box>
+
       <DataGrid
         rows={rows}
         columns={columns}
@@ -134,6 +141,7 @@ export const RendaTable = () => {
           },
         }}
       />
+
       <RendaFormModal open={open} setOpen={setOpen} data={data} />
     </GridCard>
   );

@@ -2,15 +2,15 @@ import { Controller, useForm } from "react-hook-form";
 import {
   Box,
   Button,
-  Input,
-  InputAdornment,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import { CModal } from "../../../../shared/components";
+import { NumericFormat } from "react-number-format";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 interface SaldoModalProps {
   addSaldoModal: boolean;
@@ -27,22 +27,38 @@ export const SaldoModal = ({
 
   interface SaldoFormData {
     type: string;
-    value: number;
+    value: string;
   }
 
-  const { register, handleSubmit, setValue, reset, control } =
-    useForm<SaldoFormData>();
+  const { handleSubmit, reset, control } = useForm<SaldoFormData>();
 
-  const handleSubmitForm = (data) => {
-    console.log(data);
+  const handleSubmitForm = (data: SaldoFormData) => {
+    const dataFormatted = {
+      ...data,
+      value: FormatarParaMoeda(data.value),
+    };
+    console.log(dataFormatted);
+    // clearForm();
+  };
+
+  const NumberFormatCustom = forwardRef((props, ref) => (
+    <NumericFormat {...props} getInputRef={ref} />
+  ));
+
+  const onClose = () => {
+    setAddSaldoModal(false);
+    clearForm();
+  };
+
+  const clearForm = () => {
+    reset({
+      type: "",
+      value: "0",
+    });
   };
 
   return (
-    <CModal
-      title="Editar o saldo"
-      open={addSaldoModal}
-      onClose={() => setAddSaldoModal(false)}
-    >
+    <CModal title="Editar o saldo" open={addSaldoModal} onClose={onClose}>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         <Box
           display="flex"
@@ -59,7 +75,10 @@ export const SaldoModal = ({
                 color="primary"
                 value={field.value}
                 exclusive
-                onChange={(_, newValue) => field.onChange(newValue)}
+                onChange={(_, newValue) => {
+                  field.onChange(newValue);
+                  setEditSaldo(newValue);
+                }}
                 sx={{ gap: "1rem" }}
               >
                 <ToggleButton
@@ -99,16 +118,28 @@ export const SaldoModal = ({
               </ToggleButtonGroup>
             )}
           />
-          <Input
-            {...register("value")}
-            sx={{ fontSize: "2rem" }}
-            startAdornment={
-              <InputAdornment position="start">
-                <Typography fontSize="2rem">
-                  {EditSaldo === "adicionar" ? "+" : "-"} R$
-                </Typography>
-              </InputAdornment>
-            }
+          <Controller
+            name="value"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Valor"
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  inputComponent: NumberFormatCustom as any,
+                  inputProps: {
+                    thousandSeparator: ".",
+                    decimalSeparator: ",",
+                    prefix: `${EditSaldo === "adicionar" ? "+" : "-"} R$ `,
+                    decimalScale: 2,
+                    fixedDecimalScale: true,
+                    allowNegative: false,
+                  },
+                }}
+              />
+            )}
           />
           <Button
             type="submit"

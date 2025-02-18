@@ -1,18 +1,14 @@
-import {
-  Box,
-  Button,
-  InputAdornment,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Box, Button, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useEffect } from "react";
+import { forwardRef, useEffect } from "react";
 import dayjs from "dayjs";
 
 import { CATEGORIAS_DESPESA } from "../../../../shared/constants/Categorias";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { NumericFormat } from "react-number-format";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 interface DespesaFormModalProps {
   open: boolean;
@@ -24,7 +20,7 @@ export interface DespesaFormData {
   date: string | null;
   description: string;
   category: string;
-  value: number;
+  value: string;
 }
 
 export const DespesaFormModal = ({
@@ -36,8 +32,12 @@ export const DespesaFormModal = ({
     useForm<DespesaFormData>();
 
   const handleSubmitForm = (data: DespesaFormData) => {
-    console.log(data);
-    clearForm();
+    const dataFormatted = {
+      ...data,
+      value: FormatarParaMoeda(data.value),
+    };
+    console.log(dataFormatted);
+    // clearForm();
   };
 
   useEffect(() => {
@@ -59,9 +59,13 @@ export const DespesaFormModal = ({
       date: null,
       description: "",
       category: "",
-      value: 0,
+      value: "0",
     });
   };
+
+  const NumberFormatCustom = forwardRef((props, ref) => (
+    <NumericFormat {...props} getInputRef={ref} />
+  ));
 
   return (
     <CModal title="Adicionar despesa" open={open} onClose={onClose}>
@@ -90,7 +94,7 @@ export const DespesaFormModal = ({
           />
           <Controller
             name="category"
-            defaultValue={undefined}
+            defaultValue=""
             control={control}
             render={({ field }) => (
               <TextField
@@ -117,23 +121,28 @@ export const DespesaFormModal = ({
               </TextField>
             )}
           />
-          <TextField
-            {...register("value")}
-            label="Valor"
-            variant="outlined"
-            defaultValue={0}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">R$</InputAdornment>
-                ),
-              },
-            }}
-            sx={{
-              "& .MuiInputBase-root": {
-                alignItems: "baseline",
-              },
-            }}
+          <Controller
+            name="value"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Valor"
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  inputComponent: NumberFormatCustom as any,
+                  inputProps: {
+                    thousandSeparator: ".",
+                    decimalSeparator: ",",
+                    prefix: "R$ ",
+                    decimalScale: 2,
+                    fixedDecimalScale: true,
+                    allowNegative: false,
+                  },
+                }}
+              />
+            )}
           />
           <Button
             type="submit"
