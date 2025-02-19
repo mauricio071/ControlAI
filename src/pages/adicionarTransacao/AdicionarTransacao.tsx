@@ -1,8 +1,16 @@
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import dayjs from "dayjs";
 
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
@@ -11,13 +19,8 @@ import { FormatarParaMoeda } from "../../shared/utils/FormatarMoeda";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 
-interface DespesaFormModalProps {
-  open: boolean;
-  setOpen: (value: boolean) => void;
-  data?: DespesaFormData;
-}
-
-export interface DespesaFormData {
+export interface TransacaoFormData {
+  type: "adicionar" | "descontar";
   date: string | null;
   description: string;
   category: string;
@@ -25,9 +28,14 @@ export interface DespesaFormData {
 }
 
 export const AdicionarTransacao = () => {
-  const { register, handleSubmit, reset, control } = useForm<DespesaFormData>();
+  const [EditSaldo, setEditSaldo] = useState<"adicionar" | "descontar">(
+    "adicionar"
+  );
 
-  const handleSubmitForm = (data: DespesaFormData) => {
+  const { register, handleSubmit, reset, control } =
+    useForm<TransacaoFormData>();
+
+  const handleSubmitForm = (data: TransacaoFormData) => {
     const dataFormatted = {
       ...data,
       value: FormatarParaMoeda(data.value),
@@ -67,6 +75,66 @@ export const AdicionarTransacao = () => {
             flexDirection="column"
             gap="2rem"
           >
+            <Controller
+              name="type"
+              control={control}
+              defaultValue={undefined}
+              rules={{ required: "Este campo é obrigatório" }}
+              render={({ field, fieldState: { error } }) => (
+                <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={field.value}
+                    exclusive
+                    onChange={(_, newValue) => {
+                      field.onChange(newValue);
+                      setEditSaldo(newValue);
+                    }}
+                    sx={{ gap: "1rem" }}
+                  >
+                    <ToggleButton
+                      value="adicionar"
+                      sx={{
+                        border: "2px solid #ccc ",
+                        borderRadius: "8px !important",
+                        "&.Mui-selected": {
+                          backgroundColor: "#4caf50",
+                          borderColor: "#4caf50",
+                          color: "white",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#4caf50",
+                        },
+                      }}
+                    >
+                      Adicionar
+                    </ToggleButton>
+                    <ToggleButton
+                      value="descontar"
+                      sx={{
+                        border: "2px solid #ccc !important",
+                        borderRadius: "8px !important",
+                        "&.Mui-selected": {
+                          backgroundColor: "#f44336",
+                          borderColor: "#f44336 !important",
+                          color: "white",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#f44336",
+                        },
+                      }}
+                    >
+                      Descontar
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  {error && (
+                    <Typography color="error" variant="caption">
+                      {error.message}
+                    </Typography>
+                  )}
+                </Box>
+              )}
+            />
             <Controller
               name="date"
               control={control}
@@ -128,7 +196,7 @@ export const AdicionarTransacao = () => {
                     inputProps: {
                       thousandSeparator: ".",
                       decimalSeparator: ",",
-                      prefix: "R$ ",
+                      prefix: `${EditSaldo === "adicionar" ? "+" : "-"} R$`,
                       decimalScale: 2,
                       fixedDecimalScale: true,
                       allowNegative: false,

@@ -3,10 +3,10 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 
 import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
+import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { GridCard } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
-import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 export const DespesaTable = () => {
   const [open, setOpen] = useState(false);
@@ -40,7 +40,14 @@ export const DespesaTable = () => {
       headerName: "Valor",
       disableColumnMenu: true,
       flex: 1,
-      renderCell: (params) => <>{FormatarMoeda(params.row.value)}</>,
+      renderCell: (params) => (
+        <>
+          <Typography fontWeight="bold" marginRight="0.25rem" color="error">
+            -
+          </Typography>
+          {FormatarMoeda(params.row.value)}
+        </>
+      ),
     },
     {
       field: "actions",

@@ -40,7 +40,14 @@ export const RendaTable = () => {
       headerName: "Valor",
       disableColumnMenu: true,
       flex: 1,
-      renderCell: (params) => <>{FormatarMoeda(params.row.value)}</>,
+      renderCell: (params) => (
+        <>
+          <Typography fontWeight="bold" marginRight="0.25rem" color="success">
+            +
+          </Typography>
+          {FormatarMoeda(params.row.value)}
+        </>
+      ),
     },
     {
       field: "actions",

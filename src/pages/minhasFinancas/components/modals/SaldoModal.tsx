@@ -5,6 +5,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
 
@@ -70,52 +71,60 @@ export const SaldoModal = ({
             name="type"
             control={control}
             defaultValue=""
-            render={({ field }) => (
-              <ToggleButtonGroup
-                color="primary"
-                value={field.value}
-                exclusive
-                onChange={(_, newValue) => {
-                  field.onChange(newValue);
-                  setEditSaldo(newValue);
-                }}
-                sx={{ gap: "1rem" }}
-              >
-                <ToggleButton
-                  value="adicionar"
-                  sx={{
-                    border: "2px solid #ccc ",
-                    borderRadius: "8px !important",
-                    "&.Mui-selected": {
-                      backgroundColor: "#4caf50",
-                      borderColor: "#4caf50",
-                      color: "white",
-                    },
-                    "&.Mui-selected:hover": {
-                      backgroundColor: "#4caf50",
-                    },
+            rules={{ required: "Este campo é obrigatório" }}
+            render={({ field, fieldState: { error } }) => (
+              <Box display="flex" flexDirection="column" gap="0.25rem">
+                <ToggleButtonGroup
+                  color="primary"
+                  value={field.value}
+                  exclusive
+                  onChange={(_, newValue) => {
+                    field.onChange(newValue);
+                    setEditSaldo(newValue);
                   }}
+                  sx={{ gap: "1rem" }}
                 >
-                  Adicionar
-                </ToggleButton>
-                <ToggleButton
-                  value="descontar"
-                  sx={{
-                    border: "2px solid #ccc !important",
-                    borderRadius: "8px !important",
-                    "&.Mui-selected": {
-                      backgroundColor: "#f44336",
-                      borderColor: "#f44336 !important",
-                      color: "white",
-                    },
-                    "&.Mui-selected:hover": {
-                      backgroundColor: "#f44336",
-                    },
-                  }}
-                >
-                  Descontar
-                </ToggleButton>
-              </ToggleButtonGroup>
+                  <ToggleButton
+                    value="adicionar"
+                    sx={{
+                      border: "2px solid #ccc ",
+                      borderRadius: "8px !important",
+                      "&.Mui-selected": {
+                        backgroundColor: "#4caf50",
+                        borderColor: "#4caf50",
+                        color: "white",
+                      },
+                      "&.Mui-selected:hover": {
+                        backgroundColor: "#4caf50",
+                      },
+                    }}
+                  >
+                    Adicionar
+                  </ToggleButton>
+                  <ToggleButton
+                    value="descontar"
+                    sx={{
+                      border: "2px solid #ccc !important",
+                      borderRadius: "8px !important",
+                      "&.Mui-selected": {
+                        backgroundColor: "#f44336",
+                        borderColor: "#f44336 !important",
+                        color: "white",
+                      },
+                      "&.Mui-selected:hover": {
+                        backgroundColor: "#f44336",
+                      },
+                    }}
+                  >
+                    Descontar
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                {error && (
+                  <Typography color="error" variant="caption">
+                    {error.message}
+                  </Typography>
+                )}
+              </Box>
             )}
           />
           <Controller
