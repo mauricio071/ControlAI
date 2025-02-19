@@ -5,10 +5,10 @@ import { forwardRef, useEffect } from "react";
 import dayjs from "dayjs";
 
 import { CATEGORIAS_DESPESA } from "../../../../shared/constants/Categorias";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 import { NumericFormat } from "react-number-format";
-import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 
 interface DespesaFormModalProps {
   open: boolean;

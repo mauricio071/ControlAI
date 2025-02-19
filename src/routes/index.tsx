@@ -20,14 +20,14 @@ export const AppRoutes = () => {
         path: "/dashboard",
       },
       {
-        icon: "account_balance_wallet",
-        label: "Minhas Finanças",
-        path: "/minhas-financas",
-      },
-      {
         icon: "add_circle",
         label: "Adicionar transação",
         path: "/adicionar-transacao",
+      },
+      {
+        icon: "account_balance_wallet",
+        label: "Minhas Finanças",
+        path: "/minhas-financas",
       },
       {
         icon: "history",

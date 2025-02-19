@@ -122,6 +122,14 @@ export const Sidebar = ({ children }: SidebarProps) => {
               </ListItemButton> */}
             </List>
           </Box>
+          <Typography
+            variant="body1"
+            fontSize="0.8rem"
+            marginBottom="0.75rem"
+            alignSelf="center"
+          >
+            Copyright &#169; 2025 Maurício Naoki
+          </Typography>
         </Box>
       </Drawer>
 
