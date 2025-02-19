@@ -103,7 +103,7 @@ export const RendaTable = () => {
 
   return (
     <GridCard>
-      <Typography variant="h4" fontWeight="bold">
+      <Typography variant="h4" fontWeight="bold" marginBottom="1rem">
         Renda
       </Typography>
 

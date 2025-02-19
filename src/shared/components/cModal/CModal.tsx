@@ -1,4 +1,12 @@
-import { Box, Icon, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Icon,
+  IconButton,
+  Modal,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ReactNode } from "react";
 
 interface CModalProps {
@@ -9,12 +17,14 @@ interface CModalProps {
 }
 
 export const CModal = ({ children, title, open, onClose }: CModalProps) => {
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    minWidth: `${smDown ? "60vw" : "400px"}`,
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,

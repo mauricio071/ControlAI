@@ -132,7 +132,7 @@ export const DespesaTable = () => {
 
   return (
     <GridCard>
-      <Typography variant="h4" fontWeight="bold">
+      <Typography variant="h4" fontWeight="bold" marginBottom="1rem">
         Despesa
       </Typography>
 

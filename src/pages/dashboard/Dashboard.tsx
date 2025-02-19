@@ -20,7 +20,7 @@ export const Dashboard = () => {
       icon: "home",
       color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
       title: "Gasto Fixo Mensal",
-      value: 1200,
+      value: 1200000000000,
       to: "/minhas-financas",
     },
     {
@@ -95,7 +95,7 @@ export const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           {gridContents.map((content) => (
-            <Grid size={{ xs: 12, md: 6, lg: 3 }} key={content.title}>
+            <Grid size={{ xs: 12, md: 6, xl: 3 }} key={content.title}>
               <GridCard>
                 <Box>
                   <Box
@@ -129,7 +129,15 @@ export const Dashboard = () => {
                         <Icon sx={{ fontSize: "1.75rem" }}>{content.icon}</Icon>
                       </Box>
                     </Box>
-                    <Box display="flex" gap="0.5rem">
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      gap="0.15rem"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      width="100%"
+                    >
                       <Typography variant="h4" fontWeight="600">
                         {FormatarMoeda(content.value)}
                       </Typography>
@@ -162,7 +170,7 @@ export const Dashboard = () => {
       </Box>
       <Box>
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 7 }}>
+          <Grid size={{ xs: 12, xl: 7 }}>
             <GridCard>
               <BarChart
                 slotProps={{ legend: { hidden: true } }}
@@ -174,7 +182,7 @@ export const Dashboard = () => {
             </GridCard>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 5 }}>
+          <Grid size={{ xs: 12, xl: 5 }}>
             <GridCard>
               <PieChart
                 series={[

@@ -23,7 +23,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ children }: SidebarProps) => {
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { toggleTheme } = useAppThemeContext();
 
@@ -33,7 +33,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
     <>
       <Drawer
         open={isDrawerOpen}
-        variant={smDown ? "temporary" : "permanent"}
+        variant={lgDown ? "temporary" : "permanent"}
         onClose={toggleDrawerOpen}
         PaperProps={{
           sx: {
@@ -84,7 +84,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
                   to={drawerOption.path}
                   icon={drawerOption.icon}
                   label={drawerOption.label}
-                  onClick={smDown ? toggleDrawerOpen : undefined}
+                  onClick={lgDown ? toggleDrawerOpen : undefined}
                 />
               ))}
             </List>
@@ -134,8 +134,8 @@ export const Sidebar = ({ children }: SidebarProps) => {
       </Drawer>
 
       <Box
-        minHeight={smDown ? "100vh" : "calc(100vh - 6rem)"}
-        marginLeft={smDown ? 0 : theme.spacing(38)}
+        minHeight={lgDown ? "100vh" : "calc(100vh - 6rem)"}
+        marginLeft={lgDown ? 0 : theme.spacing(38)}
       >
         {children}
       </Box>

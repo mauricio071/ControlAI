@@ -18,6 +18,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { toggleDrawerOpen } = useDrawerContext();
 
@@ -27,7 +28,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
       display="flex"
       flexDirection="column"
       gap={1}
-      paddingInline="2rem"
+      paddingInline={smDown ? "1rem" : "2rem"}
       paddingTop="1rem"
       paddingBottom="4rem"
     >
@@ -43,9 +44,9 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
         alignItems="center"
         gap={1}
       >
-        {smDown && (
+        {lgDown && (
           <IconButton onClick={toggleDrawerOpen}>
-            <Icon>menu</Icon>
+            <Icon fontSize={smDown ? "medium" : "large"}>menu</Icon>
           </IconButton>
         )}
 
