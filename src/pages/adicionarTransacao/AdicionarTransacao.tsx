@@ -14,7 +14,10 @@ import { forwardRef, useState } from "react";
 import dayjs from "dayjs";
 
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
-import { CATEGORIAS_DESPESA } from "../../shared/constants/Categorias";
+import {
+  CATEGORIAS_DESPESA,
+  CATEGORIAS_RENDA,
+} from "../../shared/constants/Categorias";
 import { FormatarParaMoeda } from "../../shared/utils/FormatarMoeda";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
@@ -28,7 +31,7 @@ export interface TransacaoFormData {
 }
 
 export const AdicionarTransacao = () => {
-  const [EditSaldo, setEditSaldo] = useState<"adicionar" | "descontar">(
+  const [tipoTransacao, setTipoTransacao] = useState<"adicionar" | "descontar">(
     "adicionar"
   );
 
@@ -88,7 +91,7 @@ export const AdicionarTransacao = () => {
                     exclusive
                     onChange={(_, newValue) => {
                       field.onChange(newValue);
-                      setEditSaldo(newValue);
+                      setTipoTransacao(newValue);
                     }}
                     sx={{ gap: "1rem" }}
                   >
@@ -157,6 +160,7 @@ export const AdicionarTransacao = () => {
               name="category"
               defaultValue=""
               control={control}
+              disabled={!tipoTransacao}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -170,15 +174,26 @@ export const AdicionarTransacao = () => {
                     },
                   }}
                 >
-                  {CATEGORIAS_DESPESA.map((option) => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      sx={{ display: "flex", gap: "0.75rem" }}
-                    >
-                      <CategoriaBadge categoria={option.value} />
-                    </MenuItem>
-                  ))}
+                  {tipoTransacao === "adicionar" &&
+                    CATEGORIAS_RENDA.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        sx={{ display: "flex", gap: "0.75rem" }}
+                      >
+                        <CategoriaBadge categoria={option.value} />
+                      </MenuItem>
+                    ))}
+                  {tipoTransacao === "descontar" &&
+                    CATEGORIAS_DESPESA.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        sx={{ display: "flex", gap: "0.75rem" }}
+                      >
+                        <CategoriaBadge categoria={option.value} />
+                      </MenuItem>
+                    ))}
                 </TextField>
               )}
             />
@@ -196,7 +211,7 @@ export const AdicionarTransacao = () => {
                     inputProps: {
                       thousandSeparator: ".",
                       decimalSeparator: ",",
-                      prefix: `${EditSaldo === "adicionar" ? "+" : "-"} R$`,
+                      prefix: `${tipoTransacao === "adicionar" ? "+" : "-"} R$`,
                       decimalScale: 2,
                       fixedDecimalScale: true,
                       allowNegative: false,
