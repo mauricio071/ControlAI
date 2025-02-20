@@ -223,59 +223,77 @@ export const Dashboard = () => {
         </Grid>
       </Box>
       <Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          marginBottom="1rem"
-        >
-          <Typography variant="h6" fontWeight="bold">
-            Últimas transações
-          </Typography>
-          <CLink to="/historico" color="#1976D2" hovercolor="#1565C0">
-            Histórico completo
-          </CLink>
-        </Box>
-        <Box display="flex" flexDirection="column" gap="1rem">
-          {lastTransactions.map((transaction) => (
-            <GridCard key={transaction.id}>
+        <GridCard titleContainer>
+          <TitleContainer title="Últimas transações" />
+          <Box display="flex" flexDirection="column" gap="1rem">
+            {lastTransactions.map((transaction) => (
               <Box
+                sx={{
+                  border: "1px solid lightGray",
+                  borderRadius: "0.5rem",
+                  padding: "1rem",
+                }}
+                key={transaction.id}
+              >
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  gap="1"
+                >
+                  <Box display="flex" alignItems="center" gap="1rem">
+                    {transaction.type === "adicionar" ? (
+                      <Icon color="success" sx={{ fontSize: "2.25rem" }}>
+                        arrow_circle_up
+                      </Icon>
+                    ) : (
+                      <Icon color="error" sx={{ fontSize: "2.25rem" }}>
+                        arrow_circle_down
+                      </Icon>
+                    )}
+                    <Box display="flex" flexDirection="column">
+                      <Typography variant="body1" fontWeight="bold">
+                        {transaction.description}
+                      </Typography>
+                      <Typography variant="body1" fontWeight="500">
+                        {transaction.date}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography
+                    fontWeight="bold"
+                    color={
+                      transaction.type === "adicionar" ? "success" : "error"
+                    }
+                    sx={{ fontSize: "1.4rem" }}
+                  >
+                    {transaction.type === "adicionar" ? "+ " : "- "}
+                    {FormatarMoeda(transaction.value)}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+          <Box display="flex" justifyContent="center" marginTop="2rem">
+            <CLink
+              to="/historico"
+              color="#1976D2"
+              hovercolor="#1565C0"
+              underline
+            >
+              <Typography
+                variant="body1"
+                fontWeight="bold"
                 display="flex"
                 alignItems="center"
-                justifyContent="space-between"
-                gap="1"
+                gap="0.5rem"
               >
-                <Box display="flex" alignItems="center" gap="1rem">
-                  {transaction.type === "adicionar" ? (
-                    <Icon color="success" sx={{ fontSize: "2.25rem" }}>
-                      arrow_circle_up
-                    </Icon>
-                  ) : (
-                    <Icon color="error" sx={{ fontSize: "2.25rem" }}>
-                      arrow_circle_down
-                    </Icon>
-                  )}
-                  <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight="bold">
-                      {transaction.description}
-                    </Typography>
-                    <Typography variant="body1" fontWeight="500">
-                      {transaction.date}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Typography
-                  fontWeight="bold"
-                  color={transaction.type === "adicionar" ? "success" : "error"}
-                  sx={{ fontSize: "1.4rem" }}
-                >
-                  {transaction.type === "adicionar" ? "+ " : "- "}
-                  {FormatarMoeda(transaction.value)}
-                </Typography>
-              </Box>
-            </GridCard>
-          ))}
-        </Box>
+                <Icon>history</Icon>
+                Histórico completo
+              </Typography>
+            </CLink>
+          </Box>
+        </GridCard>
       </Box>
     </LayoutBase>
   );
