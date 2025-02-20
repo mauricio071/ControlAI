@@ -60,33 +60,38 @@ export const Dashboard = () => {
   const lastTransactions = [
     {
       id: 1,
-      type: "gain",
-      value: 300,
+      type: "adicionar",
       date: "01/01/2025 19:00",
+      description: "Netflix",
+      value: 300,
     },
     {
       id: 2,
-      type: "lost",
-      value: 300,
+      type: "descontar",
       date: "01/01/2025 19:00",
+      description: "Netflix",
+      value: 300,
     },
     {
       id: 3,
-      type: "gain",
-      value: 300,
+      type: "adicionar",
       date: "01/01/2025 19:00",
+      description: "Netflix",
+      value: 300,
     },
     {
       id: 4,
-      type: "gain",
-      value: 300,
+      type: "adicionar",
       date: "01/01/2025 19:00",
+      description: "Netflix",
+      value: 300,
     },
     {
       id: 5,
-      type: "gain",
-      value: 300,
+      type: "adicionar",
       date: "01/01/2025 19:00",
+      description: "Netflix",
+      value: 300,
     },
   ];
 
@@ -236,19 +241,34 @@ export const Dashboard = () => {
                 alignItems="center"
                 justifyContent="space-between"
                 gap="1"
-                paddingInline="0.5rem"
               >
-                <Typography variant="body1" fontWeight="bold">
-                  {transaction.date}
-                </Typography>
-                <Box display="flex" alignItems="center" gap="0.25rem">
-                  {transaction.type === "gain" ? (
-                    <Icon color="success">arrow_upward</Icon>
+                <Box display="flex" alignItems="center" gap="1rem">
+                  {transaction.type === "adicionar" ? (
+                    <Icon color="success" sx={{ fontSize: "2.25rem" }}>
+                      arrow_circle_up
+                    </Icon>
                   ) : (
-                    <Icon color="error">arrow_downward</Icon>
+                    <Icon color="error" sx={{ fontSize: "2.25rem" }}>
+                      arrow_circle_down
+                    </Icon>
                   )}
-                  <Typography>{FormatarMoeda(transaction.value)}</Typography>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="body1" fontWeight="bold">
+                      {transaction.description}
+                    </Typography>
+                    <Typography variant="body1" fontWeight="500">
+                      {transaction.date}
+                    </Typography>
+                  </Box>
                 </Box>
+                <Typography
+                  fontWeight="bold"
+                  color={transaction.type === "adicionar" ? "success" : "error"}
+                  sx={{ fontSize: "1.4rem" }}
+                >
+                  {transaction.type === "adicionar" ? "+ " : "- "}
+                  {FormatarMoeda(transaction.value)}
+                </Typography>
               </Box>
             </GridCard>
           ))}
