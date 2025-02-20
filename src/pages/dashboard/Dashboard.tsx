@@ -20,7 +20,7 @@ export const Dashboard = () => {
       icon: "home",
       color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
       title: "Gasto Fixo Mensal",
-      value: 1200000000000,
+      value: 1200000,
       to: "/minhas-financas",
     },
     {
@@ -133,17 +133,31 @@ export const Dashboard = () => {
                       display="flex"
                       flexDirection="column"
                       gap="0.15rem"
-                      whiteSpace="nowrap"
-                      overflow="hidden"
-                      textOverflow="ellipsis"
                       width="100%"
                     >
-                      <Typography variant="h4" fontWeight="600">
+                      <Typography
+                        variant="h4"
+                        fontWeight="600"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
                         {FormatarMoeda(content.value)}
                       </Typography>
-                      <Box display="flex" alignItems="center" gap="0.25rem">
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap="0.25rem"
+                        width="100%"
+                      >
                         <Icon color="success">arrow_upward</Icon>
-                        <Typography>{FormatarMoeda(content.value)}</Typography>
+                        <Typography
+                          whiteSpace="nowrap"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {FormatarMoeda(content.value)}
+                        </Typography>
                       </Box>
                     </Box>
                     <Link to={content.to}>

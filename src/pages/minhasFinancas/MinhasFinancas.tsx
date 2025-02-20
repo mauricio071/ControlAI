@@ -32,13 +32,20 @@ export const MinhasFinancas = () => {
                 flexDirection="column"
                 alignItems="start"
                 gap="0.75rem"
+                width="80%"
               >
                 <Typography textAlign="start" color="gray">
                   Saldo atual
                 </Typography>
-                <Box display="flex" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="600">
-                    {FormatarMoeda(300)}
+                <Box display="flex" gap="0.5rem" width="100%">
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                  >
+                    {FormatarMoeda(3000)}
                   </Typography>
                 </Box>
               </Box>
@@ -64,12 +71,20 @@ export const MinhasFinancas = () => {
                 flexDirection="column"
                 alignItems="start"
                 gap="0.75rem"
+                width="100%"
               >
                 <Typography textAlign="start" color="gray">
                   Renda total
                 </Typography>
-                <Box display="flex" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="600" color="success">
+                <Box display="flex" gap="0.5rem" width="100%">
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    color="success"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                  >
                     {FormatarMoeda(300)}
                   </Typography>
                 </Box>
@@ -85,12 +100,20 @@ export const MinhasFinancas = () => {
                 flexDirection="column"
                 alignItems="start"
                 gap="0.75rem"
+                width="100%"
               >
                 <Typography textAlign="start" color="gray">
                   Despesa total
                 </Typography>
-                <Box display="flex" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="600" color="error">
+                <Box display="flex" gap="0.5rem" width="100%">
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    color="error"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                  >
                     {FormatarMoeda(300)}
                   </Typography>
                 </Box>
