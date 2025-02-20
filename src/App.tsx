@@ -1,4 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
+// @ts-expect-error está funcionando
+import "@fontsource/inter";
 
 import {
   AppLocalizationProvider,

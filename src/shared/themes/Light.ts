@@ -19,4 +19,7 @@ export const LightTheme = createTheme({
       default: "#FDF8F3",
     },
   },
+  typography: {
+    fontFamily: "'Inter', sans-serif",
+  },
 });

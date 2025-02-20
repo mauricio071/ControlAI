@@ -1,4 +1,4 @@
-import { Icon, IconButton, Typography } from "@mui/material";
+import { Box, Icon, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
@@ -7,6 +7,9 @@ import { FormatarData } from "../../shared/utils/FormatarData";
 import { GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { BarChart } from "@mui/x-charts";
+import { DatePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 
 export const Historico = () => {
   const columns: GridColDef[] = [
@@ -148,9 +151,22 @@ export const Historico = () => {
     "Dec",
   ];
 
+  const [year, setYear] = useState<Dayjs | null>(dayjs());
+
   return (
     <LayoutBase titulo="Histórico">
-      <GridCard>
+      <GridCard titleContainer>
+        <TitleContainer title="Histórico de gastos" />
+        <Box display="flex" justifyContent="center">
+          <DatePicker
+            views={["year"]}
+            label="Ano"
+            value={year}
+            onChange={(newYear) => setYear(newYear)}
+            minDate={dayjs("2000-01-01")}
+            maxDate={dayjs()}
+          />
+        </Box>
         <BarChart
           slotProps={{ legend: { hidden: true } }}
           height={400}

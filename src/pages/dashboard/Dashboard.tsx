@@ -279,7 +279,7 @@ export const Dashboard = () => {
               to="/historico"
               color="#1976D2"
               hovercolor="#1565C0"
-              underline
+              tdecoration="true"
             >
               <Typography
                 variant="body1"
