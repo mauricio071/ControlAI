@@ -6,6 +6,7 @@ import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
+import { BarChart } from "@mui/x-charts";
 
 export const Historico = () => {
   const columns: GridColDef[] = [
@@ -129,8 +130,35 @@ export const Historico = () => {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
+  const pData = [
+    2400, 1398, 9800, 3908, 4800, 3800, 4300, 1398, 9800, 3908, 4800, 3800,
+  ];
+  const xLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   return (
     <LayoutBase titulo="Histórico">
+      <GridCard>
+        <BarChart
+          slotProps={{ legend: { hidden: true } }}
+          height={400}
+          borderRadius={6}
+          series={[{ data: pData, label: "pv", id: "pvId" }]}
+          xAxis={[{ data: xLabels, scaleType: "band" }]}
+        />
+      </GridCard>
       <GridCard>
         <Typography variant="h4" fontWeight="bold" marginBottom="1.5rem">
           Histórico de transações

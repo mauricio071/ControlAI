@@ -3,16 +3,16 @@ import { styled } from "@mui/material";
 
 interface CLinkProps {
   color?: string;
-  hoverColor?: string;
+  hovercolor?: string;
 }
 
 export const CLink = styled(Link)<CLinkProps>(
-  ({ color = "#fff", hoverColor = "#f8f8f8" }) => ({
+  ({ color = "#fff", hovercolor = "#f8f8f8" }) => ({
     color: color,
     textDecoration: "none",
     transition: "color 300ms ease-in-out",
     "&:hover": {
-      color: hoverColor,
+      color: hovercolor,
     },
   })
 );

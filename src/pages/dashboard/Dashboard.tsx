@@ -191,6 +191,14 @@ export const Dashboard = () => {
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, xl: 7 }}>
             <GridCard>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                marginBottom="1.5rem"
+                textAlign="center"
+              >
+                Gastos dos últimos 12 meses
+              </Typography>
               <BarChart
                 slotProps={{ legend: { hidden: true } }}
                 height={300}
@@ -203,6 +211,14 @@ export const Dashboard = () => {
 
           <Grid size={{ xs: 12, xl: 5 }}>
             <GridCard>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                marginBottom="1.5rem"
+                textAlign="center"
+              >
+                Seus gastos
+              </Typography>
               <PieChart
                 series={[
                   {
@@ -229,7 +245,7 @@ export const Dashboard = () => {
           <Typography variant="h6" fontWeight="bold">
             Últimas transações
           </Typography>
-          <CLink to="/historico" color="#1976D2" hoverColor="#1565C0">
+          <CLink to="/historico" color="#1976D2" hovercolor="#1565C0">
             Histórico completo
           </CLink>
         </Box>
