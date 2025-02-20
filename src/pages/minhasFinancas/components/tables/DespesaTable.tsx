@@ -5,7 +5,7 @@ import { useState } from "react";
 import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
-import { GridCard } from "../../../../shared/components";
+import { GridCard, TitleContainer } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 
 export const DespesaTable = () => {
@@ -131,16 +131,15 @@ export const DespesaTable = () => {
   const paginationModel = { page: 0, pageSize: 5 };
 
   return (
-    <GridCard>
-      <Typography variant="h4" fontWeight="bold" marginBottom="1rem">
-        Despesa
-      </Typography>
+    <GridCard titleContainer>
+      <TitleContainer title="Despesa" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button
           onClick={() => setOpen(true)}
           variant="contained"
           disableElevation
+          color="secondary"
           sx={{
             display: "flex",
             alignItems: "center",

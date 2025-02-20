@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { RendaFormData, RendaFormModal } from "../modals/RendaFormModal";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
-import { GridCard } from "../../../../shared/components";
+import { GridCard, TitleContainer } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 
@@ -102,16 +102,15 @@ export const RendaTable = () => {
   // }
 
   return (
-    <GridCard>
-      <Typography variant="h4" fontWeight="bold" marginBottom="1rem">
-        Renda
-      </Typography>
+    <GridCard titleContainer>
+      <TitleContainer title="Renda" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button
           onClick={() => setOpen(true)}
           variant="contained"
           disableElevation
+          color="secondary"
           sx={{
             display: "flex",
             alignItems: "center",

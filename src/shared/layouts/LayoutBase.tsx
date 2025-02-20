@@ -24,7 +24,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
 
   return (
     <Box
-      height="100%"
+      minHeight="calc(100vh - 5rem)"
       display="flex"
       flexDirection="column"
       gap={1}
@@ -56,6 +56,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
           overflow="hidden"
           textOverflow="ellipsis"
           fontWeight="bold"
+          // marginBottom="1rem"
         >
           {titulo}
         </Typography>

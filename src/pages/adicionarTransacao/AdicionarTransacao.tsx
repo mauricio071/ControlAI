@@ -21,7 +21,7 @@ import {
   CATEGORIAS_RENDA,
 } from "../../shared/constants/Categorias";
 import { FormatarParaMoeda } from "../../shared/utils/FormatarMoeda";
-import { GridCard } from "../../shared/components";
+import { GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 
 export interface TransacaoFormData {
@@ -67,15 +67,8 @@ export const AdicionarTransacao = () => {
   return (
     <LayoutBase titulo="Adicionar Transação">
       <Box maxWidth="50rem" width="100%" margin={lgDown ? "auto" : "none"}>
-        <GridCard>
-          <Typography
-            variant="h2"
-            fontSize="2rem"
-            fontWeight="bold"
-            marginBottom="2rem"
-          >
-            Nova transação
-          </Typography>
+        <GridCard titleContainer>
+          <TitleContainer title="Nova transação" />
           <form onSubmit={handleSubmit(handleSubmitForm)}>
             <Box
               display="flex"

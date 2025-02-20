@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
-import { GridCard } from "../../shared/components";
+import { GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { BarChart } from "@mui/x-charts";
 
@@ -159,10 +159,8 @@ export const Historico = () => {
           xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
       </GridCard>
-      <GridCard>
-        <Typography variant="h4" fontWeight="bold" marginBottom="1.5rem">
-          Histórico de transações
-        </Typography>
+      <GridCard titleContainer>
+        <TitleContainer title="Histórico de transações" />
         <DataGrid
           rows={rows}
           columns={columns}

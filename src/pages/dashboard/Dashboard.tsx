@@ -3,7 +3,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts";
 import { Link } from "react-router-dom";
 
-import { CLink, GridCard } from "../../shared/components";
+import { CLink, GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 
@@ -190,15 +190,8 @@ export const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, xl: 7 }}>
-            <GridCard>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                marginBottom="1.5rem"
-                textAlign="center"
-              >
-                Gastos dos últimos 12 meses
-              </Typography>
+            <GridCard titleContainer>
+              <TitleContainer title="Gastos dos últimos 12 meses" />
               <BarChart
                 slotProps={{ legend: { hidden: true } }}
                 height={300}
@@ -210,15 +203,9 @@ export const Dashboard = () => {
           </Grid>
 
           <Grid size={{ xs: 12, xl: 5 }}>
-            <GridCard>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                marginBottom="1.5rem"
-                textAlign="center"
-              >
-                Seus gastos
-              </Typography>
+            <GridCard titleContainer>
+              <TitleContainer title="Seus gastos" />
+
               <PieChart
                 series={[
                   {

@@ -133,10 +133,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
         </Box>
       </Drawer>
 
-      <Box
-        minHeight={lgDown ? "100vh" : "calc(100vh - 6rem)"}
-        marginLeft={lgDown ? 0 : theme.spacing(38)}
-      >
+      <Box minHeight="100vh" marginLeft={lgDown ? 0 : theme.spacing(38)}>
         {children}
       </Box>
     </>
