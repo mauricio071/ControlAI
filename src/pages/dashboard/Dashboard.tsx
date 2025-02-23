@@ -265,7 +265,7 @@ export const Dashboard = () => {
                     color={
                       transaction.type === "adicionar" ? "success" : "error"
                     }
-                    sx={{ fontSize: "1.4rem" }}
+                    sx={{ fontSize: "1.25rem" }}
                   >
                     {transaction.type === "adicionar" ? "+ " : "- "}
                     {FormatarMoeda(transaction.value)}

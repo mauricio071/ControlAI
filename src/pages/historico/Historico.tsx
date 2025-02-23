@@ -156,26 +156,6 @@ export const Historico = () => {
   return (
     <LayoutBase titulo="Histórico">
       <GridCard titleContainer>
-        <TitleContainer title="Histórico de gastos" />
-        <Box display="flex" justifyContent="center">
-          <DatePicker
-            views={["year"]}
-            label="Ano"
-            value={year}
-            onChange={(newYear) => setYear(newYear)}
-            minDate={dayjs("2000-01-01")}
-            maxDate={dayjs()}
-          />
-        </Box>
-        <BarChart
-          slotProps={{ legend: { hidden: true } }}
-          height={400}
-          borderRadius={6}
-          series={[{ data: pData, label: "pv", id: "pvId" }]}
-          xAxis={[{ data: xLabels, scaleType: "band" }]}
-        />
-      </GridCard>
-      <GridCard titleContainer>
         <TitleContainer title="Histórico de transações" />
         <DataGrid
           rows={rows}
@@ -201,6 +181,26 @@ export const Historico = () => {
                 `${from}-${to} de ${count}`,
             },
           }}
+        />
+      </GridCard>
+      <GridCard titleContainer>
+        <TitleContainer title="Histórico de gastos" />
+        <Box display="flex" justifyContent="center">
+          <DatePicker
+            views={["year"]}
+            label="Ano"
+            value={year}
+            onChange={(newYear) => setYear(newYear)}
+            minDate={dayjs("2000-01-01")}
+            maxDate={dayjs()}
+          />
+        </Box>
+        <BarChart
+          slotProps={{ legend: { hidden: true } }}
+          height={400}
+          borderRadius={6}
+          series={[{ data: pData, label: "pv", id: "pvId" }]}
+          xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
       </GridCard>
     </LayoutBase>
