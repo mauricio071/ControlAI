@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { ReactNode } from "react";
 import { useDrawerContext } from "../contexts";
+import { Sidebar } from "../components";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -23,48 +24,50 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const { toggleDrawerOpen } = useDrawerContext();
 
   return (
-    <Box
-      minHeight="calc(100vh - 5rem)"
-      display="flex"
-      flexDirection="column"
-      gap={1}
-      paddingInline={smDown ? "1rem" : "2rem"}
-      paddingTop="1rem"
-      paddingBottom="4rem"
-    >
+    <Sidebar>
       <Box
-        height={
-          smDown
-            ? theme.spacing(6)
-            : mdDown
-            ? theme.spacing(8)
-            : theme.spacing(12)
-        }
+        minHeight="calc(100vh - 5rem)"
         display="flex"
-        alignItems="center"
+        flexDirection="column"
         gap={1}
+        paddingInline={smDown ? "1rem" : "2rem"}
+        paddingTop="1rem"
+        paddingBottom="4rem"
       >
-        {lgDown && (
-          <IconButton onClick={toggleDrawerOpen}>
-            <Icon fontSize={smDown ? "medium" : "large"}>menu</Icon>
-          </IconButton>
-        )}
-
-        <Typography
-          variant={smDown ? "h5" : "h4"}
-          whiteSpace="nowrap"
-          overflow="hidden"
-          textOverflow="ellipsis"
-          fontWeight="bold"
-          // marginBottom="1rem"
+        <Box
+          height={
+            smDown
+              ? theme.spacing(6)
+              : mdDown
+              ? theme.spacing(8)
+              : theme.spacing(12)
+          }
+          display="flex"
+          alignItems="center"
+          gap={1}
         >
-          {titulo}
-        </Typography>
-      </Box>
+          {lgDown && (
+            <IconButton onClick={toggleDrawerOpen}>
+              <Icon fontSize={smDown ? "medium" : "large"}>menu</Icon>
+            </IconButton>
+          )}
 
-      <Box flex={1} display="flex" flexDirection="column" gap={4}>
-        {children}
+          <Typography
+            variant={smDown ? "h5" : "h4"}
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            fontWeight="bold"
+            // marginBottom="1rem"
+          >
+            {titulo}
+          </Typography>
+        </Box>
+
+        <Box flex={1} display="flex" flexDirection="column" gap={4}>
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </Sidebar>
   );
 };

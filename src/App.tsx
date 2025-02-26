@@ -7,7 +7,6 @@ import {
   AppThemeProvider,
   DrawerProvider,
 } from "./shared/contexts";
-import { Sidebar } from "./shared/components";
 import { AppRoutes } from "./routes";
 
 export const App = () => {
@@ -16,9 +15,7 @@ export const App = () => {
       <AppLocalizationProvider>
         <DrawerProvider>
           <BrowserRouter>
-            <Sidebar>
-              <AppRoutes />
-            </Sidebar>
+            <AppRoutes />
           </BrowserRouter>
         </DrawerProvider>
       </AppLocalizationProvider>

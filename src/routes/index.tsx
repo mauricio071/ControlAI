@@ -6,6 +6,7 @@ import {
   AdicionarTransacao,
   Dashboard,
   Historico,
+  Login,
   MinhasFinancas,
 } from "../pages";
 
@@ -39,6 +40,7 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/minhas-financas" element={<MinhasFinancas />} />
       <Route path="/adicionar-transacao" element={<AdicionarTransacao />} />

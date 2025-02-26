@@ -6,35 +6,42 @@ import { Link } from "react-router-dom";
 import { CLink, GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
+import { useEffect, useState } from "react";
+import { getDashboardAction } from "../../services/actions/dashboardAction";
 
 export const Dashboard = () => {
+  const [balance, setBalance] = useState(0);
+  const [monthlyExpense, setMonthlyExpense] = useState(0);
+  const [monthlyFixed, setMonthlyFixed] = useState(0);
+  const [savings, setSavings] = useState(0);
+
   const gridContents = [
     {
       icon: "account_balance_wallet",
       color: "linear-gradient(195deg, #49a3f1, #1A73E8)",
       title: "Saldo",
-      value: 300,
+      value: balance,
       to: "/minhas-financas",
     },
     {
       icon: "home",
       color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
       title: "Gasto Fixo Mensal",
-      value: 1200000,
+      value: monthlyExpense,
       to: "/minhas-financas",
     },
     {
       icon: "credit_card",
       color: "linear-gradient(195deg, #FFB6C1, #FF1493)",
       title: "Gasto do Mês",
-      value: 1500,
+      value: monthlyFixed,
       to: "/historico",
     },
     {
       icon: "trending_up",
       color: "linear-gradient(195deg, #66BB6A, #388E3C)",
       title: "Economia",
-      value: 200,
+      value: savings,
       to: "/historico",
     },
   ];
@@ -94,6 +101,16 @@ export const Dashboard = () => {
       value: 300,
     },
   ];
+
+  useEffect(() => {
+    // getDashboardAction().then((data) => {
+    //   console.log(data);
+    //   setBalance(data.balance);
+    //   setMonthlyExpense(data.monthlyExpense);
+    //   setMonthlyFixed(data.monthlyFixed);
+    //   setSavings(data.savings);
+    // });
+  }, []);
 
   return (
     <LayoutBase titulo="Dashboard">
