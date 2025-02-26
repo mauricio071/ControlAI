@@ -85,6 +85,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
                   icon={drawerOption.icon}
                   label={drawerOption.label}
                   onClick={lgDown ? toggleDrawerOpen : undefined}
+                  action={drawerOption.action}
                 />
               ))}
             </List>
@@ -114,12 +115,6 @@ export const Sidebar = ({ children }: SidebarProps) => {
                 </ListItemIcon>
                 <ListItemText primary="Alterar tema" />
               </ListItemButton>
-              {/* <ListItemButton onClick={}>
-                <ListItemIcon>
-                  <Icon>logout</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Sair" />
-              </ListItemButton> */}
             </List>
           </Box>
           <Typography

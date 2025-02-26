@@ -10,6 +10,7 @@ interface DrawerOption {
   icon: string;
   label: string;
   path: string;
+  action?: () => void;
 }
 
 interface DrawerContextData {

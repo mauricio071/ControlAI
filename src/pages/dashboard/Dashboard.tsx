@@ -8,6 +8,7 @@ import { LayoutBase } from "../../shared/layouts";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { useEffect, useState } from "react";
 import { getDashboardAction } from "../../services/actions/dashboardAction";
+import { auth } from "../../config/firebaseConfig";
 
 export const Dashboard = () => {
   const [balance, setBalance] = useState(0);
@@ -110,6 +111,7 @@ export const Dashboard = () => {
     //   setMonthlyFixed(data.monthlyFixed);
     //   setSavings(data.savings);
     // });
+    console.log(auth.currentUser);
   }, []);
 
   return (

@@ -12,6 +12,7 @@ interface ListItemLinkProps {
   icon: string;
   label: string;
   onClick?: () => void;
+  action?: () => Promise;
 }
 
 export const ListItemLink = ({
@@ -19,6 +20,7 @@ export const ListItemLink = ({
   icon,
   label,
   onClick,
+  action,
 }: ListItemLinkProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -26,7 +28,10 @@ export const ListItemLink = ({
   const resolvedPath = useResolvedPath(to);
   const match = useMatch({ path: resolvedPath.pathname, end: false });
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    if (action) {
+      await action();
+    }
     navigate(to);
     onClick?.();
   };
