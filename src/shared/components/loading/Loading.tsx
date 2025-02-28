@@ -1,14 +1,22 @@
 import { Box } from "@mui/material";
 
-export const Loading = () => {
+interface LoadingPropsType {
+  width?: string;
+  height?: string;
+}
+
+export const Loading = ({
+  width = "150px",
+  height = "150px",
+}: LoadingPropsType) => {
   return (
     <Box
       display="flex"
       justifyContent="center"
       alignItems="center"
       borderRadius="50%"
-      width="150px"
-      height="150px"
+      width={width}
+      height={height}
       margin="auto"
       border="8px solid #F4A261"
       borderTop="8px solid white"
