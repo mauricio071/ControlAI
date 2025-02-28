@@ -23,35 +23,57 @@ import {
 import { FormatarParaMoeda } from "../../shared/utils/FormatarMoeda";
 import { GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
-
-export interface TransacaoFormData {
-  type: "adicionar" | "descontar";
-  date: string | null;
-  description: string;
-  category: string;
-  value: string;
-}
+import { TransactionType } from "../../services/interfaces/dashboardInterfaces";
+import { addTransacaoAction } from "../../services/actions/addTransacaoAction";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { enqueueSnackbar } from "notistack";
+import * as yup from "yup";
 
 export const AdicionarTransacao = () => {
   const [tipoTransacao, setTipoTransacao] = useState<"adicionar" | "descontar">(
     "adicionar"
   );
 
-  const { register, handleSubmit, reset, control } =
-    useForm<TransacaoFormData>();
+  const schema = yup.object().shape({
+    type: yup
+      .string()
+      .oneOf(
+        ["adicionar", "descontar"],
+        'Tipo deve ser "adicionar" ou "descontar"'
+      )
+      .required("Tipo é obrigatório"),
+    date: yup.string().required("Data é obrigatória"),
+    description: yup.string().required("Descrição é obrigatória"),
+    category: yup.string().required("Categoria é obrigatória"),
+    value: yup.number().required("Valor é obrigatório"),
+  });
 
-  const handleSubmitForm = (data: TransacaoFormData) => {
-    const dataFormatted = {
-      ...data,
-      value: FormatarParaMoeda(data.value),
-    };
-    console.log(dataFormatted);
-    // clearForm();
+  const { handleSubmit, reset, control } = useForm<TransactionType>({
+    resolver: yupResolver(schema),
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmitForm = async (data: TransactionType) => {
+    try {
+      setLoading(true);
+      await addTransacaoAction(data);
+      enqueueSnackbar("Transação registrada com sucesso!", {
+        variant: "success",
+      });
+      clearForm();
+      setLoading(false);
+    } catch (error) {
+      enqueueSnackbar("Erro ao registrar a transação. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    }
   };
 
   const clearForm = () => {
     reset({
-      date: null,
+      date: "",
       description: "",
       category: "",
       value: "0",
@@ -139,90 +161,133 @@ export const AdicionarTransacao = () => {
               <Controller
                 name="date"
                 control={control}
-                render={({ field: { onChange, value } }) => (
-                  <DatePicker
-                    value={value ? dayjs(value) : null}
-                    onChange={(date) =>
-                      onChange(date ? date.toISOString() : null)
-                    }
-                    label="Selecione a data"
-                  />
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                    <DatePicker
+                      value={value ? dayjs(value) : null}
+                      onChange={(date) =>
+                        onChange(date ? date.format("YYYY-MM-DD") : null)
+                      }
+                      label="Selecione a data"
+                    />
+                    {error && (
+                      <Typography color="error" variant="caption">
+                        {error.message}
+                      </Typography>
+                    )}
+                  </Box>
                 )}
               />
-              <TextField
-                {...register("description")}
-                label="Descrição"
-                variant="outlined"
+              <Controller
+                name="description"
+                defaultValue=""
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                    <TextField
+                      {...field}
+                      label="Descrição"
+                      variant="outlined"
+                    />
+                    {error && (
+                      <Typography color="error" variant="caption">
+                        {error.message}
+                      </Typography>
+                    )}
+                  </Box>
+                )}
               />
               <Controller
                 name="category"
                 defaultValue=""
                 control={control}
                 disabled={!tipoTransacao}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    select
-                    label="Categoria"
-                    sx={{
-                      "& .MuiSelect-select": {
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.75rem",
-                      },
-                    }}
-                  >
-                    {tipoTransacao === "adicionar" &&
-                      CATEGORIAS_RENDA.map((option) => (
-                        <MenuItem
-                          key={option.value}
-                          value={option.value}
-                          sx={{ display: "flex", gap: "0.75rem" }}
-                        >
-                          <CategoriaBadge categoria={option.value} />
-                        </MenuItem>
-                      ))}
-                    {tipoTransacao === "descontar" &&
-                      CATEGORIAS_DESPESA.map((option) => (
-                        <MenuItem
-                          key={option.value}
-                          value={option.value}
-                          sx={{ display: "flex", gap: "0.75rem" }}
-                        >
-                          <CategoriaBadge categoria={option.value} />
-                        </MenuItem>
-                      ))}
-                  </TextField>
+                render={({ field, fieldState: { error } }) => (
+                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                    <TextField
+                      {...field}
+                      select
+                      label="Categoria"
+                      sx={{
+                        "& .MuiSelect-select": {
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.75rem",
+                        },
+                      }}
+                    >
+                      {tipoTransacao === "adicionar" &&
+                        CATEGORIAS_RENDA.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            sx={{ display: "flex", gap: "0.75rem" }}
+                          >
+                            <CategoriaBadge categoria={option.value} />
+                          </MenuItem>
+                        ))}
+                      {tipoTransacao === "descontar" &&
+                        CATEGORIAS_DESPESA.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            sx={{ display: "flex", gap: "0.75rem" }}
+                          >
+                            <CategoriaBadge categoria={option.value} />
+                          </MenuItem>
+                        ))}
+                    </TextField>
+                    {error && (
+                      <Typography color="error" variant="caption">
+                        {error.message}
+                      </Typography>
+                    )}
+                  </Box>
                 )}
               />
               <Controller
                 name="value"
                 control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Valor"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      inputComponent: NumberFormatCustom as any,
-                      inputProps: {
-                        thousandSeparator: ".",
-                        decimalSeparator: ",",
-                        prefix: `${
-                          tipoTransacao === "adicionar" ? "+" : "-"
-                        } R$`,
-                        decimalScale: 2,
-                        fixedDecimalScale: true,
-                        allowNegative: false,
-                      },
-                    }}
-                  />
+                render={({ field, fieldState: { error } }) => (
+                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                    <TextField
+                      {...field}
+                      label="Valor"
+                      variant="outlined"
+                      fullWidth
+                      onChange={(e) => {
+                        const rawValue = FormatarParaMoeda(e.target.value);
+                        field.onChange(rawValue);
+                      }}
+                      InputProps={{
+                        inputComponent: NumberFormatCustom as any,
+                        inputProps: {
+                          thousandSeparator: ".",
+                          decimalSeparator: ",",
+                          prefix: `${
+                            tipoTransacao === "adicionar" ? "+" : "-"
+                          } R$`,
+                          decimalScale: 2,
+                          fixedDecimalScale: true,
+                          allowNegative: false,
+                        },
+                      }}
+                    />
+                    {error && (
+                      <Typography color="error" variant="caption">
+                        {error.message}
+                      </Typography>
+                    )}
+                  </Box>
                 )}
               />
               <Button
                 type="submit"
                 size="large"
+                disabled={loading}
                 variant="contained"
                 disableElevation
                 sx={{

@@ -6,7 +6,6 @@ export interface DashboardType {
   yourExpenses: YourExpensesType;
   savings: number;
   uid: string;
-  recentTransactions: RecentTransactionsType;
 }
 
 export interface LastYearTransactionsType {
@@ -24,13 +23,14 @@ export interface ExpenseType {
   value: number;
 }
 
-export interface RecentTransactionsType {
-  uid: string;
-  transactions: TransactionHistoryType[];
-}
+// export interface RecentTransactionsType {
+//   uid: string;
+//   transaction: TransactionType;
+// }
 
-export interface TransactionHistoryType {
-  id: string;
+export interface TransactionType {
+  // uid: string;
+  // id: string;
   type: "adicionar" | "descontar";
   date: string;
   description: string;

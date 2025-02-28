@@ -8,7 +8,7 @@ export const FormatarMoeda = (value: number) => {
 };
 
 export const FormatarParaMoeda = (value: string) => {
-  const numero = value.replace("R$", "");
-  const valorNumerico = numero.replace(/[+-.]/g, "").replace(",", ".");
-  return Number(valorNumerico);
+  const stringNumber = value.replace(/[^0-9,]/g, "").replace(",", ".");
+
+  return parseFloat(stringNumber);
 };

@@ -3,7 +3,11 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  limit,
   onSnapshot,
+  orderBy,
+  query,
   query,
   where,
 } from "firebase/firestore";
@@ -12,6 +16,7 @@ import { auth, db } from "../../config/firebaseConfig";
 import {
   DashboardType,
   RecentTransactionsType,
+  TransactionType,
 } from "../interfaces/dashboardInterfaces";
 import dayjs from "dayjs";
 
@@ -62,11 +67,26 @@ const getYourExpenses = async (dashboardInfo: DashboardType) => {
 };
 
 const getRecentTransactions = async (dashboardInfo: DashboardType) => {
-  const recentTransactions = await getDoc(
-    doc(db, "historicoTransacoes", dashboardInfo.recentTransactions?.id)
-  );
+  const user = auth.currentUser;
 
-  return recentTransactions.data();
+  try {
+    const recentTransactionsRef = collection(db, "historicoTransacoes");
+    const transactionsQuery = query(
+      recentTransactionsRef,
+      where("uid", "==", user?.uid),
+      orderBy("timestamp", "desc"),
+      limit(5)
+    );
+    const querySnapshot = await getDocs(transactionsQuery);
+    const recentTransactions = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    return recentTransactions;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // export const addDashboardData = async (body, id) => {
@@ -106,56 +126,35 @@ const getRecentTransactions = async (dashboardInfo: DashboardType) => {
 //   });
 // };
 
-// export const addDashboardData = async () => {
-//   const gastosCollectionRef = collection(db, "historicoTransacoes");
+export const addDashboardData = async () => {
+  const gastosCollectionRef = collection(db, "historicoTransacoes");
 
-//   const user = auth.currentUser;
+  const user = auth.currentUser;
 
-//   const data: RecentTransactionsType = {
-//     uid: user?.uid,
-//     transactions: [
-//       {
-//         id: "1",
-//         type: "descontar",
-//         category: "lazer",
-//         date: dayjs().format("YYYY-MM-DD"),
-//         description: "Netflix",
-//         value: 300,
-//       },
-//       {
-//         id: "2",
-//         type: "descontar",
-//         category: "lazer",
-//         date: dayjs().format("YYYY-MM-DD"),
-//         description: "Jogo",
-//         value: 200,
-//       },
-//       {
-//         id: "3",
-//         type: "adicionar",
-//         category: "salario",
-//         date: dayjs().format("YYYY-MM-DD"),
-//         description: "Salário",
-//         value: 100,
-//       },
-//       {
-//         id: "4",
-//         type: "adicionar",
-//         category: "freelance",
-//         date: dayjs().format("YYYY-MM-DD"),
-//         description: "Freelance",
-//         value: 3000,
-//       },
-//       {
-//         id: "5",
-//         type: "descontar",
-//         category: "freelance",
-//         date: dayjs().format("YYYY-MM-DD"),
-//         description: "Spotify",
-//         value: 10,
-//       },
-//     ],
-//   };
+  const data: TransactionType = {
+    uid: user?.uid,
+    // type: "descontar",
+    // category: "lazer",
+    // date: dayjs().format("YYYY-MM-DD"),
+    // description: "Netflix",
+    // value: 300,
+    // type: "adicionar",
+    // category: "salario",
+    // date: dayjs().format("YYYY-MM-DD"),
+    // description: "Salário",
+    // value: 100,
+    // type: "adicionar",
+    // category: "freelance",
+    // date: dayjs().format("YYYY-MM-DD"),
+    // description: "Freelance",
+    // value: 3000,
+    type: "descontar",
+    category: "freelance",
+    date: dayjs().format("YYYY-MM-DD HH:mm"),
+    description: "Teste4",
+    value: 1000,
+    timestamp: dayjs().toDate(),
+  };
 
-//   await addDoc(gastosCollectionRef, data);
-// };
+  await addDoc(gastosCollectionRef, data);
+};

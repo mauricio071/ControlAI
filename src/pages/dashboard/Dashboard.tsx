@@ -21,9 +21,10 @@ import {
 import {
   DashboardType,
   ExpenseType,
-  TransactionHistoryType,
+  TransactionType,
 } from "../../services/interfaces/dashboardInterfaces";
 import { Loading } from "../../shared/components/loading/Loading";
+import { FormatarData } from "../../shared/utils/FormatarData";
 
 interface Dashboard {
   balance: number;
@@ -86,9 +87,9 @@ export const Dashboard = () => {
     "Dez",
   ];
 
-  const [lastTransactions, setLastTransactions] = useState<
-    TransactionHistoryType[]
-  >([]);
+  const [lastTransactions, setLastTransactions] = useState<TransactionType[]>(
+    []
+  );
 
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
@@ -100,7 +101,7 @@ export const Dashboard = () => {
     setSavings(data.savings);
     setPdata(data.lastYearTransactions.transactions);
     setYourExpenses(data.yourExpenses.expenses);
-    setLastTransactions(data.recentTransactions.transactions);
+    setLastTransactions(data.recentTransactions);
     setLoading(false);
   };
 
@@ -265,6 +266,10 @@ export const Dashboard = () => {
           <TitleContainer title="Últimas transações" />
           {loading ? (
             <Loading width="285px" height="285px" />
+          ) : lastTransactions.length === 0 ? (
+            <Box display="flex" justifyContent="center">
+              <Typography>Nenhum dado encontrado</Typography>
+            </Box>
           ) : (
             <>
               <Box display="flex" flexDirection="column" gap="1rem">
@@ -298,7 +303,7 @@ export const Dashboard = () => {
                             {transaction.description}
                           </Typography>
                           <Typography variant="body1" fontWeight="500">
-                            {transaction.date}
+                            {FormatarData(transaction.date)}
                           </Typography>
                         </Box>
                       </Box>
