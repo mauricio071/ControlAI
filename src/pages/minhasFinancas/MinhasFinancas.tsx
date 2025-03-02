@@ -3,9 +3,10 @@ import {
   Grid2 as Grid,
   Icon,
   IconButton,
+  Skeleton,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { DespesaTable } from "./components/tables/DespesaTable";
 import { RendaTable } from "./components/tables/RendaTable";
@@ -13,9 +14,28 @@ import { SaldoModal } from "./components/modals/SaldoModal";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
+import { getMinhasFinancasObserver } from "../../services/observers/minhasFinancasObserver";
+import { MinhasFinancasType } from "../../services/interfaces/minhasFinancas";
 
 export const MinhasFinancas = () => {
   const [addSaldoModal, setAddSaldoModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [balance, setBalance] = useState(0);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
+
+  const handleMinhasFinancasData = (data: MinhasFinancasType) => {
+    setLoading(true);
+    setBalance(data.balance);
+    setTotalIncome(data.totalIncome);
+    setTotalExpense(data.totalExpense);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getMinhasFinancasObserver(handleMinhasFinancasData);
+  }, []);
 
   return (
     <LayoutBase titulo="Minhas finanças">
@@ -38,15 +58,19 @@ export const MinhasFinancas = () => {
                   Saldo atual
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
-                  <Typography
-                    variant="h4"
-                    fontWeight="600"
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                  >
-                    {FormatarMoeda(3000)}
-                  </Typography>
+                  {loading ? (
+                    <Skeleton variant="rounded" width="100%" height={43} />
+                  ) : (
+                    <Typography
+                      variant="h4"
+                      fontWeight="600"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {FormatarMoeda(balance)}
+                    </Typography>
+                  )}
                 </Box>
               </Box>
               <Box>
@@ -77,16 +101,20 @@ export const MinhasFinancas = () => {
                   Renda total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
-                  <Typography
-                    variant="h4"
-                    fontWeight="600"
-                    color="success"
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                  >
-                    {FormatarMoeda(300)}
-                  </Typography>
+                  {loading ? (
+                    <Skeleton variant="rounded" width="100%" height={43} />
+                  ) : (
+                    <Typography
+                      variant="h4"
+                      fontWeight="600"
+                      color="success"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {FormatarMoeda(totalIncome)}
+                    </Typography>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -106,16 +134,20 @@ export const MinhasFinancas = () => {
                   Despesa total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
-                  <Typography
-                    variant="h4"
-                    fontWeight="600"
-                    color="error"
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                  >
-                    {FormatarMoeda(300)}
-                  </Typography>
+                  {loading ? (
+                    <Skeleton variant="rounded" width="100%" height={43} />
+                  ) : (
+                    <Typography
+                      variant="h4"
+                      fontWeight="600"
+                      color="error"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {FormatarMoeda(totalExpense)}
+                    </Typography>
+                  )}
                 </Box>
               </Box>
             </Box>

@@ -13,41 +13,43 @@ import {
 
 import { auth, db } from "../../config/firebaseConfig";
 import { DashboardType } from "../interfaces/dashboardInterfaces";
+import { MinhasFinancasType } from "../interfaces/minhasFinancas";
 
-export const getDashboardObserver = async (
-  callBack: (data: DashboardType) => void
+export const getMinhasFinancasObserver = async (
+  callBack: (data: MinhasFinancasType) => void
 ) => {
   const user = auth.currentUser;
 
-  const dashboardCollectionRef = collection(db, "dashboard");
+  const financasCollectionRef = collection(db, "minhasFinancas");
 
-  const dashboardQuery = query(
-    dashboardCollectionRef,
+  const financasQuery = query(
+    financasCollectionRef,
     where("uid", "==", user?.uid)
   );
 
-  return onSnapshot(dashboardQuery, async (collection) => {
-    const dashboardInfo = collection.docs.map((doc) => ({
-      ...(doc.data() as Partial<DashboardType>),
+  return onSnapshot(financasQuery, async (collection) => {
+    const financasInfo = collection.docs.map((doc) => ({
+      ...(doc.data() as Partial<MinhasFinancasType>),
       id: doc.id,
     }));
 
-    const data = dashboardInfo[0] as DashboardType;
+    const data = financasInfo[0] as MinhasFinancasType;
 
     const finalData = {
       ...data,
       balance: await getBalance(data),
-      lastYearTransactions: await getLastYearTransactions(data),
-      yourExpenses: await getYourExpenses(data),
-      recentTransactions: await getRecentTransactions(data),
+      //   lastYearTransactions: await getLastYearTransactions(data),
+      //   yourExpenses: await getYourExpenses(data),
+      //   recentTransactions: await getRecentTransactions(data),
     };
 
-    callBack(finalData as DashboardType);
+    callBack(finalData as MinhasFinancasType);
   });
 };
 
-export const getBalance = async (dashboardInfo: DashboardType) => {
-  const balance = await getDoc(doc(db, "saldos", dashboardInfo.balance?.id));
+export const getBalance = async (data: MinhasFinancasType) => {
+  const balance = await getDoc(doc(db, "saldos", data.balance?.id));
+
   return balance.data()?.balance;
 };
 
