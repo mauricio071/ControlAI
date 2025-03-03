@@ -1,6 +1,6 @@
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 // import { getAnalytics } from "firebase/analytics";
 
 const env = import.meta.env;
@@ -14,4 +14,5 @@ const firebaseApp = initializeApp({
 
 export const db = getFirestore(firebaseApp);
 export const auth = getAuth(firebaseApp);
+export const googleProvider = new GoogleAuthProvider();
 // const analytics = getAnalytics(app);

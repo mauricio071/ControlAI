@@ -7,12 +7,14 @@ import {
   Theme,
   Divider,
   Icon,
+  IconButton,
 } from "@mui/material";
 import {
   browserSessionPersistence,
   createUserWithEmailAndPassword,
   setPersistence,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,8 +23,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import loginBanner from "../../assets/loginBanner.png";
-import { auth } from "../../config/firebaseConfig";
+import { auth, googleProvider } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { GoogleIcon } from "../../shared/components/icons/GoogleIcon";
 
 interface FormData {
   email: string;
@@ -90,6 +93,26 @@ export const Login = () => {
         console.error(error);
       } finally {
         setLoading(false);
+      }
+    }
+  };
+
+  const signGoogle = async () => {
+    try {
+      await setPersistence(auth, browserSessionPersistence);
+      await signInWithPopup(auth, googleProvider);
+      enqueueSnackbar("Login realizado com sucesso!", {
+        variant: "success",
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        return;
+      } else {
+        enqueueSnackbar("Erro ao fazer login. Tente novamente.", {
+          variant: "error",
+        });
+        console.error(error);
       }
     }
   };
@@ -199,6 +222,25 @@ export const Login = () => {
                       Registre-se
                     </Typography>
                   </Typography>
+                  <Divider sx={{ marginBlock: "-1rem" }}>ou</Divider>
+                  <Button
+                    onClick={signGoogle}
+                    variant="outlined"
+                    size="large"
+                    color="inherit"
+                    style={{
+                      textTransform: "none",
+                      color: "gray",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                      paddingBlock: "0.75rem",
+                      borderColor: "lightgray",
+                    }}
+                  >
+                    <GoogleIcon width="25px" height="25px" />
+                    Fazer login com o Google
+                  </Button>
                 </>
               )}
               {formType === "registrar" && (
