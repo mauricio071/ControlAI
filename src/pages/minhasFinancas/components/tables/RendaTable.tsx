@@ -1,15 +1,24 @@
 import { Box, Button, Icon, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { enqueueSnackbar } from "notistack";
 
+import {
+  CModal,
+  GridCard,
+  TitleContainer,
+} from "../../../../shared/components";
+import { deleteRendaAction } from "../../../../services/actions/minhasFinancasActions";
+import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
+import { getIncomes } from "../../../../services/observers/minhasFinancasObserver";
 import { RendaFormData, RendaFormModal } from "../modals/RendaFormModal";
-import { FormatarData } from "../../../../shared/utils/FormatarData";
-import { GridCard, TitleContainer } from "../../../../shared/components";
-import { CategoriaBadge } from "../CategoriaBadge";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
+import { FormatarData } from "../../../../shared/utils/FormatarData";
+import { CategoriaBadge } from "../CategoriaBadge";
 
 export const RendaTable = () => {
   const [open, setOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [data, setData] = useState<RendaFormData>({} as RendaFormData);
 
   const columns: GridColDef[] = [
@@ -59,7 +68,10 @@ export const RendaTable = () => {
           <IconButton color="primary" onClick={() => handleEdit(params.row)}>
             <Icon>edit</Icon>
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            onClick={() => openDeleteModal(params.row.id)}
+          >
             <Icon>delete</Icon>
           </IconButton>
         </>
@@ -72,34 +84,54 @@ export const RendaTable = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    console.log("Deletando ID:", id);
-  };
-
-  const rows = [
-    {
-      id: 1,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Netflix",
-      category: "salario",
-      value: 35,
-    },
-    {
-      id: 2,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Netflix",
-      category: "freelance",
-      value: 42,
-    },
-  ];
+  const [rows, setRows] = useState<TransactionType[]>([]);
 
   const paginationModel = { page: 0, pageSize: 5 };
 
-  // const [hasRows, setHasRows] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // if (rows.length > 0) {
-  //   setHasRows(true);
-  // }
+  const [selectedId, setSelectedId] = useState("");
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const data = await getIncomes();
+      setRows(data);
+    } catch (error) {
+      enqueueSnackbar("Erro ao listar as rendas. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    } finally {
+      setData({} as RendaFormData);
+      setLoading(false);
+    }
+  };
+
+  const openDeleteModal = (id: string) => {
+    setDeleteModal(true);
+    setSelectedId(id);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteRendaAction(selectedId);
+      enqueueSnackbar("Deletado com sucesso!", {
+        variant: "success",
+      });
+      fetchData();
+      setDeleteModal(false);
+    } catch (error) {
+      enqueueSnackbar("Erro ao deletar a renda. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <GridCard titleContainer>
@@ -121,12 +153,14 @@ export const RendaTable = () => {
           Adicionar renda
         </Button>
       </Box>
-
       <DataGrid
         rows={rows}
         columns={columns}
+        rowCount={rows.length}
+        // paginationMode="server"
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
+        loading={loading}
         sx={{
           border: 0,
           outline: "none",
@@ -148,7 +182,28 @@ export const RendaTable = () => {
         }}
       />
 
-      <RendaFormModal open={open} setOpen={setOpen} data={data} />
+      <RendaFormModal
+        open={open}
+        setOpen={setOpen}
+        data={data}
+        fetchData={fetchData}
+      />
+
+      <CModal
+        title="Apagar a renda"
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+      >
+        <Typography>Tem certeza que deseja apagar esta renda?</Typography>
+        <Box display="flex" gap="1rem">
+          <Button onClick={handleDelete} variant="contained" disableElevation>
+            Sim
+          </Button>
+          <Button onClick={() => setDeleteModal(false)} variant="outlined">
+            Voltar
+          </Button>
+        </Box>
+      </CModal>
     </GridCard>
   );
 };

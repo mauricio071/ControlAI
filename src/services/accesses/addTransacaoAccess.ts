@@ -1,4 +1,4 @@
-import { addDoc, collection, query, where } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 import { TransactionType } from "../interfaces/dashboardInterfaces";
 import { auth, db } from "../../config/firebaseConfig";

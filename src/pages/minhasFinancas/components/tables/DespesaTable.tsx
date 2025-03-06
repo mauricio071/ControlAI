@@ -1,15 +1,24 @@
 import { Box, Button, Icon, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
-import { GridCard, TitleContainer } from "../../../../shared/components";
+import {
+  CModal,
+  GridCard,
+  TitleContainer,
+} from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
+import { getExpenses } from "../../../../services/observers/minhasFinancasObserver";
+import { enqueueSnackbar } from "notistack";
+import { deleteDespesaAction } from "../../../../services/actions/minhasFinancasActions";
 
 export const DespesaTable = () => {
   const [open, setOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [data, setData] = useState<DespesaFormData>({} as DespesaFormData);
 
   const columns: GridColDef[] = [
@@ -59,7 +68,10 @@ export const DespesaTable = () => {
           <IconButton color="primary" onClick={() => handleEdit(params.row)}>
             <Icon>edit</Icon>
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            onClick={() => openDeleteModal(params.row.id)}
+          >
             <Icon>delete</Icon>
           </IconButton>
         </>
@@ -72,63 +84,54 @@ export const DespesaTable = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    console.log("Deletando ID:", id);
-  };
-
-  const rows = [
-    {
-      id: 1,
-      date: "2025-03-19T03:00:00.000Z",
-      description: "Restaurante",
-      category: "alimentacao",
-      value: 80,
-    },
-    {
-      id: 2,
-      date: "2025-05-19T03:00:00.000Z",
-      description: "Passagem de ônibus",
-      category: "transporte",
-      value: 4.5,
-    },
-    {
-      id: 3,
-      date: "2025-06-19T03:00:00.000Z",
-      description: "Supermercado",
-      category: "supermercado",
-      value: 250,
-    },
-    {
-      id: 4,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Consulta médica",
-      category: "saude",
-      value: 180,
-    },
-    {
-      id: 5,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Aluguel",
-      category: "casa",
-      value: 1.5,
-    },
-    {
-      id: 6,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Spotify",
-      category: "assinatura",
-      value: 21.0,
-    },
-    {
-      id: 97,
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Curso online",
-      category: "educacao",
-      value: 200,
-    },
-  ];
+  const [rows, setRows] = useState<TransactionType[]>([]);
 
   const paginationModel = { page: 0, pageSize: 5 };
+
+  const [loading, setLoading] = useState(true);
+
+  const [selectedId, setSelectedId] = useState("");
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const data = await getExpenses();
+      setRows(data);
+    } catch (error) {
+      enqueueSnackbar("Erro ao listar as despesas. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    } finally {
+      setData({} as DespesaFormData);
+      setLoading(false);
+    }
+  };
+
+  const openDeleteModal = (id: string) => {
+    setDeleteModal(true);
+    setSelectedId(id);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDespesaAction(selectedId);
+      enqueueSnackbar("Deletado com sucesso!", {
+        variant: "success",
+      });
+      fetchData();
+      setDeleteModal(false);
+    } catch (error) {
+      enqueueSnackbar("Erro ao deletar a despesa. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <GridCard titleContainer>
@@ -153,8 +156,10 @@ export const DespesaTable = () => {
       <DataGrid
         rows={rows}
         columns={columns}
+        rowCount={rows.length}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
+        loading={loading}
         sx={{
           border: 0,
           outline: "none",
@@ -175,7 +180,27 @@ export const DespesaTable = () => {
           },
         }}
       />
-      <DespesaFormModal open={open} setOpen={setOpen} data={data} />
+      <DespesaFormModal
+        open={open}
+        setOpen={setOpen}
+        data={data}
+        fetchData={fetchData}
+      />
+      <CModal
+        title="Apagar a despesa"
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+      >
+        <Typography>Tem certeza que deseja apagar esta despesa?</Typography>
+        <Box display="flex" gap="1rem">
+          <Button onClick={handleDelete} variant="contained" disableElevation>
+            Sim
+          </Button>
+          <Button onClick={() => setDeleteModal(false)} variant="outlined">
+            Voltar
+          </Button>
+        </Box>
+      </CModal>
     </GridCard>
   );
 };

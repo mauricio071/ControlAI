@@ -1,7 +1,9 @@
+import { TransactionType } from "./dashboardInterfaces";
+
 export interface MinhasFinancasType {
   balance: number;
   totalIncome: number;
   totalExpense: number;
-  // incomes:
+  incomes: TransactionType[];
   // expenses:
 }

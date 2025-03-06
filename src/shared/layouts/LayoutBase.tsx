@@ -52,16 +52,25 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             </IconButton>
           )}
 
-          <Typography
-            variant={smDown ? "h5" : "h4"}
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis"
-            fontWeight="bold"
-            // marginBottom="1rem"
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
           >
-            {titulo}
-          </Typography>
+            <Typography
+              variant={smDown ? "h5" : "h4"}
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              fontWeight="bold"
+            >
+              {titulo}
+            </Typography>
+            <Typography variant="h5" fontWeight="500">
+              Usuário
+            </Typography>
+          </Box>
         </Box>
 
         <Box flex={1} display="flex" flexDirection="column" gap={4}>

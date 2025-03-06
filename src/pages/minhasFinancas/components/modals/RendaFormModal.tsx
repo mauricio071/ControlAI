@@ -1,19 +1,28 @@
 import { Box, Button, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { NumericFormat } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import * as yup from "yup";
 import dayjs from "dayjs";
 
 import { CATEGORIAS_RENDA } from "../../../../shared/constants/Categorias";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
+import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
-import { NumericFormat } from "react-number-format";
-import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
-
+import {
+  addRendaAction,
+  updateRendaAction,
+} from "../../../../services/actions/minhasFinancasActions";
+import { enqueueSnackbar } from "notistack";
+import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
 interface RendaFormModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   data?: RendaFormData;
+  fetchData: () => Promise<TransactionType>;
 }
 
 export interface RendaFormData {
@@ -27,17 +36,53 @@ export const RendaFormModal = ({
   open,
   setOpen,
   data,
+  fetchData,
 }: RendaFormModalProps) => {
-  const { register, handleSubmit, reset, control, setValue } =
-    useForm<RendaFormData>();
+  const schema = yup.object().shape({
+    date: yup.string().required("Data é obrigatória"),
+    description: yup.string().required("Descrição é obrigatória"),
+    category: yup.string().required("Categoria é obrigatória"),
+    value: yup.number().required("Valor é obrigatório"),
+  });
 
-  const handleSubmitForm = (data: RendaFormData) => {
-    const dataFormatted = {
-      ...data,
-      value: FormatarParaMoeda(data.value),
-    };
-    console.log(dataFormatted);
-    // clearForm();
+  const { handleSubmit, reset, control, setValue } = useForm<RendaFormData>({
+    resolver: yupResolver(schema),
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmitForm = async (formData: RendaFormData) => {
+    if (data?.id) {
+      try {
+        setLoading(true);
+        await updateRendaAction(formData, data.id);
+        enqueueSnackbar("Renda atualizada com sucesso!", {
+          variant: "success",
+        });
+        onClose();
+        setLoading(false);
+      } catch (error) {
+        enqueueSnackbar("Erro ao atualizar renda. Tente novamente.", {
+          variant: "error",
+        });
+        console.error(error);
+      }
+    } else {
+      try {
+        setLoading(true);
+        await addRendaAction(formData);
+        enqueueSnackbar("Renda nova registrada com sucesso!", {
+          variant: "success",
+        });
+        onClose();
+        setLoading(false);
+      } catch (error) {
+        enqueueSnackbar("Erro ao registrar a nova renda. Tente novamente.", {
+          variant: "error",
+        });
+        console.error(error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -49,7 +94,8 @@ export const RendaFormModal = ({
     }
   }, [data, setValue]);
 
-  const onClose = () => {
+  const onClose = async () => {
+    await fetchData();
     setOpen(false);
     clearForm();
   };
@@ -79,69 +125,85 @@ export const RendaFormModal = ({
           <Controller
             name="date"
             control={control}
-            render={({ field: { onChange, value } }) => (
-              <DatePicker
-                value={value ? dayjs(value) : null}
-                onChange={(date) => onChange(date ? date.toISOString() : null)}
-                label="Selecione a data"
-              />
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <CInput error={error}>
+                <DatePicker
+                  value={value ? dayjs(value) : null}
+                  onChange={(date) =>
+                    onChange(date ? date.format("YYYY-MM-DD") : null)
+                  }
+                  label="Selecione a data"
+                />
+              </CInput>
             )}
           />
-          <TextField
-            {...register("description")}
-            label="Descrição"
-            variant="outlined"
+          <Controller
+            name="description"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <CInput error={error}>
+                <TextField {...field} label="Descrição" variant="outlined" />
+              </CInput>
+            )}
           />
           <Controller
             name="category"
             defaultValue=""
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                label="Categoria"
-                sx={{
-                  "& .MuiSelect-select": {
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                  },
-                }}
-              >
-                {CATEGORIAS_RENDA.map((option) => (
-                  <MenuItem
-                    key={option.value}
-                    value={option.value}
-                    sx={{ display: "flex", gap: "0.75rem" }}
-                  >
-                    <CategoriaBadge categoria={option.value} />
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field, fieldState: { error } }) => (
+              <CInput error={error}>
+                <TextField
+                  {...field}
+                  select
+                  label="Categoria"
+                  sx={{
+                    "& .MuiSelect-select": {
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                    },
+                  }}
+                >
+                  {CATEGORIAS_RENDA.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      sx={{ display: "flex", gap: "0.75rem" }}
+                    >
+                      <CategoriaBadge categoria={option.value} />
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </CInput>
             )}
           />
           <Controller
             name="value"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Valor"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  inputComponent: NumberFormatCustom as any,
-                  inputProps: {
-                    thousandSeparator: ".",
-                    decimalSeparator: ",",
-                    prefix: "R$ ",
-                    decimalScale: 2,
-                    fixedDecimalScale: true,
-                    allowNegative: false,
-                  },
-                }}
-              />
+            render={({ field, fieldState: { error } }) => (
+              <CInput error={error}>
+                <TextField
+                  {...field}
+                  label="Valor"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => {
+                    const rawValue = FormatarParaMoeda(e.target.value);
+                    field.onChange(rawValue);
+                  }}
+                  InputProps={{
+                    inputComponent: NumberFormatCustom as any,
+                    inputProps: {
+                      thousandSeparator: ".",
+                      decimalSeparator: ",",
+                      prefix: "R$ ",
+                      decimalScale: 2,
+                      fixedDecimalScale: true,
+                      allowNegative: false,
+                    },
+                  }}
+                />
+              </CInput>
             )}
           />
           <Button
@@ -149,6 +211,7 @@ export const RendaFormModal = ({
             size="large"
             variant="contained"
             disableElevation
+            disabled={loading}
             sx={{
               borderRadius: "1rem",
               maxWidth: "12rem",

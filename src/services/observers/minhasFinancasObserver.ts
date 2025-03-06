@@ -12,7 +12,10 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../../config/firebaseConfig";
-import { DashboardType } from "../interfaces/dashboardInterfaces";
+import {
+  DashboardType,
+  TransactionType,
+} from "../interfaces/dashboardInterfaces";
 import { MinhasFinancasType } from "../interfaces/minhasFinancas";
 
 export const getMinhasFinancasObserver = async (
@@ -38,6 +41,7 @@ export const getMinhasFinancasObserver = async (
     const finalData = {
       ...data,
       balance: await getBalance(data),
+      incomes: await getIncomes(),
       //   lastYearTransactions: await getLastYearTransactions(data),
       //   yourExpenses: await getYourExpenses(data),
       //   recentTransactions: await getRecentTransactions(data),
@@ -53,39 +57,45 @@ export const getBalance = async (data: MinhasFinancasType) => {
   return balance.data()?.balance;
 };
 
-const getLastYearTransactions = async (dashboardInfo: DashboardType) => {
-  const lastYearTransactions = await getDoc(
-    doc(db, "gastosUltimoAno", dashboardInfo.lastYearTransactions?.id)
-  );
-  return lastYearTransactions.data();
-};
-
-const getYourExpenses = async (dashboardInfo: DashboardType) => {
-  const yourExpenses = await getDoc(
-    doc(db, "despesas", dashboardInfo.yourExpenses?.id)
-  );
-
-  return yourExpenses.data();
-};
-
-const getRecentTransactions = async (dashboardInfo: DashboardType) => {
+export const getIncomes = async () => {
   const user = auth.currentUser;
 
   try {
-    const recentTransactionsRef = collection(db, "historicoTransacoes");
-    const transactionsQuery = query(
-      recentTransactionsRef,
+    const incomesRef = collection(db, "rendas");
+    const incomesQuery = query(
+      incomesRef,
       where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc"),
-      limit(5)
+      orderBy("timestamp", "desc")
     );
-    const querySnapshot = await getDocs(transactionsQuery);
-    const recentTransactions = querySnapshot.docs.map((doc) => ({
+    const querySnapshot = await getDocs(incomesQuery);
+    const incomes = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
 
-    return recentTransactions;
+    return incomes;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getExpenses = async () => {
+  const user = auth.currentUser;
+
+  try {
+    const expensesRef = collection(db, "despesas");
+    const expensesQuery = query(
+      expensesRef,
+      where("uid", "==", user?.uid),
+      orderBy("timestamp", "desc")
+    );
+    const querySnapshot = await getDocs(expensesQuery);
+    const expenses = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    return expenses;
   } catch (error) {
     console.error(error);
   }
