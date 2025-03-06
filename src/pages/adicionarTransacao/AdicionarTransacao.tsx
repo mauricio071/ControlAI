@@ -28,6 +28,7 @@ import { addTransacaoAction } from "../../services/actions/addTransacaoAction";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { enqueueSnackbar } from "notistack";
 import * as yup from "yup";
+import { CInput } from "../../shared/components/cInput/CInput";
 
 export const AdicionarTransacao = () => {
   const [tipoTransacao, setTipoTransacao] = useState<"adicionar" | "descontar">(
@@ -104,7 +105,7 @@ export const AdicionarTransacao = () => {
                 defaultValue={undefined}
                 rules={{ required: "Este campo é obrigatório" }}
                 render={({ field, fieldState: { error } }) => (
-                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <CInput error={error}>
                     <ToggleButtonGroup
                       color="primary"
                       value={field.value}
@@ -150,12 +151,7 @@ export const AdicionarTransacao = () => {
                         Descontar
                       </ToggleButton>
                     </ToggleButtonGroup>
-                    {error && (
-                      <Typography color="error" variant="caption">
-                        {error.message}
-                      </Typography>
-                    )}
-                  </Box>
+                  </CInput>
                 )}
               />
               <Controller
@@ -165,7 +161,7 @@ export const AdicionarTransacao = () => {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => (
-                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <CInput error={error}>
                     <DatePicker
                       value={value ? dayjs(value) : null}
                       onChange={(date) =>
@@ -173,12 +169,7 @@ export const AdicionarTransacao = () => {
                       }
                       label="Selecione a data"
                     />
-                    {error && (
-                      <Typography color="error" variant="caption">
-                        {error.message}
-                      </Typography>
-                    )}
-                  </Box>
+                  </CInput>
                 )}
               />
               <Controller
@@ -186,18 +177,13 @@ export const AdicionarTransacao = () => {
                 defaultValue=""
                 control={control}
                 render={({ field, fieldState: { error } }) => (
-                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <CInput error={error}>
                     <TextField
                       {...field}
                       label="Descrição"
                       variant="outlined"
                     />
-                    {error && (
-                      <Typography color="error" variant="caption">
-                        {error.message}
-                      </Typography>
-                    )}
-                  </Box>
+                  </CInput>
                 )}
               />
               <Controller
@@ -206,7 +192,7 @@ export const AdicionarTransacao = () => {
                 control={control}
                 disabled={!tipoTransacao}
                 render={({ field, fieldState: { error } }) => (
-                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <CInput error={error}>
                     <TextField
                       {...field}
                       select
@@ -240,19 +226,14 @@ export const AdicionarTransacao = () => {
                           </MenuItem>
                         ))}
                     </TextField>
-                    {error && (
-                      <Typography color="error" variant="caption">
-                        {error.message}
-                      </Typography>
-                    )}
-                  </Box>
+                  </CInput>
                 )}
               />
               <Controller
                 name="value"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
-                  <Box display="flex" flexDirection="column" gap="0.25rem">
+                  <CInput error={error}>
                     <TextField
                       {...field}
                       label="Valor"
@@ -276,12 +257,7 @@ export const AdicionarTransacao = () => {
                         },
                       }}
                     />
-                    {error && (
-                      <Typography color="error" variant="caption">
-                        {error.message}
-                      </Typography>
-                    )}
-                  </Box>
+                  </CInput>
                 )}
               />
               <Button

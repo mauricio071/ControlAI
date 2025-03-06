@@ -41,7 +41,7 @@ export const getMinhasFinancasObserver = async (
     const finalData = {
       ...data,
       balance: await getBalance(data),
-      incomes: await getIncomes(),
+      // incomes: await getRendas(),
       //   lastYearTransactions: await getLastYearTransactions(data),
       //   yourExpenses: await getYourExpenses(data),
       //   recentTransactions: await getRecentTransactions(data),
@@ -54,51 +54,10 @@ export const getMinhasFinancasObserver = async (
 export const getBalance = async (data: MinhasFinancasType) => {
   const balance = await getDoc(doc(db, "saldos", data.balance?.id));
 
-  return balance.data()?.balance;
-};
-
-export const getIncomes = async () => {
-  const user = auth.currentUser;
-
-  try {
-    const incomesRef = collection(db, "rendas");
-    const incomesQuery = query(
-      incomesRef,
-      where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc")
-    );
-    const querySnapshot = await getDocs(incomesQuery);
-    const incomes = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    return incomes;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const getExpenses = async () => {
-  const user = auth.currentUser;
-
-  try {
-    const expensesRef = collection(db, "despesas");
-    const expensesQuery = query(
-      expensesRef,
-      where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc")
-    );
-    const querySnapshot = await getDocs(expensesQuery);
-    const expenses = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    return expenses;
-  } catch (error) {
-    console.error(error);
-  }
+  return {
+    id: data.balance?.id,
+    balance: balance.data()?.balance,
+  };
 };
 
 // export const addDashboardData = async (body, id) => {

@@ -1,15 +1,20 @@
-import { Box, Icon, IconButton, Typography } from "@mui/material";
+import { Box, Button, Icon, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
-import { GridCard, TitleContainer } from "../../shared/components";
+import { CModal, GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { BarChart } from "@mui/x-charts";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import {
+  deleteTransactionAction,
+  getAllTransactionsAction,
+} from "../../services/actions/historicoAction";
+import { enqueueSnackbar } from "notistack";
 
 export const Historico = () => {
   const columns: GridColDef[] = [
@@ -60,7 +65,10 @@ export const Historico = () => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            onClick={() => openDeleteModal(params.row.id)}
+          >
             <Icon>delete</Icon>
           </IconButton>
         </>
@@ -68,74 +76,39 @@ export const Historico = () => {
     },
   ];
 
-  const handleDelete = (id: number) => {
-    console.log("Deletando ID:", id);
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const [selectedId, setSelectedId] = useState("");
+
+  const openDeleteModal = (id: string) => {
+    setDeleteModal(true);
+    setSelectedId(id);
   };
 
-  const rows = [
-    {
-      id: 1,
-      type: "adicionar",
-      date: "2025-03-19T03:00:00.000Z",
-      description: "Restaurante",
-      category: "alimentacao",
-      value: 80,
-    },
-    {
-      id: 2,
-      type: "adicionar",
-      date: "2025-05-19T03:00:00.000Z",
-      description: "Passagem de ônibus",
-      category: "transporte",
-      value: 4.5,
-    },
-    {
-      id: 3,
-      type: "descontar",
-      date: "2025-06-19T03:00:00.000Z",
-      description: "Supermercado",
-      category: "supermercado",
-      value: 250,
-    },
-    {
-      id: 4,
-      type: "descontar",
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Consulta médica",
-      category: "saude",
-      value: 180,
-    },
-    {
-      id: 5,
-      type: "adicionar",
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Aluguel",
-      category: "casa",
-      value: 1.5,
-    },
-    {
-      id: 6,
-      type: "descontar",
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Spotify",
-      category: "assinatura",
-      value: 21.0,
-    },
-    {
-      id: 7,
-      type: "descontar",
-      date: "2025-02-19T03:00:00.000Z",
-      description: "Curso online",
-      category: "educacao",
-      value: 200,
-    },
-  ];
+  const handleDelete = async () => {
+    try {
+      await deleteTransactionAction(selectedId);
+      enqueueSnackbar("Deletado com sucesso!", {
+        variant: "success",
+      });
+      getHistoryTransaction();
+      setDeleteModal(false);
+    } catch (error) {
+      enqueueSnackbar("Erro ao deletar a renda. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    }
+  };
+
+  const [rows, setRows] = useState([]);
 
   const paginationModel = { page: 0, pageSize: 5 };
 
   const pData = [
     2400, 1398, 9800, 3908, 4800, 3800, 4300, 1398, 9800, 3908, 4800, 3800,
   ];
+
   const xLabels = [
     "Jan",
     "Feb",
@@ -153,6 +126,18 @@ export const Historico = () => {
 
   const [year, setYear] = useState<Dayjs | null>(dayjs());
 
+  const [loading, setLoading] = useState(true);
+
+  const getHistoryTransaction = async () => {
+    const transactions = await getAllTransactionsAction();
+    setRows(transactions);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getHistoryTransaction();
+  }, []);
+
   return (
     <LayoutBase titulo="Histórico">
       <GridCard titleContainer>
@@ -162,6 +147,7 @@ export const Historico = () => {
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
+          loading={loading}
           sx={{
             border: 0,
             outline: "none",
@@ -175,6 +161,7 @@ export const Historico = () => {
           }}
           disableRowSelectionOnClick
           localeText={{
+            noRowsLabel: "Nenhuma transação registrada",
             MuiTablePagination: {
               labelRowsPerPage: "Linhas por página",
               labelDisplayedRows: ({ from, to, count }) =>
@@ -183,6 +170,21 @@ export const Historico = () => {
           }}
         />
       </GridCard>
+      <CModal
+        title="Apagar a transação"
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+      >
+        <Typography>Tem certeza que deseja apagar esta transação?</Typography>
+        <Box display="flex" gap="1rem">
+          <Button onClick={handleDelete} variant="contained" disableElevation>
+            Sim
+          </Button>
+          <Button onClick={() => setDeleteModal(false)} variant="outlined">
+            Voltar
+          </Button>
+        </Box>
+      </CModal>
       <GridCard titleContainer>
         <TitleContainer title="Histórico de gastos" />
         <Box display="flex" justifyContent="center">

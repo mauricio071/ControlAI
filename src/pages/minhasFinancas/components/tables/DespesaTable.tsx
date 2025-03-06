@@ -12,11 +12,17 @@ import {
 } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
-import { getExpenses } from "../../../../services/observers/minhasFinancasObserver";
 import { enqueueSnackbar } from "notistack";
-import { deleteDespesaAction } from "../../../../services/actions/minhasFinancasActions";
+import {
+  deleteDespesaAction,
+  getDespesasAction,
+} from "../../../../services/actions/minhasFinancasActions";
 
-export const DespesaTable = () => {
+interface DespesaTableProps {
+  setTotalExpense: (totalExpense: number) => void;
+}
+
+export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
   const [open, setOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [data, setData] = useState<DespesaFormData>({} as DespesaFormData);
@@ -95,8 +101,10 @@ export const DespesaTable = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getExpenses();
+      const data = await getDespesasAction();
       setRows(data);
+      const totalExpense = data?.reduce((total, obj) => total + obj.value, 0);
+      setTotalExpense(totalExpense);
     } catch (error) {
       enqueueSnackbar("Erro ao listar as despesas. Tente novamente.", {
         variant: "error",
@@ -173,6 +181,7 @@ export const DespesaTable = () => {
         }}
         disableRowSelectionOnClick
         localeText={{
+          noRowsLabel: "Nenhuma despesa cadastrada",
           MuiTablePagination: {
             labelRowsPerPage: "Linhas por página",
             labelDisplayedRows: ({ from, to, count }) =>

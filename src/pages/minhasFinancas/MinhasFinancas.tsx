@@ -15,21 +15,23 @@ import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { getMinhasFinancasObserver } from "../../services/observers/minhasFinancasObserver";
-import { MinhasFinancasType } from "../../services/interfaces/minhasFinancas";
+import {
+  BalanceType,
+  MinhasFinancasType,
+} from "../../services/interfaces/minhasFinancas";
+import { getRendaTotalAction } from "../../services/actions/minhasFinancasActions";
 
 export const MinhasFinancas = () => {
   const [addSaldoModal, setAddSaldoModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState<BalanceType>(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
 
   const handleMinhasFinancasData = (data: MinhasFinancasType) => {
     setLoading(true);
     setBalance(data.balance);
-    setTotalIncome(data.totalIncome);
-    setTotalExpense(data.totalExpense);
     setLoading(false);
   };
 
@@ -68,7 +70,7 @@ export const MinhasFinancas = () => {
                       overflow="hidden"
                       textOverflow="ellipsis"
                     >
-                      {FormatarMoeda(balance)}
+                      {FormatarMoeda(balance.balance)}
                     </Typography>
                   )}
                 </Box>
@@ -83,6 +85,7 @@ export const MinhasFinancas = () => {
             </Box>
           </GridCard>
           <SaldoModal
+            balance={balance}
             addSaldoModal={addSaldoModal}
             setAddSaldoModal={setAddSaldoModal}
           />
@@ -154,8 +157,8 @@ export const MinhasFinancas = () => {
           </GridCard>
         </Grid>
       </Grid>
-      <RendaTable />
-      <DespesaTable />
+      <RendaTable setTotalIncome={setTotalIncome} />
+      <DespesaTable setTotalExpense={setTotalExpense} />
     </LayoutBase>
   );
 };

@@ -1,13 +1,28 @@
 import { DespesaFormData } from "../../pages/minhasFinancas/components/modals/DespesaFormModal";
 import { RendaFormData } from "../../pages/minhasFinancas/components/modals/RendaFormModal";
+import { SaldoFormData } from "../../pages/minhasFinancas/components/modals/SaldoModal";
 import {
   addDespesaAccess,
   addRendaAccess,
   deleteDespesaAccess,
   deleteRendaAccess,
+  getDespesasAccess,
+  getRendasAccess,
+  updateBalanceAccess,
   updateDespesaAccess,
   updateRendaAccess,
 } from "../accesses/minhasFinancasAccess";
+import { BalanceType } from "../interfaces/minhasFinancas";
+
+export const updateBalanceAction = async (body: BalanceType) => {
+  const data = await updateBalanceAccess(body);
+  return data;
+};
+
+export const getRendasAction = async () => {
+  const data = await getRendasAccess();
+  return data;
+};
 
 export const addRendaAction = async (body: RendaFormData) => {
   const data = await addRendaAccess(body);
@@ -21,6 +36,11 @@ export const updateRendaAction = async (body: RendaFormData, id: string) => {
 
 export const deleteRendaAction = async (id: string) => {
   const data = await deleteRendaAccess(id);
+  return data;
+};
+
+export const getDespesasAction = async () => {
+  const data = await getDespesasAccess();
   return data;
 };
 

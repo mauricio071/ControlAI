@@ -66,7 +66,7 @@ const getYourExpenses = async (dashboardInfo: DashboardType) => {
   return yourExpenses.data();
 };
 
-const getRecentTransactions = async (dashboardInfo: DashboardType) => {
+const getRecentTransactions = async () => {
   const user = auth.currentUser;
 
   try {

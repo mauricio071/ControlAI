@@ -8,38 +8,86 @@ import {
   Typography,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
+import * as yup from "yup";
 
 import { CModal } from "../../../../shared/components";
 import { NumericFormat } from "react-number-format";
 import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { enqueueSnackbar } from "notistack";
+import { CInput } from "../../../../shared/components/cInput/CInput";
+import { updateBalanceAction } from "../../../../services/actions/minhasFinancasActions";
+import { BalanceType } from "../../../../services/interfaces/minhasFinancas";
 
 interface SaldoModalProps {
+  balance: BalanceType;
   addSaldoModal: boolean;
   setAddSaldoModal: (value: boolean) => void;
 }
 
 type EditSaldoType = "adicionar" | "descontar";
 
+export interface SaldoFormData {
+  type: string;
+  value: number;
+}
+
 export const SaldoModal = ({
+  balance,
   addSaldoModal,
   setAddSaldoModal,
 }: SaldoModalProps) => {
+  const schema = yup.object().shape({
+    type: yup
+      .string()
+      .oneOf(
+        ["adicionar", "descontar"],
+        'Tipo deve ser "adicionar" ou "descontar"'
+      )
+      .required("Tipo é obrigatório"),
+    value: yup.number().required("Valor é obrigatório"),
+  });
+
+  const { handleSubmit, reset, control } = useForm<SaldoFormData>({
+    resolver: yupResolver(schema),
+  });
+
   const [EditSaldo, setEditSaldo] = useState<EditSaldoType>("adicionar");
 
-  interface SaldoFormData {
-    type: string;
-    value: string;
-  }
+  const [loading, setLoading] = useState(false);
 
-  const { handleSubmit, reset, control } = useForm<SaldoFormData>();
+  const handleSubmitForm = async (data: SaldoFormData) => {
+    try {
+      setLoading(true);
 
-  const handleSubmitForm = (data: SaldoFormData) => {
-    const dataFormatted = {
-      ...data,
-      value: FormatarParaMoeda(data.value),
-    };
-    console.log(dataFormatted);
-    // clearForm();
+      const newBalance = balance;
+
+      if (data.type === "adicionar") {
+        newBalance.balance += data.value;
+      } else if (
+        data.type === "descontar" &&
+        newBalance.balance - data.value >= 0
+      ) {
+        newBalance.balance -= data.value;
+      } else {
+        enqueueSnackbar("Saldo insuficiente", {
+          variant: "error",
+        });
+        setLoading(false);
+        return;
+      }
+      await updateBalanceAction(newBalance);
+      enqueueSnackbar("Saldo atualizado com sucesso!", {
+        variant: "success",
+      });
+      onClose();
+      setLoading(false);
+    } catch (error) {
+      enqueueSnackbar("Erro ao atualizar o saldo. Tente novamente.", {
+        variant: "error",
+      });
+      console.error(error);
+    }
   };
 
   const NumberFormatCustom = forwardRef((props, ref) => (
@@ -73,7 +121,7 @@ export const SaldoModal = ({
             defaultValue=""
             rules={{ required: "Este campo é obrigatório" }}
             render={({ field, fieldState: { error } }) => (
-              <Box display="flex" flexDirection="column" gap="0.25rem">
+              <CInput error={error}>
                 <ToggleButtonGroup
                   color="primary"
                   value={field.value}
@@ -119,41 +167,43 @@ export const SaldoModal = ({
                     Descontar
                   </ToggleButton>
                 </ToggleButtonGroup>
-                {error && (
-                  <Typography color="error" variant="caption">
-                    {error.message}
-                  </Typography>
-                )}
-              </Box>
+              </CInput>
             )}
           />
           <Controller
             name="value"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Valor"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  inputComponent: NumberFormatCustom as any,
-                  inputProps: {
-                    thousandSeparator: ".",
-                    decimalSeparator: ",",
-                    prefix: `${EditSaldo === "adicionar" ? "+" : "-"} R$ `,
-                    decimalScale: 2,
-                    fixedDecimalScale: true,
-                    allowNegative: false,
-                  },
-                }}
-              />
+            render={({ field, fieldState: { error } }) => (
+              <CInput error={error}>
+                <TextField
+                  {...field}
+                  label="Valor"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => {
+                    const rawValue = FormatarParaMoeda(e.target.value);
+                    field.onChange(rawValue);
+                  }}
+                  InputProps={{
+                    inputComponent: NumberFormatCustom as any,
+                    inputProps: {
+                      thousandSeparator: ".",
+                      decimalSeparator: ",",
+                      prefix: `${EditSaldo === "adicionar" ? "+" : "-"} R$ `,
+                      decimalScale: 2,
+                      fixedDecimalScale: true,
+                      allowNegative: false,
+                    },
+                  }}
+                />
+              </CInput>
             )}
           />
           <Button
             type="submit"
             size="large"
             variant="contained"
+            disabled={loading}
             disableElevation
             sx={{
               borderRadius: "1rem",

@@ -8,15 +8,21 @@ import {
   GridCard,
   TitleContainer,
 } from "../../../../shared/components";
-import { deleteRendaAction } from "../../../../services/actions/minhasFinancasActions";
+import {
+  deleteRendaAction,
+  getRendasAction,
+} from "../../../../services/actions/minhasFinancasActions";
 import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
-import { getIncomes } from "../../../../services/observers/minhasFinancasObserver";
 import { RendaFormData, RendaFormModal } from "../modals/RendaFormModal";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { CategoriaBadge } from "../CategoriaBadge";
 
-export const RendaTable = () => {
+interface RendaTableProps {
+  setTotalIncome: (totalIncome: number) => void;
+}
+
+export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
   const [open, setOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [data, setData] = useState<RendaFormData>({} as RendaFormData);
@@ -95,8 +101,10 @@ export const RendaTable = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getIncomes();
+      const data = await getRendasAction();
       setRows(data);
+      const totalIncome = data?.reduce((total, obj) => total + obj.value, 0);
+      setTotalIncome(totalIncome);
     } catch (error) {
       enqueueSnackbar("Erro ao listar as rendas. Tente novamente.", {
         variant: "error",
@@ -174,6 +182,7 @@ export const RendaTable = () => {
         }}
         disableRowSelectionOnClick
         localeText={{
+          noRowsLabel: "Nenhuma renda cadastrada",
           MuiTablePagination: {
             labelRowsPerPage: "Linhas por página",
             labelDisplayedRows: ({ from, to, count }) =>

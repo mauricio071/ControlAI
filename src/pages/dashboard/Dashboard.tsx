@@ -100,7 +100,7 @@ export const Dashboard = () => {
     setMonthlyFixed(data.monthlyFixed);
     setSavings(data.savings);
     setPdata(data.lastYearTransactions.transactions);
-    setYourExpenses(data.yourExpenses.expenses);
+    // setYourExpenses(data.yourExpenses.expenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
   };
@@ -109,7 +109,6 @@ export const Dashboard = () => {
 
   useEffect(() => {
     getDashboardObserver(handleDashboardData);
-    // addDashboardData();
   }, []);
 
   return (
