@@ -25,6 +25,8 @@ import {
 } from "../../services/interfaces/dashboardInterfaces";
 import { Loading } from "../../shared/components/loading/Loading";
 import { FormatarData } from "../../shared/utils/FormatarData";
+import { updateProfile } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
 
 interface Dashboard {
   balance: number;
@@ -100,7 +102,7 @@ export const Dashboard = () => {
     setMonthlyFixed(data.monthlyFixed);
     setSavings(data.savings);
     setPdata(data.lastYearTransactions.transactions);
-    // setYourExpenses(data.yourExpenses.expenses);
+    setYourExpenses(data.yourExpenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
   };

@@ -9,6 +9,8 @@ import {
 import { ReactNode } from "react";
 import { useDrawerContext } from "../contexts";
 import { Sidebar } from "../components";
+import { auth } from "../../config/firebaseConfig";
+import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -22,6 +24,8 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { toggleDrawerOpen } = useDrawerContext();
+
+  const user = auth.currentUser;
 
   return (
     <Sidebar>
@@ -67,9 +71,15 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             >
               {titulo}
             </Typography>
-            <Typography variant="h5" fontWeight="500">
-              Usuário
-            </Typography>
+            <Box display="flex" alignItems="center" gap="0.25rem">
+              <Typography variant="h5" fontWeight="bold" color="primary">
+                Olá,
+              </Typography>
+              <Typography variant="h5" fontWeight="bold">
+                {user?.displayName}!
+              </Typography>
+              <LayoutBaseMenu />
+            </Box>
           </Box>
         </Box>
 

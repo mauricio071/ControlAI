@@ -90,33 +90,6 @@ export const Sidebar = ({ children }: SidebarProps) => {
               ))}
             </List>
           </Box>
-
-          <Box>
-            <List component="nav">
-              <ListItemButton
-                onClick={toggleTheme}
-                sx={{
-                  marginBlock: "0.375rem",
-                  marginInline: "1.5rem",
-                  paddingBlock: "0.75rem",
-                  borderRadius: "0.75rem",
-                  background: "linear-gradient(195deg, #49a3f1, #408aeb)",
-                  boxShadow:
-                    "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    color: theme.palette.primary.contrastText,
-                    marginRight: "-1rem",
-                  }}
-                >
-                  <Icon>dark_mode</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Alterar tema" />
-              </ListItemButton>
-            </List>
-          </Box>
           <Typography
             variant="body1"
             fontSize="0.8rem"

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 
 import { useDrawerContext } from "../shared/contexts";
@@ -9,15 +9,10 @@ import {
   Login,
   MinhasFinancas,
 } from "../pages";
-import { signOut } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
-import { enqueueSnackbar } from "notistack";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     setDrawerOptions([
@@ -40,19 +35,6 @@ export const AppRoutes = () => {
         icon: "history",
         label: "Histórico",
         path: "/historico",
-      },
-      {
-        icon: "logout",
-        label: "Sair",
-        path: "/login",
-        action: async () => {
-          try {
-            await signOut(auth);
-            console.log(auth);
-          } catch (error) {
-            console.error(error);
-          }
-        },
       },
     ]);
   }, []);

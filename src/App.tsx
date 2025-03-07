@@ -8,6 +8,7 @@ import {
   AppThemeProvider,
   DrawerProvider,
 } from "./shared/contexts";
+import { SnackbarCloseButton } from "./shared/components/snackbarCloseButton/SnackbarCloseButton";
 import { AppRoutes } from "./routes";
 
 export const App = () => {
@@ -15,6 +16,9 @@ export const App = () => {
     <SnackbarProvider
       autoHideDuration={2000}
       anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      action={(snackbarKey) => (
+        <SnackbarCloseButton snackbarKey={snackbarKey} />
+      )}
     >
       <AppThemeProvider>
         <AppLocalizationProvider>

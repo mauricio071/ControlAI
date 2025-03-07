@@ -38,7 +38,7 @@ export const getDashboardObserver = async (
       ...data,
       balance: await getBalance(data),
       lastYearTransactions: await getLastYearTransactions(data),
-      yourExpenses: await getYourExpenses(data),
+      yourExpenses: await getYourExpenses(),
       recentTransactions: await getRecentTransactions(data),
     };
 
@@ -58,12 +58,47 @@ const getLastYearTransactions = async (dashboardInfo: DashboardType) => {
   return lastYearTransactions.data();
 };
 
-const getYourExpenses = async (dashboardInfo: DashboardType) => {
-  const yourExpenses = await getDoc(
-    doc(db, "despesas", dashboardInfo.yourExpenses?.id)
-  );
+const getYourExpenses = async () => {
+  const user = auth.currentUser;
 
-  return yourExpenses.data();
+  try {
+    const yourExpensesCollection = collection(db, "historicoTransacoes");
+    const yourExpensesQuery = query(
+      yourExpensesCollection,
+      where("uid", "==", user?.uid)
+    );
+    const querySnapshot = await getDocs(yourExpensesQuery);
+    const data = querySnapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        if (data.type === "descontar") {
+          return {
+            value: doc.data().value,
+            label: doc.data().category,
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    const yourExpenses = data.reduce((total, item) => {
+      if (total[item?.label]) {
+        total[item?.label] += item?.value;
+      } else {
+        total[item?.label] = item?.value;
+      }
+      return total;
+    }, {} as { [key: string]: number });
+
+    const result = Object.entries(yourExpenses).map(([label, value]) => ({
+      label,
+      value,
+    }));
+
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getRecentTransactions = async () => {
