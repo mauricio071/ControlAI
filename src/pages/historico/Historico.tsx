@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import {
   deleteTransactionAction,
+  getAllExpensesAction,
   getAllTransactionsAction,
 } from "../../services/actions/historicoAction";
 import { enqueueSnackbar } from "notistack";
@@ -105,23 +106,21 @@ export const Historico = () => {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
-  const pData = [
-    2400, 1398, 9800, 3908, 4800, 3800, 4300, 1398, 9800, 3908, 4800, 3800,
-  ];
+  const [pData, setPdata] = useState<number[]>([]);
 
   const xLabels = [
     "Jan",
-    "Feb",
+    "Fev",
     "Mar",
-    "Apr",
-    "May",
+    "Abr",
+    "Mai",
     "Jun",
     "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
+    "Ago",
+    "Set",
+    "Out",
     "Nov",
-    "Dec",
+    "Dez",
   ];
 
   const [year, setYear] = useState<Dayjs | null>(dayjs());
@@ -134,9 +133,20 @@ export const Historico = () => {
     setLoading(false);
   };
 
+  const getHistoryExpense = async () => {
+    setLoading(true);
+    const data: number[] = await getAllExpensesAction(year?.year());
+    setPdata(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
     getHistoryTransaction();
   }, []);
+
+  useEffect(() => {
+    getHistoryExpense();
+  }, [year]);
 
   return (
     <LayoutBase titulo="Histórico">
@@ -201,7 +211,14 @@ export const Historico = () => {
           slotProps={{ legend: { hidden: true } }}
           height={400}
           borderRadius={6}
-          series={[{ data: pData, label: "pv", id: "pvId" }]}
+          series={[
+            {
+              data: pData,
+              label: "Gastou",
+              id: "id",
+              valueFormatter: (value) => `${FormatarMoeda(Number(value))}`,
+            },
+          ]}
           xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
       </GridCard>

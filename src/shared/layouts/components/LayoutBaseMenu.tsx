@@ -1,17 +1,14 @@
 import { Box, Icon, IconButton, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
-import { useAppThemeContext } from "../../contexts";
 import { signOut } from "firebase/auth";
+import { useState } from "react";
+
 import { auth } from "../../../config/firebaseConfig";
+import { useAppThemeContext } from "../../contexts";
 
 export const LayoutBaseMenu = () => {
-  const options = ["Alterar o tema", "Sair"];
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -34,7 +31,6 @@ export const LayoutBaseMenu = () => {
         aria-controls={open ? "long-menu" : undefined}
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
-        onClick={handleClick}
       >
         <Icon>settings</Icon>
       </IconButton>

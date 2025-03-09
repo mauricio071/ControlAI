@@ -1,5 +1,6 @@
 import {
   deleteTransactionAccess,
+  getAllExpensesAccess,
   getAllTransactionsAccess,
 } from "../accesses/historicoAccess";
 
@@ -10,5 +11,10 @@ export const getAllTransactionsAction = async () => {
 
 export const deleteTransactionAction = async (id: string) => {
   const data = await deleteTransactionAccess(id);
+  return data;
+};
+
+export const getAllExpensesAction = async (year: string) => {
+  const data = await getAllExpensesAccess(year);
   return data;
 };
