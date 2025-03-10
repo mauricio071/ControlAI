@@ -14,7 +14,7 @@ export const deleteTransactionAction = async (id: string) => {
   return data;
 };
 
-export const getAllExpensesAction = async (year: string) => {
+export const getAllExpensesAction = async (year: number) => {
   const data = await getAllExpensesAccess(year);
   return data;
 };

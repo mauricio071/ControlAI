@@ -16,6 +16,7 @@ import {
   getAllTransactionsAction,
 } from "../../services/actions/historicoAction";
 import { enqueueSnackbar } from "notistack";
+import { Loading } from "../../shared/components/loading/Loading";
 
 export const Historico = () => {
   const columns: GridColDef[] = [
@@ -123,9 +124,11 @@ export const Historico = () => {
     "Dez",
   ];
 
-  const [year, setYear] = useState<Dayjs | null>(dayjs());
+  const [year, setYear] = useState<Dayjs>(dayjs());
 
   const [loading, setLoading] = useState(true);
+
+  const [graphLoading, setGraphLoading] = useState(true);
 
   const getHistoryTransaction = async () => {
     const transactions = await getAllTransactionsAction();
@@ -134,10 +137,9 @@ export const Historico = () => {
   };
 
   const getHistoryExpense = async () => {
-    setLoading(true);
-    const data: number[] = await getAllExpensesAction(year?.year());
+    const data: number[] = await getAllExpensesAction(year.year());
     setPdata(data);
-    setLoading(false);
+    setGraphLoading(false);
   };
 
   useEffect(() => {
@@ -197,7 +199,7 @@ export const Historico = () => {
       </CModal>
       <GridCard titleContainer>
         <TitleContainer title="Histórico de gastos" />
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" marginBottom="4rem">
           <DatePicker
             views={["year"]}
             label="Ano"
@@ -207,20 +209,25 @@ export const Historico = () => {
             maxDate={dayjs()}
           />
         </Box>
-        <BarChart
-          slotProps={{ legend: { hidden: true } }}
-          height={400}
-          borderRadius={6}
-          series={[
-            {
-              data: pData,
-              label: "Gastou",
-              id: "id",
-              valueFormatter: (value) => `${FormatarMoeda(Number(value))}`,
-            },
-          ]}
-          xAxis={[{ data: xLabels, scaleType: "band" }]}
-        />
+
+        {graphLoading ? (
+          <Loading width="285px" height="285px" />
+        ) : (
+          <BarChart
+            slotProps={{ legend: { hidden: true } }}
+            height={400}
+            borderRadius={6}
+            series={[
+              {
+                data: pData,
+                label: "Gastou",
+                id: "id",
+                valueFormatter: (value) => `${FormatarMoeda(Number(value))}`,
+              },
+            ]}
+            xAxis={[{ data: xLabels, scaleType: "band" }]}
+          />
+        )}
       </GridCard>
     </LayoutBase>
   );
