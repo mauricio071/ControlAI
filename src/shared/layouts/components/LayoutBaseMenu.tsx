@@ -9,11 +9,13 @@ export const LayoutBaseMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const { toggleTheme } = useAppThemeContext();
 
   const handleLogout = async () => {
     try {
@@ -31,6 +33,7 @@ export const LayoutBaseMenu = () => {
         aria-controls={open ? "long-menu" : undefined}
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
+        onClick={handleClick}
       >
         <Icon>settings</Icon>
       </IconButton>
@@ -51,9 +54,6 @@ export const LayoutBaseMenu = () => {
           },
         }}
       >
-        <MenuItem key="Alterar o tema" onClick={toggleTheme}>
-          Alterar o tema
-        </MenuItem>
         <MenuItem key="Sair" onClick={handleLogout}>
           Sair
         </MenuItem>

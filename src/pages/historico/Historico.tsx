@@ -217,6 +217,7 @@ export const Historico = () => {
             slotProps={{ legend: { hidden: true } }}
             height={400}
             borderRadius={6}
+            margin={{ left: 100, right: 20, top: 20, bottom: 30 }}
             series={[
               {
                 data: pData,
@@ -226,6 +227,11 @@ export const Historico = () => {
               },
             ]}
             xAxis={[{ data: xLabels, scaleType: "band" }]}
+            yAxis={[
+              {
+                valueFormatter: (value) => `${FormatarMoeda(Number(value))}`,
+              },
+            ]}
           />
         )}
       </GridCard>

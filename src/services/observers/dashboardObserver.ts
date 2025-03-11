@@ -13,6 +13,7 @@ import {
 
 import { auth, db } from "../../config/firebaseConfig";
 import { DashboardType } from "../interfaces/dashboardInterfaces";
+import dayjs from "dayjs";
 
 export const getDashboardObserver = async (
   callBack: (data: DashboardType) => void
@@ -51,11 +52,75 @@ export const getBalance = async (dashboardInfo: DashboardType) => {
   return balance.data()?.balance;
 };
 
-const getLastYearTransactions = async (dashboardInfo: DashboardType) => {
-  const lastYearTransactions = await getDoc(
-    doc(db, "gastosUltimoAno", dashboardInfo.lastYearTransactions?.id)
-  );
-  return lastYearTransactions.data();
+export const getCompare = async () => {
+  const user = auth.currentUser;
+
+  const actualMonth = dayjs().month();
+  const pastMonth = actualMonth - 1;
+
+  try {
+    const lastYearTransactionsCollection = collection(db, "saldos");
+    const lastYearTransactionsQuery = query(
+      lastYearTransactionsCollection,
+      where("uid", "==", user?.uid),
+      where("date", ">=", startYear),
+      where("date", "<=", endYear),
+      where("type", "==", "descontar")
+    );
+    const querySnapshot = await getDocs(lastYearTransactionsQuery);
+    const data = querySnapshot.docs.map((doc) => ({
+      date: doc.data().date,
+      value: doc.data().value,
+    }));
+
+    const monthlyArr = Array(12).fill(0);
+
+    data.forEach((item) => {
+      const date = dayjs(item.date).month();
+      monthlyArr[date] += item.value;
+    });
+
+    return monthlyArr;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getLastYearTransactions = async () => {
+  const user = auth.currentUser;
+
+  const startYear = dayjs().startOf("year").format("YYYY-MM-DD");
+  const endYear = dayjs().endOf("year").format("YYYY-MM-DD");
+
+  try {
+    const lastYearTransactionsCollection = collection(
+      db,
+      "historicoTransacoes"
+    );
+    const lastYearTransactionsQuery = query(
+      lastYearTransactionsCollection,
+      where("uid", "==", user?.uid),
+      where("date", ">=", startYear),
+      where("date", "<=", endYear),
+      where("type", "==", "descontar")
+    );
+    const querySnapshot = await getDocs(lastYearTransactionsQuery);
+    const data = querySnapshot.docs.map((doc) => ({
+      date: doc.data().date,
+      value: doc.data().value,
+    }));
+
+    const monthlyArr = Array(12).fill(0);
+
+    data.forEach((item) => {
+      const date = dayjs(item.date).month();
+      monthlyArr[date] += item.value;
+    });
+
+    return monthlyArr;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getYourExpenses = async () => {

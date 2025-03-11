@@ -7,26 +7,22 @@ import {
   Typography,
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
-import { CLink, GridCard, TitleContainer } from "../../shared/components";
-import { LayoutBase } from "../../shared/layouts";
-import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
-import { useEffect, useState } from "react";
-import {
-  addDashboardData,
-  getDashboardObserver,
-} from "../../services/observers/dashboardObserver";
 import {
   DashboardType,
   ExpenseType,
   TransactionType,
 } from "../../services/interfaces/dashboardInterfaces";
+import { getDashboardObserver } from "../../services/observers/dashboardObserver";
+import { CLink, GridCard, TitleContainer } from "../../shared/components";
 import { Loading } from "../../shared/components/loading/Loading";
+import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
-import { updateProfile } from "firebase/auth";
-import { auth } from "../../config/firebaseConfig";
+import { LayoutBase } from "../../shared/layouts";
 
 interface Dashboard {
   balance: number;
@@ -101,7 +97,7 @@ export const Dashboard = () => {
     setMonthlyExpense(data.monthlyExpense);
     setMonthlyFixed(data.monthlyFixed);
     setSavings(data.savings);
-    setPdata(data.lastYearTransactions.transactions);
+    setPdata(data.lastYearTransactions);
     setYourExpenses(data.yourExpenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
@@ -183,6 +179,9 @@ export const Dashboard = () => {
                             textOverflow="ellipsis"
                           >
                             {FormatarMoeda(content.value)}
+                            <Typography variant="caption" marginLeft="0.25rem">
+                              em relação a mês anterior
+                            </Typography>
                           </Typography>
                         </Box>
                       </Box>
@@ -213,7 +212,7 @@ export const Dashboard = () => {
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, xl: 7 }}>
             <GridCard titleContainer>
-              <TitleContainer title="Gastos dos últimos 12 meses" />
+              <TitleContainer title={`Seus gastos de ${dayjs().year()}`} />
               {loading ? (
                 <Loading width="285px" height="285px" />
               ) : (
@@ -221,6 +220,7 @@ export const Dashboard = () => {
                   slotProps={{ legend: { hidden: true } }}
                   height={300}
                   borderRadius={6}
+                  margin={{ left: 100, right: 20, top: 20, bottom: 30 }}
                   series={[
                     {
                       data: pData,
@@ -236,6 +236,12 @@ export const Dashboard = () => {
                       scaleType: "band",
                     },
                   ]}
+                  yAxis={[
+                    {
+                      valueFormatter: (value) =>
+                        `${FormatarMoeda(Number(value))}`,
+                    },
+                  ]}
                 />
               )}
             </GridCard>
@@ -243,7 +249,7 @@ export const Dashboard = () => {
 
           <Grid size={{ xs: 12, xl: 5 }}>
             <GridCard titleContainer>
-              <TitleContainer title="Seus gastos" />
+              <TitleContainer title="Seus gastos deste mês" />
               {loading ? (
                 <Loading width="285px" height="285px" />
               ) : (

@@ -7,10 +7,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { ReactNode } from "react";
-import { useDrawerContext } from "../contexts";
+import { useAppThemeContext, useDrawerContext } from "../contexts";
 import { Sidebar } from "../components";
 import { auth } from "../../config/firebaseConfig";
 import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
+import { MaterialUISwitch } from "./components/MaterialUISwitch";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -24,6 +25,8 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { toggleDrawerOpen } = useDrawerContext();
+
+  const { toggleTheme } = useAppThemeContext();
 
   const user = auth.currentUser;
 
@@ -78,6 +81,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
               <Typography variant="h5" fontWeight="bold">
                 {user?.displayName}!
               </Typography>
+              <MaterialUISwitch onClick={toggleTheme} />
               <LayoutBaseMenu />
             </Box>
           </Box>
