@@ -38,6 +38,7 @@ export const getDashboardObserver = async (
     const finalData = {
       ...data,
       balance: await getBalance(data),
+      // monthlyExpense: await get
       lastYearTransactions: await getLastYearTransactions(data),
       yourExpenses: await getYourExpenses(),
       recentTransactions: await getRecentTransactions(data),
@@ -52,39 +53,43 @@ export const getBalance = async (dashboardInfo: DashboardType) => {
   return balance.data()?.balance;
 };
 
-export const getCompare = async () => {
-  const user = auth.currentUser;
+// export const compareExpense = async () => {
+//   //TODO
+//   const user = auth.currentUser;
 
-  const actualMonth = dayjs().month();
-  const pastMonth = actualMonth - 1;
+//   const currentMonth = dayjs()..format("YYYY-MM");
+//   const previusMonth = dayjs().endOf("year").format("YYYY-MM-DD");
 
-  try {
-    const lastYearTransactionsCollection = collection(db, "saldos");
-    const lastYearTransactionsQuery = query(
-      lastYearTransactionsCollection,
-      where("uid", "==", user?.uid),
-      where("date", ">=", startYear),
-      where("date", "<=", endYear),
-      where("type", "==", "descontar")
-    );
-    const querySnapshot = await getDocs(lastYearTransactionsQuery);
-    const data = querySnapshot.docs.map((doc) => ({
-      date: doc.data().date,
-      value: doc.data().value,
-    }));
+//   try {
+//     const lastYearTransactionsCollection = collection(
+//       db,
+//       "historicoTransacoes"
+//     );
+//     const lastYearTransactionsQuery = query(
+//       lastYearTransactionsCollection,
+//       where("uid", "==", user?.uid),
+//       where("date", ">=", startYear),
+//       where("date", "<=", endYear),
+//       where("type", "==", "descontar")
+//     );
+//     const querySnapshot = await getDocs(lastYearTransactionsQuery);
+//     const data = querySnapshot.docs.map((doc) => ({
+//       date: doc.data().date,
+//       value: doc.data().value,
+//     }));
 
-    const monthlyArr = Array(12).fill(0);
+//     const monthlyArr = Array(12).fill(0);
 
-    data.forEach((item) => {
-      const date = dayjs(item.date).month();
-      monthlyArr[date] += item.value;
-    });
+//     data.forEach((item) => {
+//       const date = dayjs(item.date).month();
+//       monthlyArr[date] += item.value;
+//     });
 
-    return monthlyArr;
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     return monthlyArr;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 const getLastYearTransactions = async () => {
   const user = auth.currentUser;
@@ -128,10 +133,17 @@ const getYourExpenses = async () => {
 
   try {
     const yourExpensesCollection = collection(db, "historicoTransacoes");
+
+    const startMonth = dayjs().startOf("month").format("YYYY-MM-DD");
+    const endMonth = dayjs().endOf("month").format("YYYY-MM-DD");
+
     const yourExpensesQuery = query(
       yourExpensesCollection,
-      where("uid", "==", user?.uid)
+      where("uid", "==", user?.uid),
+      where("date", ">=", startMonth),
+      where("date", "<=", endMonth)
     );
+
     const querySnapshot = await getDocs(yourExpensesQuery);
     const data = querySnapshot.docs
       .map((doc) => {

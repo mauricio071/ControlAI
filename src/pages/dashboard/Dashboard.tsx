@@ -46,18 +46,18 @@ export const Dashboard = () => {
       to: "/minhas-financas",
     },
     {
+      icon: "credit_card",
+      color: "linear-gradient(195deg, #FFB6C1, #FF1493)",
+      title: "Gasto deste Mês",
+      value: monthlyFixed,
+      to: "/historico",
+    },
+    {
       icon: "home",
       color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
       title: "Gasto Fixo Mensal",
       value: monthlyExpense,
       to: "/minhas-financas",
-    },
-    {
-      icon: "credit_card",
-      color: "linear-gradient(195deg, #FFB6C1, #FF1493)",
-      title: "Gasto do Mês",
-      value: monthlyFixed,
-      to: "/historico",
     },
     {
       icon: "trending_up",
@@ -92,6 +92,8 @@ export const Dashboard = () => {
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const handleDashboardData = (data: DashboardType) => {
+    console.log(data);
+
     setLoading(true);
     setBalance(data.balance);
     setMonthlyExpense(data.monthlyExpense);
@@ -121,7 +123,9 @@ export const Dashboard = () => {
                     display="flex"
                     flexDirection="column"
                     alignItems="start"
+                    justifyContent="space-between"
                     gap="0.75rem"
+                    height={content.title === "Saldo" && 150}
                   >
                     <Box
                       display="flex"
@@ -166,24 +170,29 @@ export const Dashboard = () => {
                         >
                           {FormatarMoeda(content.value)}
                         </Typography>
-                        <Box
-                          display="flex"
-                          alignItems="center"
-                          gap="0.25rem"
-                          width="100%"
-                        >
-                          <Icon color="success">arrow_upward</Icon>
-                          <Typography
-                            whiteSpace="nowrap"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
+                        {content.title !== "Saldo" && (
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap="0.25rem"
+                            width="100%"
                           >
-                            {FormatarMoeda(content.value)}
-                            <Typography variant="caption" marginLeft="0.25rem">
-                              em relação a mês anterior
+                            <Icon color="success">arrow_upward</Icon>
+                            <Typography
+                              whiteSpace="nowrap"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                            >
+                              {FormatarMoeda(content.value)}
+                              <Typography
+                                variant="caption"
+                                marginLeft="0.25rem"
+                              >
+                                em relação a mês anterior
+                              </Typography>
                             </Typography>
-                          </Typography>
-                        </Box>
+                          </Box>
+                        )}
                       </Box>
                     )}
                     <Link to={content.to}>
