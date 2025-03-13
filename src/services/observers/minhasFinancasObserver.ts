@@ -23,7 +23,7 @@ export const getMinhasFinancasObserver = async (
 ) => {
   const user = auth.currentUser;
 
-  const financasCollectionRef = collection(db, "minhasFinancas");
+  const financasCollectionRef = collection(db, "saldos");
 
   const financasQuery = query(
     financasCollectionRef,
@@ -37,13 +37,14 @@ export const getMinhasFinancasObserver = async (
     }));
 
     const data = financasInfo[0] as MinhasFinancasType;
+    console.log(data);
 
     const finalData = {
       ...data,
       balance: await getBalance(data),
       // incomes: await getRendas(),
       //   lastYearTransactions: await getLastYearTransactions(data),
-      //   yourExpenses: await getYourExpenses(data),
+      //   yourExpenses: await getExpenses(data),
       //   recentTransactions: await getRecentTransactions(data),
     };
 

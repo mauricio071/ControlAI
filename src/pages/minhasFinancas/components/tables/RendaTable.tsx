@@ -30,7 +30,7 @@ export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
   const columns: GridColDef[] = [
     {
       field: "date",
-      headerName: "Data",
+      headerName: "Início do Recebimento",
       disableColumnMenu: true,
       flex: 1,
       renderCell: (params) => <>{FormatarData(params.row.date)}</>,

@@ -134,7 +134,7 @@ export const DespesaFormModal = ({
                   onChange={(date) =>
                     onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
-                  label="Selecione a data"
+                  label="Data de início do pagamento"
                 />
               </CInput>
             )}

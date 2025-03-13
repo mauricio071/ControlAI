@@ -1,6 +1,5 @@
 import { DespesaFormData } from "../../pages/minhasFinancas/components/modals/DespesaFormModal";
 import { RendaFormData } from "../../pages/minhasFinancas/components/modals/RendaFormModal";
-import { SaldoFormData } from "../../pages/minhasFinancas/components/modals/SaldoModal";
 import {
   addDespesaAccess,
   addRendaAccess,

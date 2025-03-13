@@ -1,15 +1,7 @@
-import {
-  Box,
-  Button,
-  Grid2 as Grid,
-  Icon,
-  Skeleton,
-  Typography,
-} from "@mui/material";
+import { Box, Grid2 as Grid, Icon, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 import {
@@ -23,6 +15,7 @@ import { Loading } from "../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
 import { LayoutBase } from "../../shared/layouts";
+import { DashboardMiniCard } from "./components/DashboardMiniCard";
 
 interface Dashboard {
   balance: number;
@@ -33,40 +26,10 @@ interface Dashboard {
 
 export const Dashboard = () => {
   const [balance, setBalance] = useState(0);
-  const [monthlyExpense, setMonthlyExpense] = useState(0);
+  const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
+  const [previousMonthlyExpense, setPreviousMnthlyExpense] = useState(0);
   const [monthlyFixed, setMonthlyFixed] = useState(0);
   const [savings, setSavings] = useState(0);
-
-  const gridContents = [
-    {
-      icon: "account_balance_wallet",
-      color: "linear-gradient(195deg, #49a3f1, #1A73E8)",
-      title: "Saldo",
-      value: balance,
-      to: "/minhas-financas",
-    },
-    {
-      icon: "credit_card",
-      color: "linear-gradient(195deg, #FFB6C1, #FF1493)",
-      title: "Gasto deste Mês",
-      value: monthlyFixed,
-      to: "/historico",
-    },
-    {
-      icon: "home",
-      color: "linear-gradient(195deg, #FF8A00, #FF5E00)",
-      title: "Gasto Fixo Mensal",
-      value: monthlyExpense,
-      to: "/minhas-financas",
-    },
-    {
-      icon: "trending_up",
-      color: "linear-gradient(195deg, #66BB6A, #388E3C)",
-      title: "Economia",
-      value: savings,
-      to: "/historico",
-    },
-  ];
 
   const [pData, setPdata] = useState<number[]>([]);
 
@@ -92,17 +55,24 @@ export const Dashboard = () => {
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const handleDashboardData = (data: DashboardType) => {
-    console.log(data);
-
     setLoading(true);
     setBalance(data.balance);
-    setMonthlyExpense(data.monthlyExpense);
+    setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
+    setPreviousMnthlyExpense(data.monthlyExpense.previousMonthValue);
     setMonthlyFixed(data.monthlyFixed);
     setSavings(data.savings);
     setPdata(data.lastYearTransactions);
     setYourExpenses(data.yourExpenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
+  };
+
+  const compareValue = (
+    currentMonthValue: number,
+    previousMonthValue: number
+  ) => {
+    const result = currentMonthValue - previousMonthValue;
+    return result;
   };
 
   const [loading, setLoading] = useState(true);
@@ -115,106 +85,94 @@ export const Dashboard = () => {
     <LayoutBase titulo="Dashboard">
       <Box>
         <Grid container spacing={3}>
-          {gridContents.map((content) => (
-            <Grid size={{ xs: 12, md: 6, xl: 3 }} key={content.title}>
-              <GridCard>
-                <Box>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="start"
-                    justifyContent="space-between"
-                    gap="0.75rem"
-                    height={content.title === "Saldo" && 150}
-                  >
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      width="100%"
-                    >
-                      <Typography textAlign="start" color="gray">
-                        {content.title}
-                      </Typography>
-                      <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        height="4rem"
-                        width="4rem"
-                        borderRadius="0.75rem"
-                        boxShadow="0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
-                        marginTop="-2.5rem"
-                        color="white"
-                        sx={{
-                          background: content.color,
-                        }}
-                      >
-                        <Icon sx={{ fontSize: "1.75rem" }}>{content.icon}</Icon>
-                      </Box>
-                    </Box>
-                    {loading ? (
-                      <Skeleton variant="rounded" width="100%" height={68} />
-                    ) : (
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap="0.15rem"
-                        width="100%"
-                      >
-                        <Typography
-                          variant="h4"
-                          fontWeight="600"
-                          whiteSpace="nowrap"
-                          overflow="hidden"
-                          textOverflow="ellipsis"
-                        >
-                          {FormatarMoeda(content.value)}
-                        </Typography>
-                        {content.title !== "Saldo" && (
-                          <Box
-                            display="flex"
-                            alignItems="center"
-                            gap="0.25rem"
-                            width="100%"
-                          >
-                            <Icon color="success">arrow_upward</Icon>
-                            <Typography
-                              whiteSpace="nowrap"
-                              overflow="hidden"
-                              textOverflow="ellipsis"
-                            >
-                              {FormatarMoeda(content.value)}
-                              <Typography
-                                variant="caption"
-                                marginLeft="0.25rem"
-                              >
-                                em relação a mês anterior
-                              </Typography>
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                    )}
-                    <Link to={content.to}>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        disableElevation
-                        sx={{
-                          borderRadius: "0.75rem",
-                          textTransform: "none",
-                          maxWidth: "6.5rem",
-                          width: "100%",
-                        }}
-                      >
-                        Ver
-                      </Button>
-                    </Link>
-                  </Box>
-                </Box>
-              </GridCard>
-            </Grid>
-          ))}
+          <DashboardMiniCard
+            icon="account_balance_wallet"
+            color="linear-gradient(195deg, #49a3f1, #1A73E8)"
+            title="Saldo"
+            value={balance}
+            to="/minhas-financas"
+            loading={loading}
+          >
+            <Icon color="success">arrow_upward</Icon>
+            <Typography
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {FormatarMoeda(balance)}
+              <Typography variant="caption" marginLeft="0.25rem">
+                em relação a mês anterior
+              </Typography>
+            </Typography>
+          </DashboardMiniCard>
+          <DashboardMiniCard
+            icon="home"
+            color="linear-gradient(195deg, #FF8A00, #FF5E00)"
+            title="Gastos deste Mês"
+            value={currentMonthExpense}
+            to="/historico"
+            loading={loading}
+          >
+            {compareValue(currentMonthExpense, previousMonthlyExpense) > 0 ? (
+              <Icon color="error">arrow_upward</Icon>
+            ) : (
+              <Icon color="success">arrow_downward</Icon>
+            )}
+
+            <Typography
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {FormatarMoeda(
+                compareValue(currentMonthExpense, previousMonthlyExpense)
+              )}
+              <Typography variant="caption" marginLeft="0.25rem">
+                comparado ao mês anterior
+              </Typography>
+            </Typography>
+          </DashboardMiniCard>
+          <DashboardMiniCard
+            icon="credit_card"
+            color="linear-gradient(195deg, #FFB6C1, #FF1493)"
+            title="Gasto Fixo Mensal"
+            value={monthlyFixed}
+            to="/minhas-financas"
+            loading={loading}
+          >
+            {}
+            <Icon color="error">arrow_upward</Icon>
+            <Typography
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {FormatarMoeda(balance)}
+              <Typography variant="caption" marginLeft="0.25rem">
+                em relação a mês anterior
+              </Typography>
+            </Typography>
+          </DashboardMiniCard>
+          <DashboardMiniCard
+            icon="trending_up"
+            color="linear-gradient(195deg, #66BB6A, #388E3C)"
+            title="Economia"
+            value={savings}
+            to="/historico"
+            loading={loading}
+          >
+            <Icon color="success">arrow_upward</Icon>
+            <Typography
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {FormatarMoeda(balance)}
+              <Typography variant="caption" marginLeft="0.25rem">
+                em relação a mês anterior
+              </Typography>
+            </Typography>
+          </DashboardMiniCard>
         </Grid>
       </Box>
       <Box>

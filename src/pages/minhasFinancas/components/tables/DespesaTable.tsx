@@ -30,7 +30,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
   const columns: GridColDef[] = [
     {
       field: "date",
-      headerName: "Data",
+      headerName: "Início do Pagamento",
       disableColumnMenu: true,
       flex: 1,
       renderCell: (params) => <>{FormatarData(params.row.date)}</>,

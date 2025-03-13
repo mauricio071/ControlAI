@@ -35,13 +35,16 @@ export const getDashboardObserver = async (
 
     const data = dashboardInfo[0] as DashboardType;
 
+    const expenses = await getExpenses();
+
     const finalData = {
       ...data,
       balance: await getBalance(data),
-      // monthlyExpense: await get
-      lastYearTransactions: await getLastYearTransactions(data),
-      yourExpenses: await getYourExpenses(),
-      recentTransactions: await getRecentTransactions(data),
+      monthlyExpense: expenses?.values,
+      //TODO remover o recent e filtrar 5 pelo front
+      lastYearTransactions: await getLastYearTransactions(),
+      yourExpenses: expenses?.currentMonthDetails,
+      recentTransactions: await getRecentTransactions(),
     };
 
     callBack(finalData as DashboardType);
@@ -58,7 +61,7 @@ export const getBalance = async (dashboardInfo: DashboardType) => {
 //   const user = auth.currentUser;
 
 //   const currentMonth = dayjs()..format("YYYY-MM");
-//   const previusMonth = dayjs().endOf("year").format("YYYY-MM-DD");
+//   const previousMonth = dayjs().endOf("year").format("YYYY-MM-DD");
 
 //   try {
 //     const lastYearTransactionsCollection = collection(
@@ -128,51 +131,98 @@ const getLastYearTransactions = async () => {
   }
 };
 
-const getYourExpenses = async () => {
+const fetchExpenses = async (userUid: string | undefined) => {
+  const expensesCollection = collection(db, "historicoTransacoes");
+
+  const startPreviousMonth = dayjs()
+    .subtract(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+
+  const endCurrentMonth = dayjs().endOf("month").format("YYYY-MM-DD");
+
+  const expensesQuery = query(
+    expensesCollection,
+    where("uid", "==", userUid),
+    where("date", ">=", startPreviousMonth),
+    where("date", "<=", endCurrentMonth)
+  );
+
+  const snapshot = await getDocs(expensesQuery);
+
+  return snapshot.docs
+    .map((doc) => {
+      const data = doc.data();
+
+      if (data.type === "descontar") {
+        return {
+          value: data.value,
+          label: data.category,
+          date: data.date,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+};
+
+const groupExpensesByCategory = (
+  expenses: { label: string; value: number; date: string }[]
+) => {
+  return expenses.reduce<Record<string, number>>((total, item) => {
+    total[item.label] = (total[item.label] || 0) + item.value;
+    return total;
+  }, {});
+};
+
+const getExpenses = async () => {
   const user = auth.currentUser;
 
   try {
-    const yourExpensesCollection = collection(db, "historicoTransacoes");
+    const expenses = await fetchExpenses(user?.uid);
+    const currentMonth = dayjs().startOf("month").format("YYYY-MM-DD");
 
-    const startMonth = dayjs().startOf("month").format("YYYY-MM-DD");
-    const endMonth = dayjs().endOf("month").format("YYYY-MM-DD");
-
-    const yourExpensesQuery = query(
-      yourExpensesCollection,
-      where("uid", "==", user?.uid),
-      where("date", ">=", startMonth),
-      where("date", "<=", endMonth)
+    const currentMonthData = expenses.filter(
+      (item) => item?.date >= currentMonth
+    );
+    const previousMonthData = expenses.filter(
+      (item) => item?.date < currentMonth
     );
 
-    const querySnapshot = await getDocs(yourExpensesQuery);
-    const data = querySnapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        if (data.type === "descontar") {
-          return {
-            value: doc.data().value,
-            label: doc.data().category,
-          };
-        }
-        return null;
+    const currentMonthExpenses = groupExpensesByCategory(currentMonthData);
+    const previousMonthExpenses = groupExpensesByCategory(previousMonthData);
+
+    const currentMonthDetails = Object.entries(currentMonthExpenses).map(
+      ([label, value]) => ({
+        label,
+        value,
       })
-      .filter(Boolean);
+    );
 
-    const yourExpenses = data.reduce((total, item) => {
-      if (total[item?.label]) {
-        total[item?.label] += item?.value;
-      } else {
-        total[item?.label] = item?.value;
-      }
-      return total;
-    }, {} as { [key: string]: number });
+    const currentMonthValue = Object.values(currentMonthExpenses).reduce(
+      (total, value) => total + value,
+      0
+    );
 
-    const result = Object.entries(yourExpenses).map(([label, value]) => ({
-      label,
-      value,
-    }));
+    const previousMonthValue = Object.values(previousMonthExpenses).reduce(
+      (total, value) => total + value,
+      0
+    );
 
-    return result;
+    return {
+      currentMonthDetails,
+      values: {
+        currentMonthValue,
+        previousMonthValue,
+      },
+      // Se precisar pegar as informações detalhadas do mês anterior
+      // previousMonth: Object.entries(previousMonthExpenses).map(
+      //   ([label, value]) => ({
+      //     label,
+      //     value,
+      //   })
+      // ),
+    };
   } catch (error) {
     console.error(error);
   }

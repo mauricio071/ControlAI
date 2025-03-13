@@ -132,7 +132,7 @@ export const RendaFormModal = ({
                   onChange={(date) =>
                     onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
-                  label="Selecione a data"
+                  label="Data de início do recebimento"
                 />
               </CInput>
             )}
