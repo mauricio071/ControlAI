@@ -131,6 +131,29 @@ const getLastYearTransactions = async () => {
   }
 };
 
+const getRecentTransactions = async () => {
+  const user = auth.currentUser;
+
+  try {
+    const recentTransactionsRef = collection(db, "historicoTransacoes");
+    const transactionsQuery = query(
+      recentTransactionsRef,
+      where("uid", "==", user?.uid),
+      orderBy("timestamp", "desc"),
+      limit(5)
+    );
+    const querySnapshot = await getDocs(transactionsQuery);
+    const recentTransactions = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    return recentTransactions;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const fetchExpenses = async (userUid: string | undefined) => {
   const expensesCollection = collection(db, "historicoTransacoes");
 
@@ -223,29 +246,6 @@ const getExpenses = async () => {
       //   })
       // ),
     };
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getRecentTransactions = async () => {
-  const user = auth.currentUser;
-
-  try {
-    const recentTransactionsRef = collection(db, "historicoTransacoes");
-    const transactionsQuery = query(
-      recentTransactionsRef,
-      where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc"),
-      limit(5)
-    );
-    const querySnapshot = await getDocs(transactionsQuery);
-    const recentTransactions = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    return recentTransactions;
   } catch (error) {
     console.error(error);
   }

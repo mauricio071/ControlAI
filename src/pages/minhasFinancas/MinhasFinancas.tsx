@@ -25,7 +25,7 @@ export const MinhasFinancas = () => {
   const [addSaldoModal, setAddSaldoModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [balance, setBalance] = useState<BalanceType>(0);
+  const [balance, setBalance] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
 

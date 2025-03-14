@@ -38,7 +38,6 @@ export const getMinhasFinancasObserver = async (
 
     const data = financasInfo[0] as MinhasFinancasType;
     console.log(data);
-
     const finalData = {
       ...data,
       balance: await getBalance(data),
@@ -53,7 +52,7 @@ export const getMinhasFinancasObserver = async (
 };
 
 export const getBalance = async (data: MinhasFinancasType) => {
-  const balance = await getDoc(doc(db, "saldos", data.balance?.id));
+  const balance = await getDoc(doc(db, "saldos", data.id));
 
   return {
     id: data.balance?.id,

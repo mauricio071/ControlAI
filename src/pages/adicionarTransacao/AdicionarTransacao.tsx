@@ -2,17 +2,19 @@ import {
   Box,
   Button,
   MenuItem,
+  Skeleton,
   TextField,
   Theme,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
   useMediaQuery,
+  Grid2 as Grid,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import dayjs from "dayjs";
 
 import { CategoriaBadge } from "../minhasFinancas/components/CategoriaBadge";
@@ -20,7 +22,10 @@ import {
   CATEGORIAS_DESPESA,
   CATEGORIAS_RENDA,
 } from "../../shared/constants/Categorias";
-import { FormatarParaMoeda } from "../../shared/utils/FormatarMoeda";
+import {
+  FormatarMoeda,
+  FormatarParaMoeda,
+} from "../../shared/utils/FormatarMoeda";
 import { GridCard, TitleContainer } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
 import { TransactionType } from "../../services/interfaces/dashboardInterfaces";
@@ -29,6 +34,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { enqueueSnackbar } from "notistack";
 import * as yup from "yup";
 import { CInput } from "../../shared/components/cInput/CInput";
+import { getMinhasFinancasObserver } from "../../services/observers/minhasFinancasObserver";
+import { MinhasFinancasType } from "../../services/interfaces/minhasFinancas";
 
 export const AdicionarTransacao = () => {
   const [tipoTransacao, setTipoTransacao] = useState<"adicionar" | "descontar">(
@@ -54,6 +61,10 @@ export const AdicionarTransacao = () => {
   });
 
   const [loading, setLoading] = useState(false);
+
+  const [balanceLoading, setBalanceLoading] = useState(true);
+
+  const [balance, setBalance] = useState(0);
 
   const handleSubmitForm = async (data: TransactionType) => {
     try {
@@ -85,200 +96,257 @@ export const AdicionarTransacao = () => {
     <NumericFormat {...props} getInputRef={ref} />
   ));
 
+  const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
+
+  const handleMinhasFinancasData = (data: MinhasFinancasType) => {
+    setBalanceLoading(true);
+    setBalance(data.balance);
+    setBalanceLoading(false);
+  };
+
+  useEffect(() => {
+    getMinhasFinancasObserver(handleMinhasFinancasData);
+  }, []);
 
   return (
     <LayoutBase titulo="Adicionar Transação">
-      <Box maxWidth="50rem" width="100%" margin={lgDown ? "auto" : "none"}>
-        <GridCard titleContainer>
-          <TitleContainer title="Nova transação" />
-          <form onSubmit={handleSubmit(handleSubmitForm)}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              flexDirection="column"
-              gap="2rem"
-            >
-              <Controller
-                name="type"
-                control={control}
-                defaultValue={undefined}
-                rules={{ required: "Este campo é obrigatório" }}
-                render={({ field, fieldState: { error } }) => (
-                  <CInput error={error}>
-                    <ToggleButtonGroup
-                      color="primary"
-                      value={field.value}
-                      exclusive
-                      onChange={(_, newValue) => {
-                        field.onChange(newValue);
-                        setTipoTransacao(newValue);
-                      }}
-                      sx={{ gap: "1rem" }}
-                    >
-                      <ToggleButton
-                        value="adicionar"
-                        sx={{
-                          border: "2px solid #ccc ",
-                          borderRadius: "8px !important",
-                          "&.Mui-selected": {
-                            backgroundColor: "#4caf50",
-                            borderColor: "#4caf50",
-                            color: "white",
-                          },
-                          "&.Mui-selected:hover": {
-                            backgroundColor: "#4caf50",
-                          },
-                        }}
-                      >
-                        Adicionar
-                      </ToggleButton>
-                      <ToggleButton
-                        value="descontar"
-                        sx={{
-                          border: "2px solid #ccc !important",
-                          borderRadius: "8px !important",
-                          "&.Mui-selected": {
-                            backgroundColor: "#f44336",
-                            borderColor: "#f44336 !important",
-                            color: "white",
-                          },
-                          "&.Mui-selected:hover": {
-                            backgroundColor: "#f44336",
-                          },
-                        }}
-                      >
-                        Descontar
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                  </CInput>
-                )}
-              />
-              <Controller
-                name="date"
-                control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <CInput error={error}>
-                    <DatePicker
-                      value={value ? dayjs(value) : null}
-                      onChange={(date) =>
-                        onChange(date ? date.format("YYYY-MM-DD") : null)
-                      }
-                      label="Selecione a data"
-                    />
-                  </CInput>
-                )}
-              />
-              <Controller
-                name="description"
-                defaultValue=""
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <CInput error={error}>
-                    <TextField
-                      {...field}
-                      label="Descrição"
-                      variant="outlined"
-                    />
-                  </CInput>
-                )}
-              />
-              <Controller
-                name="category"
-                defaultValue=""
-                control={control}
-                disabled={!tipoTransacao}
-                render={({ field, fieldState: { error } }) => (
-                  <CInput error={error}>
-                    <TextField
-                      {...field}
-                      select
-                      label="Categoria"
-                      sx={{
-                        "& .MuiSelect-select": {
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.75rem",
-                        },
-                      }}
-                    >
-                      {tipoTransacao === "adicionar" &&
-                        CATEGORIAS_RENDA.map((option) => (
-                          <MenuItem
-                            key={option.value}
-                            value={option.value}
-                            sx={{ display: "flex", gap: "0.75rem" }}
+      <Grid
+        container
+        spacing={3}
+        flexDirection={{ xs: "column-reverse", md: "row" }}
+      >
+        <Grid size={{ xs: 12, md: 8, xl: 6 }}>
+          <Box margin={lgDown ? "auto" : "none"}>
+            <GridCard titleContainer>
+              <TitleContainer title="Nova transação" />
+              <form onSubmit={handleSubmit(handleSubmitForm)}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  flexDirection="column"
+                  gap="2rem"
+                >
+                  <Controller
+                    name="type"
+                    control={control}
+                    defaultValue={undefined}
+                    rules={{ required: "Este campo é obrigatório" }}
+                    render={({ field, fieldState: { error } }) => (
+                      <CInput error={error}>
+                        <ToggleButtonGroup
+                          color="primary"
+                          value={field.value}
+                          exclusive
+                          onChange={(_, newValue) => {
+                            field.onChange(newValue);
+                            setTipoTransacao(newValue);
+                          }}
+                          sx={{ gap: "1rem" }}
+                        >
+                          <ToggleButton
+                            value="adicionar"
+                            sx={{
+                              border: "2px solid #ccc ",
+                              borderRadius: "8px !important",
+                              "&.Mui-selected": {
+                                backgroundColor: "#4caf50",
+                                borderColor: "#4caf50",
+                                color: "white",
+                              },
+                              "&.Mui-selected:hover": {
+                                backgroundColor: "#4caf50",
+                              },
+                            }}
                           >
-                            <CategoriaBadge categoria={option.value} />
-                          </MenuItem>
-                        ))}
-                      {tipoTransacao === "descontar" &&
-                        CATEGORIAS_DESPESA.map((option) => (
-                          <MenuItem
-                            key={option.value}
-                            value={option.value}
-                            sx={{ display: "flex", gap: "0.75rem" }}
+                            Adicionar
+                          </ToggleButton>
+                          <ToggleButton
+                            value="descontar"
+                            sx={{
+                              border: "2px solid #ccc !important",
+                              borderRadius: "8px !important",
+                              "&.Mui-selected": {
+                                backgroundColor: "#f44336",
+                                borderColor: "#f44336 !important",
+                                color: "white",
+                              },
+                              "&.Mui-selected:hover": {
+                                backgroundColor: "#f44336",
+                              },
+                            }}
                           >
-                            <CategoriaBadge categoria={option.value} />
-                          </MenuItem>
-                        ))}
-                    </TextField>
-                  </CInput>
-                )}
-              />
-              <Controller
-                name="value"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <CInput error={error}>
-                    <TextField
-                      {...field}
-                      label="Valor"
-                      variant="outlined"
-                      fullWidth
-                      onChange={(e) => {
-                        const rawValue = FormatarParaMoeda(e.target.value);
-                        field.onChange(rawValue);
-                      }}
-                      InputProps={{
-                        inputComponent: NumberFormatCustom as any,
-                        inputProps: {
-                          thousandSeparator: ".",
-                          decimalSeparator: ",",
-                          prefix: `${
-                            tipoTransacao === "adicionar" ? "+" : "-"
-                          } R$`,
-                          decimalScale: 2,
-                          fixedDecimalScale: true,
-                          allowNegative: false,
-                        },
-                      }}
-                    />
-                  </CInput>
-                )}
-              />
-              <Button
-                type="submit"
-                size="large"
-                disabled={loading}
-                variant="contained"
-                disableElevation
-                sx={{
-                  borderRadius: "1rem",
-                  maxWidth: "12rem",
-                  width: "100%",
-                  alignSelf: "center",
-                }}
+                            Descontar
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </CInput>
+                    )}
+                  />
+                  <Controller
+                    name="date"
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <CInput error={error}>
+                        <DatePicker
+                          value={value ? dayjs(value) : null}
+                          onChange={(date) =>
+                            onChange(date ? date.format("YYYY-MM-DD") : null)
+                          }
+                          label="Selecione a data"
+                        />
+                      </CInput>
+                    )}
+                  />
+                  <Controller
+                    name="description"
+                    defaultValue=""
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <CInput error={error}>
+                        <TextField
+                          {...field}
+                          label="Descrição"
+                          variant="outlined"
+                        />
+                      </CInput>
+                    )}
+                  />
+                  <Controller
+                    name="category"
+                    defaultValue=""
+                    control={control}
+                    disabled={!tipoTransacao}
+                    render={({ field, fieldState: { error } }) => (
+                      <CInput error={error}>
+                        <TextField
+                          {...field}
+                          select
+                          label="Categoria"
+                          sx={{
+                            "& .MuiSelect-select": {
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "0.75rem",
+                            },
+                          }}
+                        >
+                          {tipoTransacao === "adicionar" &&
+                            CATEGORIAS_RENDA.map((option) => (
+                              <MenuItem
+                                key={option.value}
+                                value={option.value}
+                                sx={{ display: "flex", gap: "0.75rem" }}
+                              >
+                                <CategoriaBadge categoria={option.value} />
+                              </MenuItem>
+                            ))}
+                          {tipoTransacao === "descontar" &&
+                            CATEGORIAS_DESPESA.map((option) => (
+                              <MenuItem
+                                key={option.value}
+                                value={option.value}
+                                sx={{ display: "flex", gap: "0.75rem" }}
+                              >
+                                <CategoriaBadge categoria={option.value} />
+                              </MenuItem>
+                            ))}
+                        </TextField>
+                      </CInput>
+                    )}
+                  />
+                  <Controller
+                    name="value"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <CInput error={error}>
+                        <TextField
+                          {...field}
+                          label="Valor"
+                          variant="outlined"
+                          fullWidth
+                          onChange={(e) => {
+                            const rawValue = FormatarParaMoeda(e.target.value);
+                            field.onChange(rawValue);
+                          }}
+                          InputProps={{
+                            inputComponent: NumberFormatCustom as any,
+                            inputProps: {
+                              thousandSeparator: ".",
+                              decimalSeparator: ",",
+                              prefix: `${
+                                tipoTransacao === "adicionar" ? "+" : "-"
+                              } R$`,
+                              decimalScale: 2,
+                              fixedDecimalScale: true,
+                              allowNegative: false,
+                            },
+                          }}
+                        />
+                      </CInput>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    size="large"
+                    disabled={loading}
+                    variant="contained"
+                    disableElevation
+                    sx={{
+                      borderRadius: "1rem",
+                      maxWidth: "12rem",
+                      width: "100%",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Salvar
+                  </Button>
+                </Box>
+              </form>
+            </GridCard>
+          </Box>
+        </Grid>
+        <Grid size={{ xs: 12, md: 4, xl: 3 }}>
+          <Box marginTop={mdDown ? "0" : "2rem"}>
+            <GridCard>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
               >
-                Salvar
-              </Button>
-            </Box>
-          </form>
-        </GridCard>
-      </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="start"
+                  gap="0.75rem"
+                  width="100%"
+                >
+                  <Typography textAlign="start" color="gray">
+                    Saldo atual
+                  </Typography>
+                  <Box display="flex" gap="0.5rem" width="100%">
+                    {balanceLoading ? (
+                      <Skeleton variant="rounded" width="100%" height={43} />
+                    ) : (
+                      <Typography
+                        variant="h4"
+                        fontWeight="600"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {FormatarMoeda(balance.balance)}
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+            </GridCard>
+          </Box>
+        </Grid>
+      </Grid>
     </LayoutBase>
   );
 };

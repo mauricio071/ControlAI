@@ -4,6 +4,7 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -25,12 +26,20 @@ export const useAppThemeContext = () => {
 };
 
 export const AppThemeProvider = ({ children }: AppThemeProviderProps) => {
-  const [themeName, setThemeName] = useState<"light" | "dark">("light");
+  const [themeName, setThemeName] = useState<"light" | "dark">(
+    () => (localStorage.getItem("theme") as "light" | "dark") || "light"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", themeName);
+  }, [themeName]);
 
   const toggleTheme = useCallback(() => {
-    setThemeName((oldThemeName) =>
-      oldThemeName === "light" ? "dark" : "light"
-    );
+    setThemeName((oldThemeName) => {
+      const newTheme = oldThemeName === "light" ? "dark" : "light";
+      localStorage.setItem("theme", newTheme);
+      return newTheme;
+    });
   }, []);
 
   const theme = useMemo(() => {

@@ -1,4 +1,10 @@
-import { Box, Grid2 as Grid, Icon, Typography } from "@mui/material";
+import {
+  Box,
+  Grid2 as Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts";
@@ -32,6 +38,8 @@ export const Dashboard = () => {
   const [savings, setSavings] = useState(0);
 
   const [pData, setPdata] = useState<number[]>([]);
+
+  const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
   const xLabels = [
     "Jan",
@@ -83,7 +91,7 @@ export const Dashboard = () => {
 
   return (
     <LayoutBase titulo="Dashboard">
-      <Box>
+      <Box marginTop={mdDown ? "2rem" : "0"}>
         <Grid container spacing={3}>
           <DashboardMiniCard
             icon="account_balance_wallet"

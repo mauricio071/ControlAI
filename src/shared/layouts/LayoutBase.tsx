@@ -26,7 +26,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
 
   const { toggleDrawerOpen } = useDrawerContext();
 
-  const { toggleTheme } = useAppThemeContext();
+  const { toggleTheme, themeName } = useAppThemeContext();
 
   const user = auth.currentUser;
 
@@ -42,15 +42,9 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
         paddingBottom="4rem"
       >
         <Box
-          height={
-            smDown
-              ? theme.spacing(6)
-              : mdDown
-              ? theme.spacing(8)
-              : theme.spacing(12)
-          }
+          height={theme.spacing(14)}
           display="flex"
-          alignItems="center"
+          alignItems={mdDown ? "start" : "center"}
           gap={1}
         >
           {lgDown && (
@@ -63,7 +57,10 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
+            flexWrap={mdDown ? "wrap" : "nowrap"}
+            gap="1rem"
             width="100%"
+            height="100%"
           >
             <Typography
               variant={smDown ? "h5" : "h4"}
@@ -71,17 +68,32 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
               overflow="hidden"
               textOverflow="ellipsis"
               fontWeight="bold"
+              width="100%"
             >
               {titulo}
             </Typography>
-            <Box display="flex" alignItems="center" gap="0.25rem">
-              <Typography variant="h5" fontWeight="bold" color="primary">
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={smDown ? "0rem" : "0.25rem"}
+              justifyContent="end"
+              width="100%"
+            >
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                color="primary"
+                marginRight={smDown ? "0.25rem" : "0rem"}
+              >
                 Olá,
               </Typography>
               <Typography variant="h5" fontWeight="bold">
                 {user?.displayName}!
               </Typography>
-              <MaterialUISwitch onClick={toggleTheme} />
+              <MaterialUISwitch
+                checked={themeName === "dark"}
+                onChange={toggleTheme}
+              />
               <LayoutBaseMenu />
             </Box>
           </Box>
