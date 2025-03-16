@@ -63,6 +63,8 @@ export const Dashboard = () => {
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const handleDashboardData = (data: DashboardType) => {
+    console.log(data);
+
     setLoading(true);
     setBalance(data.balance);
     setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
@@ -114,9 +116,29 @@ export const Dashboard = () => {
             </Typography>
           </DashboardMiniCard>
           <DashboardMiniCard
+            icon="credit_card"
+            color="linear-gradient(195deg, #FFB6C1, #FF1493)"
+            title="Despesas fixos mensal"
+            value={monthlyFixed}
+            to="/minhas-financas"
+            loading={loading}
+          >
+            {/* <Icon color="error">arrow_upward</Icon>
+            <Typography
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {FormatarMoeda(balance)}
+              <Typography variant="caption" marginLeft="0.25rem">
+                em relação a mês anterior
+              </Typography>
+            </Typography> */}
+          </DashboardMiniCard>
+          <DashboardMiniCard
             icon="home"
             color="linear-gradient(195deg, #FF8A00, #FF5E00)"
-            title="Gastos deste Mês"
+            title="Gastos deste mês"
             value={currentMonthExpense}
             to="/historico"
             loading={loading}
@@ -137,27 +159,6 @@ export const Dashboard = () => {
               )}
               <Typography variant="caption" marginLeft="0.25rem">
                 comparado ao mês anterior
-              </Typography>
-            </Typography>
-          </DashboardMiniCard>
-          <DashboardMiniCard
-            icon="credit_card"
-            color="linear-gradient(195deg, #FFB6C1, #FF1493)"
-            title="Gasto Fixo Mensal"
-            value={monthlyFixed}
-            to="/minhas-financas"
-            loading={loading}
-          >
-            {}
-            <Icon color="error">arrow_upward</Icon>
-            <Typography
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {FormatarMoeda(balance)}
-              <Typography variant="caption" marginLeft="0.25rem">
-                em relação a mês anterior
               </Typography>
             </Typography>
           </DashboardMiniCard>

@@ -14,6 +14,8 @@ import {
 import { auth, db } from "../../config/firebaseConfig";
 import { DashboardType } from "../interfaces/dashboardInterfaces";
 import dayjs from "dayjs";
+import { getDespesasAccess } from "../accesses/minhasFinancasAccess";
+import { getDespesasAction } from "../actions/minhasFinancasActions";
 
 export const getDashboardObserver = async (
   callBack: (data: DashboardType) => void
@@ -37,11 +39,19 @@ export const getDashboardObserver = async (
 
     const expenses = await getExpenses();
 
+    const monthlyFixedArr = await getDespesasAction();
+
+    const monthlyFixedValue = monthlyFixedArr?.reduce(
+      (total, item) => item.value + total,
+      0
+    );
+
     const finalData = {
       ...data,
       balance: await getBalance(data),
       monthlyExpense: expenses?.values,
       //TODO remover o recent e filtrar 5 pelo front
+      monthlyFixed: monthlyFixedValue,
       lastYearTransactions: await getLastYearTransactions(),
       yourExpenses: expenses?.currentMonthDetails,
       recentTransactions: await getRecentTransactions(),
