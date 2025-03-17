@@ -102,19 +102,7 @@ export const Dashboard = () => {
             value={balance}
             to="/minhas-financas"
             loading={loading}
-          >
-            <Icon color="success">arrow_upward</Icon>
-            <Typography
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {FormatarMoeda(balance)}
-              <Typography variant="caption" marginLeft="0.25rem">
-                em relação a mês anterior
-              </Typography>
-            </Typography>
-          </DashboardMiniCard>
+          />
           <DashboardMiniCard
             icon="credit_card"
             color="linear-gradient(195deg, #FFB6C1, #FF1493)"
@@ -122,19 +110,7 @@ export const Dashboard = () => {
             value={monthlyFixed}
             to="/minhas-financas"
             loading={loading}
-          >
-            {/* <Icon color="error">arrow_upward</Icon>
-            <Typography
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {FormatarMoeda(balance)}
-              <Typography variant="caption" marginLeft="0.25rem">
-                em relação a mês anterior
-              </Typography>
-            </Typography> */}
-          </DashboardMiniCard>
+          />
           <DashboardMiniCard
             icon="home"
             color="linear-gradient(195deg, #FF8A00, #FF5E00)"
@@ -142,8 +118,16 @@ export const Dashboard = () => {
             value={currentMonthExpense}
             to="/historico"
             loading={loading}
+          />
+          <DashboardMiniCard
+            icon="trending_up"
+            color="linear-gradient(195deg, #66BB6A, #388E3C)"
+            title="Economizou (vs mês passado)"
+            value={compareValue(currentMonthExpense, previousMonthlyExpense)}
+            to="/historico"
+            loading={loading}
           >
-            {compareValue(currentMonthExpense, previousMonthlyExpense) > 0 ? (
+            {/* {compareValue(currentMonthExpense, previousMonthlyExpense) > 0 ? (
               <Icon color="error">arrow_upward</Icon>
             ) : (
               <Icon color="success">arrow_downward</Icon>
@@ -160,27 +144,7 @@ export const Dashboard = () => {
               <Typography variant="caption" marginLeft="0.25rem">
                 comparado ao mês anterior
               </Typography>
-            </Typography>
-          </DashboardMiniCard>
-          <DashboardMiniCard
-            icon="trending_up"
-            color="linear-gradient(195deg, #66BB6A, #388E3C)"
-            title="Economia"
-            value={savings}
-            to="/historico"
-            loading={loading}
-          >
-            <Icon color="success">arrow_upward</Icon>
-            <Typography
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {FormatarMoeda(balance)}
-              <Typography variant="caption" marginLeft="0.25rem">
-                em relação a mês anterior
-              </Typography>
-            </Typography>
+            </Typography> */}
           </DashboardMiniCard>
         </Grid>
       </Box>

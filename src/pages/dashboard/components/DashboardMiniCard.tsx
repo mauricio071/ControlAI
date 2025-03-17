@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { ReactNode } from "react";
 
 interface DashboardMiniCardProps {
-  children: ReactNode;
+  children?: ReactNode;
   icon: string;
   color: string;
   title: string;
@@ -77,19 +77,20 @@ export const DashboardMiniCard = ({
                 whiteSpace="nowrap"
                 overflow="hidden"
                 textOverflow="ellipsis"
+                color={
+                  icon !== "trending_up" ? "" : value < 0 ? "success" : "error"
+                }
               >
-                {FormatarMoeda(value)}
+                {value < 0 ? FormatarMoeda(value * -1) : FormatarMoeda(value)}
               </Typography>
-              {title !== "Saldo" && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  gap="0.25rem"
-                  width="100%"
-                >
-                  {children}
-                </Box>
-              )}
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="0.25rem"
+                width="100%"
+              >
+                {children}
+              </Box>
             </Box>
           )}
           <Link to={to}>
