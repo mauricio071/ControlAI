@@ -157,6 +157,7 @@ export const Historico = () => {
         <DataGrid
           rows={rows}
           columns={columns}
+          rowCount={rows.length}
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
           loading={loading}

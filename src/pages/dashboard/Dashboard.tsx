@@ -63,8 +63,6 @@ export const Dashboard = () => {
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const handleDashboardData = (data: DashboardType) => {
-    console.log(data);
-
     setLoading(true);
     setBalance(data.balance);
     setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);

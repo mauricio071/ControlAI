@@ -25,7 +25,8 @@ export const addTransacaoAccess = async (body: TransactionType) => {
 
     const data = {
       uid: user?.uid,
-      timestamp: dayjs().toDate(),
+      created_at: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
       ...body,
     };
     const response = await addDoc(addTransacaoCollectionRef, data);

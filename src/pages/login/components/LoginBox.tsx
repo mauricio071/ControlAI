@@ -67,10 +67,12 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
   const signGoogle = async () => {
     try {
       await setPersistence(auth, browserSessionPersistence);
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
       enqueueSnackbar("Login realizado com sucesso!", {
         variant: "success",
       });
+      console.log(result);
+
       navigate("/dashboard");
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {

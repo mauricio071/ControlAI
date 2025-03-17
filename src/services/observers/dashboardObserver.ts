@@ -16,6 +16,7 @@ import { DashboardType } from "../interfaces/dashboardInterfaces";
 import dayjs from "dayjs";
 import { getDespesasAccess } from "../accesses/minhasFinancasAccess";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
+import { getBalance } from "./minhasFinancasObserver";
 
 export const getDashboardObserver = async (
   callBack: (data: DashboardType) => void
@@ -37,6 +38,8 @@ export const getDashboardObserver = async (
 
     const data = dashboardInfo[0] as DashboardType;
 
+    const balance = await getBalance();
+
     const expenses = await getExpenses();
 
     const monthlyFixedArr = await getDespesasAction();
@@ -48,7 +51,7 @@ export const getDashboardObserver = async (
 
     const finalData = {
       ...data,
-      balance: await getBalance(data),
+      balance: balance.balance,
       monthlyExpense: expenses?.values,
       //TODO remover o recent e filtrar 5 pelo front
       monthlyFixed: monthlyFixedValue,
@@ -57,14 +60,16 @@ export const getDashboardObserver = async (
       recentTransactions: await getRecentTransactions(),
     };
 
+    console.log(finalData.balance);
+
     callBack(finalData as DashboardType);
   });
 };
 
-export const getBalance = async (dashboardInfo: DashboardType) => {
-  const balance = await getDoc(doc(db, "saldos", dashboardInfo.balance?.id));
-  return balance.data()?.balance;
-};
+// export const getBalance = async (dashboardInfo: DashboardType) => {
+//   const balance = await getDoc(doc(db, "saldos", dashboardInfo.balance?.id));
+//   return balance.data()?.balance;
+// };
 
 // export const compareExpense = async () => {
 //   //TODO
@@ -149,7 +154,7 @@ const getRecentTransactions = async () => {
     const transactionsQuery = query(
       recentTransactionsRef,
       where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc"),
+      orderBy("updated_at", "desc"),
       limit(5)
     );
     const querySnapshot = await getDocs(transactionsQuery);
@@ -275,30 +280,6 @@ const getExpenses = async () => {
 // };
 
 // export const addDashboardData = async () => {
-//   const gastosCollectionRef = collection(db, "despesas");
-
-//   const user = auth.currentUser;
-
-//   await addDoc(gastosCollectionRef, {
-//     uid: user?.uid,
-//     expenses: [
-//       {
-//         label: "Alimentação",
-//         value: 80,
-//       },
-//       {
-//         label: "Transporte",
-//         value: 180,
-//       },
-//       {
-//         label: "Saúde",
-//         value: 280,
-//       },
-//     ],
-//   });
-// };
-
-// export const addDashboardData = async () => {
 //   const gastosCollectionRef = collection(db, "historicoTransacoes");
 
 //   const user = auth.currentUser;
@@ -325,21 +306,8 @@ const getExpenses = async () => {
 //     date: dayjs().format("YYYY-MM-DD HH:mm"),
 //     description: "Teste4",
 //     value: 1000,
-//     timestamp: dayjs().toDate(),
+//     created_at: dayjs().toDate(),
 //   };
 
 //   await addDoc(gastosCollectionRef, data);
 // };
-
-export const addDashboardData = async () => {
-  const gastosCollectionRef = collection(db, "saldos");
-
-  const user = auth.currentUser;
-
-  const data = {
-    uid: user?.uid,
-    balance: 3000,
-  };
-
-  await addDoc(gastosCollectionRef, data);
-};

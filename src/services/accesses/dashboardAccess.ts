@@ -21,7 +21,7 @@ export const getDashboardAccess = async (
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(dashboardInfo);
+      // console.log(dashboardInfo);
     });
   } catch (error) {
     console.error(error);

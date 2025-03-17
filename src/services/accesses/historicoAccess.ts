@@ -18,7 +18,7 @@ export const getAllTransactionsAccess = async () => {
     const transactionsQuery = query(
       transactionsRef,
       where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc")
+      orderBy("updated_at", "desc")
     );
     const querySnapshot = await getDocs(transactionsQuery);
     const transactions = querySnapshot.docs.map((doc) => ({

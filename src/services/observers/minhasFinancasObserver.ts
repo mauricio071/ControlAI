@@ -37,10 +37,9 @@ export const getMinhasFinancasObserver = async (
     }));
 
     const data = financasInfo[0] as MinhasFinancasType;
-    console.log(data);
     const finalData = {
       ...data,
-      balance: await getBalance(data),
+      balance: await getBalance(),
       // incomes: await getRendas(),
       //   lastYearTransactions: await getLastYearTransactions(data),
       //   yourExpenses: await getExpenses(data),
@@ -51,94 +50,21 @@ export const getMinhasFinancasObserver = async (
   });
 };
 
-export const getBalance = async (data: MinhasFinancasType) => {
-  const balance = await getDoc(doc(db, "saldos", data.id));
-
-  return {
-    id: data.balance?.id,
-    balance: balance.data()?.balance,
-  };
-};
-
-// export const addDashboardData = async (body, id) => {
-//   const gastosCollectionRef = collection(db, "gastosUltimoAno");
-
-//   const user = auth.currentUser;
-
-//   await addDoc(gastosCollectionRef, {
-//     uid: user?.uid,
-//     transactions: [
-//       12324, 2354, 234, 34325, 5436, 1234, 345, 425, 234, 123, 345,
-//     ],
-//   });
-// };
-
-// export const addDashboardData = async () => {
-//   const gastosCollectionRef = collection(db, "despesas");
-
-//   const user = auth.currentUser;
-
-//   await addDoc(gastosCollectionRef, {
-//     uid: user?.uid,
-//     expenses: [
-//       {
-//         label: "Alimentação",
-//         value: 80,
-//       },
-//       {
-//         label: "Transporte",
-//         value: 180,
-//       },
-//       {
-//         label: "Saúde",
-//         value: 280,
-//       },
-//     ],
-//   });
-// };
-
-// export const addDashboardData = async () => {
-//   const gastosCollectionRef = collection(db, "historicoTransacoes");
-
-//   const user = auth.currentUser;
-
-//   const data: TransactionType = {
-//     uid: user?.uid,
-//     // type: "descontar",
-//     // category: "lazer",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Netflix",
-//     // value: 300,
-//     // type: "adicionar",
-//     // category: "salario",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Salário",
-//     // value: 100,
-//     // type: "adicionar",
-//     // category: "freelance",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Freelance",
-//     // value: 3000,
-//     type: "descontar",
-//     category: "freelance",
-//     date: dayjs().format("YYYY-MM-DD HH:mm"),
-//     description: "Teste4",
-//     value: 1000,
-//     timestamp: dayjs().toDate(),
-//   };
-
-//   await addDoc(gastosCollectionRef, data);
-// };
-
-export const addDashboardData = async () => {
-  const gastosCollectionRef = collection(db, "saldos");
-
+export const getBalance = async () => {
   const user = auth.currentUser;
 
-  const data = {
-    uid: user?.uid,
-    balance: 3000,
-  };
+  const balanceCollectionRef = collection(db, "saldos");
 
-  await addDoc(gastosCollectionRef, data);
+  const balanceQuery = query(
+    balanceCollectionRef,
+    where("uid", "==", user?.uid)
+  );
+
+  const querySnapshot = await getDocs(balanceQuery);
+  const data = querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+
+  return data[0];
 };

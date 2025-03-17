@@ -14,6 +14,7 @@ import { useState } from "react";
 import * as yup from "yup";
 
 import { auth } from "../../../config/firebaseConfig";
+import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -56,6 +57,7 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
       await updateProfile(userCredential.user, {
         displayName: data.name,
       });
+      await createAllDocuments(userCredential.user.uid);
       enqueueSnackbar("Conta criada com sucesso!", {
         variant: "success",
       });

@@ -21,7 +21,7 @@ export const updateBalanceAccess = async (newBalance: BalanceType) => {
     const balanceDoc = doc(db, "saldos", newBalance.id);
     const newBody = {
       balance: newBalance.balance,
-      updateAt: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
     };
     const response = await updateDoc(balanceDoc, newBody);
 
@@ -39,7 +39,7 @@ export const getRendasAccess = async () => {
     const incomesQuery = query(
       incomesRef,
       where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc")
+      orderBy("updated_at", "desc")
     );
     const querySnapshot = await getDocs(incomesQuery);
     const incomes = querySnapshot.docs.map((doc) => ({
@@ -60,8 +60,8 @@ export const addRendaAccess = async (body: RendaFormData) => {
   try {
     const data = {
       uid: user?.uid,
-      timestamp: dayjs().toDate(),
-      updateAt: dayjs().toDate(),
+      created_at: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
       type: "adicionar",
       ...body,
     };
@@ -78,7 +78,7 @@ export const updateRendaAccess = async (body: RendaFormData, id: string) => {
     const renda = doc(db, "rendas", id);
     const newBody = {
       ...body,
-      updateAt: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
     };
     const response = await updateDoc(renda, newBody);
 
@@ -106,7 +106,7 @@ export const getDespesasAccess = async () => {
     const expensesQuery = query(
       expensesRef,
       where("uid", "==", user?.uid),
-      orderBy("timestamp", "desc")
+      orderBy("updated_at", "desc")
     );
     const querySnapshot = await getDocs(expensesQuery);
     const expenses = querySnapshot.docs.map((doc) => ({
@@ -128,8 +128,8 @@ export const addDespesaAccess = async (body: DespesaFormData) => {
   try {
     const data = {
       uid: user?.uid,
-      timestamp: dayjs().toDate(),
-      updateAt: dayjs().toDate(),
+      created_at: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
       type: "descontar",
       ...body,
     };
@@ -149,7 +149,7 @@ export const updateDespesaAccess = async (
     const despesa = doc(db, "despesas", id);
     const newBody = {
       ...body,
-      updateAt: dayjs().toDate(),
+      updated_at: dayjs().toDate(),
     };
     const response = await updateDoc(despesa, newBody);
 
