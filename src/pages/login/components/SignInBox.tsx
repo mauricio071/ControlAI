@@ -57,7 +57,7 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
       await updateProfile(userCredential.user, {
         displayName: data.name,
       });
-      await createAllDocuments(userCredential.user.uid);
+      await createAllDocuments();
       enqueueSnackbar("Conta criada com sucesso!", {
         variant: "success",
       });

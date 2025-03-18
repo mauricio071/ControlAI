@@ -15,6 +15,7 @@ interface DashboardMiniCardProps {
   children?: ReactNode;
   icon: string;
   color: string;
+  textColor?: "success" | "error" | "";
   title: string;
   value: number;
   to: string;
@@ -25,6 +26,7 @@ export const DashboardMiniCard = ({
   children,
   icon,
   color,
+  textColor = "",
   title,
   value,
   to,
@@ -77,11 +79,25 @@ export const DashboardMiniCard = ({
                 whiteSpace="nowrap"
                 overflow="hidden"
                 textOverflow="ellipsis"
-                color={
-                  icon !== "trending_up" ? "" : value < 0 ? "success" : "error"
-                }
+                color={textColor}
+                display="flex"
+                alignItems="center"
+                gap="0.25rem"
               >
-                {value < 0 ? FormatarMoeda(value * -1) : FormatarMoeda(value)}
+                {icon !== "trending_up" || value === 0 ? (
+                  ""
+                ) : value < 0 ? (
+                  <Icon color="success" fontSize="large">
+                    arrow_downward
+                  </Icon>
+                ) : (
+                  <Icon color="error" fontSize="large">
+                    arrow_upward
+                  </Icon>
+                )}
+                {icon === "trending_up" && value < 0
+                  ? FormatarMoeda(value * -1)
+                  : FormatarMoeda(value)}
               </Typography>
               <Box
                 display="flex"

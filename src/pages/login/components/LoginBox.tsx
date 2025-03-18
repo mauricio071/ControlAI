@@ -14,6 +14,7 @@ import * as yup from "yup";
 
 import { auth, googleProvider } from "../../../config/firebaseConfig";
 import { GoogleIcon } from "../../../shared/components/icons/GoogleIcon";
+import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -71,7 +72,13 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
       enqueueSnackbar("Login realizado com sucesso!", {
         variant: "success",
       });
-      console.log(result);
+
+      if (
+        result.user.metadata.creationTime ===
+        result.user.metadata.lastSignInTime
+      ) {
+        await createAllDocuments();
+      }
 
       navigate("/dashboard");
     } catch (error) {

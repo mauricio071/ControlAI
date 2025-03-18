@@ -336,6 +336,7 @@ export const AdicionarTransacao = () => {
                         whiteSpace="nowrap"
                         overflow="hidden"
                         textOverflow="ellipsis"
+                        color={balance.balance < 0 ? "error" : ""}
                       >
                         {FormatarMoeda(balance.balance)}
                       </Typography>

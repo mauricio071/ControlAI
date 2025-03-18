@@ -94,6 +94,7 @@ export const Historico = () => {
         variant: "success",
       });
       getHistoryTransaction();
+      getHistoryExpense();
       setDeleteModal(false);
     } catch (error) {
       enqueueSnackbar("Erro ao deletar a renda. Tente novamente.", {

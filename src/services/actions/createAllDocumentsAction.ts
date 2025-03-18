@@ -1,12 +1,14 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
-import { db } from "../../config/firebaseConfig";
+import { auth, db } from "../../config/firebaseConfig";
 
-export const createAllDocuments = async (uid: string) => {
+export const createAllDocuments = async () => {
+  const uid = auth.currentUser?.uid;
+
   await createBalance(uid);
 };
 
-export const createBalance = async (uid: string) => {
+export const createBalance = async (uid: string = "") => {
   const balanceCollectionRef = collection(db, "saldos");
 
   const data = {

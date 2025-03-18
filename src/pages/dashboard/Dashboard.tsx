@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
-import { PieChart } from "@mui/x-charts";
+import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 
 import {
@@ -96,6 +96,7 @@ export const Dashboard = () => {
           <DashboardMiniCard
             icon="account_balance_wallet"
             color="linear-gradient(195deg, #49a3f1, #1A73E8)"
+            textColor={balance < 0 ? "error" : ""}
             title="Saldo"
             value={balance}
             to="/minhas-financas"
@@ -120,7 +121,12 @@ export const Dashboard = () => {
           <DashboardMiniCard
             icon="trending_up"
             color="linear-gradient(195deg, #66BB6A, #388E3C)"
-            title="Economizou (vs mês passado)"
+            textColor={
+              compareValue(currentMonthExpense, previousMonthlyExpense) < 0
+                ? "success"
+                : "error"
+            }
+            title="Economia (vs mês passado)"
             value={compareValue(currentMonthExpense, previousMonthlyExpense)}
             to="/historico"
             loading={loading}
@@ -190,17 +196,40 @@ export const Dashboard = () => {
               <TitleContainer title="Seus gastos deste mês" />
               {loading ? (
                 <Loading width="285px" height="285px" />
-              ) : (
+              ) : yourExpenses.length > 0 ? (
                 <PieChart
                   series={[
                     {
                       data: yourExpenses,
                       valueFormatter: (data) =>
                         `${FormatarMoeda(Number(data.value))}`,
+                      arcLabel: (data) =>
+                        `${FormatarMoeda(Number(data.value))}`,
+                      arcLabelMinAngle: 35,
+                      arcLabelRadius: "60%",
+                      highlightScope: { fade: "global", highlight: "item" },
+                      faded: {
+                        additionalRadius: -30,
+                        color: "gray",
+                      },
                     },
                   ]}
+                  sx={{
+                    [`& .${pieArcLabelClasses.root}`]: {
+                      fill: "white",
+                    },
+                  }}
                   height={300}
                 />
+              ) : (
+                <Box
+                  height={300}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography>Nenhum dado disponível</Typography>
+                </Box>
               )}
             </GridCard>
           </Grid>
@@ -212,7 +241,7 @@ export const Dashboard = () => {
           {loading ? (
             <Loading width="285px" height="285px" />
           ) : lastTransactions.length === 0 ? (
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" justifyContent="center" marginBottom="1rem">
               <Typography>Nenhum dado encontrado</Typography>
             </Box>
           ) : (

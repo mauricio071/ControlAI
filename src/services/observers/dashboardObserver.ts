@@ -60,8 +60,6 @@ export const getDashboardObserver = async (
       recentTransactions: await getRecentTransactions(),
     };
 
-    console.log(finalData.balance);
-
     callBack(finalData as DashboardType);
   });
 };
