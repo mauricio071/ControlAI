@@ -8,7 +8,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { ReactNode } from "react";
-import { TitleContainer } from "../titleContainer/TitleContainer";
 
 interface CModalProps {
   children: ReactNode;
@@ -47,7 +46,6 @@ export const CModal = ({ children, title, open, onClose }: CModalProps) => {
           >
             {title}
           </Typography>
-          {/* <TitleContainer title={title} /> */}
           <IconButton
             onClick={onClose}
             sx={{

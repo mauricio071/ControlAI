@@ -10,14 +10,14 @@ export const DarkTheme = createTheme({
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#2879A8",
+      main: "#408aeb",
       dark: "#1E5B81",
-      light: "#3E92C1",
+      light: "#49a3f1",
       contrastText: "#ffffff",
     },
     background: {
-      paper: "#303134",
-      default: "#202124",
+      paper: "#2A2D32",
+      default: "#1E2125",
     },
   },
   typography: {

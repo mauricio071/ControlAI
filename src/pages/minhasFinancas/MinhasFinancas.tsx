@@ -69,9 +69,9 @@ export const MinhasFinancas = () => {
                       whiteSpace="nowrap"
                       overflow="hidden"
                       textOverflow="ellipsis"
-                      color={balance.balance < 0 ? "error" : ""}
+                      color={balance < 0 ? "error" : ""}
                     >
-                      {FormatarMoeda(balance.balance)}
+                      {FormatarMoeda(balance)}
                     </Typography>
                   )}
                 </Box>
@@ -102,7 +102,7 @@ export const MinhasFinancas = () => {
                 width="100%"
               >
                 <Typography textAlign="start" color="gray">
-                  Renda total
+                  Renda mensal total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
                   {loading ? (
@@ -135,7 +135,7 @@ export const MinhasFinancas = () => {
                 width="100%"
               >
                 <Typography textAlign="start" color="gray">
-                  Despesa total
+                  Gasto mensal total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
                   {loading ? (

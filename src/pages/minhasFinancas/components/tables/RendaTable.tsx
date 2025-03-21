@@ -143,7 +143,7 @@ export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
 
   return (
     <GridCard titleContainer>
-      <TitleContainer title="Renda" />
+      <TitleContainer title="Renda mensal" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button

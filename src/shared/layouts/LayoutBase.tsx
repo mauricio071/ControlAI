@@ -7,11 +7,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { ReactNode } from "react";
+
 import { useAppThemeContext, useDrawerContext } from "../contexts";
-import { Sidebar } from "../components";
-import { auth } from "../../config/firebaseConfig";
-import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
 import { MaterialUISwitch } from "./components/MaterialUISwitch";
+import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
+import { auth } from "../../config/firebaseConfig";
+import { Sidebar } from "../components";
 
 interface LayoutBaseProps {
   children: ReactNode;

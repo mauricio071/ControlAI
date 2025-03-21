@@ -1,21 +1,15 @@
 export interface DashboardType {
   balance: number;
-  lastYearTransactions: LastYearTransactionsType;
-  monthlyExpense: number;
   monthlyFixed: number;
-  yourExpenses: YourExpensesType;
-  savings: number;
-  uid: string;
+  monthlyExpense: MonthlyExpenseType;
+  lastYearTransactions: number[];
+  yourExpenses: ExpenseType[];
+  recentTransactions: TransactionType[];
 }
 
-export interface LastYearTransactionsType {
-  uid: string;
-  transactions: number[];
-}
-
-export interface YourExpensesType {
-  uid: string;
-  expenses: ExpenseType[];
+export interface MonthlyExpenseType {
+  currentMonthValue: number;
+  previousMonthValue: number;
 }
 
 export interface ExpenseType {
@@ -23,14 +17,13 @@ export interface ExpenseType {
   value: number;
 }
 
-// export interface RecentTransactionsType {
-//   uid: string;
-//   transaction: TransactionType;
-// }
+export interface GetExpensesType {
+  currentMonthDetails: ExpenseType[];
+  values: MonthlyExpenseType;
+}
 
 export interface TransactionType {
-  // uid: string;
-  // id: string;
+  id?: string;
   type: "adicionar" | "descontar";
   date: string;
   description: string;

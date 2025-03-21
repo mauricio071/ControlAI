@@ -58,13 +58,13 @@ export const DespesaFormModal = ({
       try {
         setLoading(true);
         await updateDespesaAction(formData, data.id);
-        enqueueSnackbar("Despesa atualizada com sucesso!", {
+        enqueueSnackbar("Gasto atualizado com sucesso!", {
           variant: "success",
         });
         onClose();
         setLoading(false);
       } catch (error) {
-        enqueueSnackbar("Erro ao atualizar despesa. Tente novamente.", {
+        enqueueSnackbar("Erro ao atualizar o gasto. Tente novamente.", {
           variant: "error",
         });
         console.error(error);
@@ -73,13 +73,13 @@ export const DespesaFormModal = ({
       try {
         setLoading(true);
         await addDespesaAction(formData);
-        enqueueSnackbar("Despesa nova registrada com sucesso!", {
+        enqueueSnackbar("Gasto novo registrada com sucesso!", {
           variant: "success",
         });
         onClose();
         setLoading(false);
       } catch (error) {
-        enqueueSnackbar("Erro ao registrar a nova despesa. Tente novamente.", {
+        enqueueSnackbar("Erro ao registrar o novo gasto. Tente novamente.", {
           variant: "error",
         });
         console.error(error);
@@ -116,7 +116,7 @@ export const DespesaFormModal = ({
   ));
 
   return (
-    <CModal title="Adicionar despesa" open={open} onClose={onClose}>
+    <CModal title="Adicionar gasto" open={open} onClose={onClose}>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         <Box
           display="flex"

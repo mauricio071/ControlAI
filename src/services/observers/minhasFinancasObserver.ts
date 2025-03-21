@@ -36,12 +36,14 @@ export const getMinhasFinancasObserver = async (
       id: doc.id,
     }));
 
+    const balance = await getBalance();
+
     const data = financasInfo[0] as MinhasFinancasType;
     const finalData = {
       ...data,
-      balance: await getBalance(),
+      // balance: { ...balance },
       // incomes: await getRendas(),
-      //   lastYearTransactions: await getLastYearTransactions(data),
+      //   lastYearTransactions: await getCurrentYearTransactions(data),
       //   yourExpenses: await getExpenses(data),
       //   recentTransactions: await getRecentTransactions(data),
     };

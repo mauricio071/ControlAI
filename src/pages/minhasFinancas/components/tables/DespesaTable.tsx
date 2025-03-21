@@ -106,7 +106,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
       const totalExpense = data?.reduce((total, obj) => total + obj.value, 0);
       setTotalExpense(totalExpense);
     } catch (error) {
-      enqueueSnackbar("Erro ao listar as despesas. Tente novamente.", {
+      enqueueSnackbar("Erro ao listar os gastos. Tente novamente.", {
         variant: "error",
       });
       console.error(error);
@@ -130,7 +130,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
       fetchData();
       setDeleteModal(false);
     } catch (error) {
-      enqueueSnackbar("Erro ao deletar a despesa. Tente novamente.", {
+      enqueueSnackbar("Erro ao deletar o gasto. Tente novamente.", {
         variant: "error",
       });
       console.error(error);
@@ -143,7 +143,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
 
   return (
     <GridCard titleContainer>
-      <TitleContainer title="Despesa" />
+      <TitleContainer title="Gasto mensal" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button
@@ -158,7 +158,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
           }}
         >
           <Icon>add_circle</Icon>
-          Adicionar despesa
+          Adicionar gasto
         </Button>
       </Box>
       <DataGrid
@@ -181,7 +181,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
         }}
         disableRowSelectionOnClick
         localeText={{
-          noRowsLabel: "Nenhuma despesa cadastrada",
+          noRowsLabel: "Nenhum gasto cadastrado",
           MuiTablePagination: {
             labelRowsPerPage: "Linhas por página",
             labelDisplayedRows: ({ from, to, count }) =>
@@ -196,11 +196,11 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
         fetchData={fetchData}
       />
       <CModal
-        title="Apagar a despesa"
+        title="Apagar o gasto"
         open={deleteModal}
         onClose={() => setDeleteModal(false)}
       >
-        <Typography>Tem certeza que deseja apagar esta despesa?</Typography>
+        <Typography>Tem certeza que deseja apagar este gasto?</Typography>
         <Box display="flex" gap="1rem">
           <Button onClick={handleDelete} variant="contained" disableElevation>
             Sim

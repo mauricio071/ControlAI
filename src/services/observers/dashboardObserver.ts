@@ -12,9 +12,11 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../../config/firebaseConfig";
-import { DashboardType } from "../interfaces/dashboardInterfaces";
+import {
+  DashboardType,
+  GetExpensesType,
+} from "../interfaces/dashboardInterfaces";
 import dayjs from "dayjs";
-import { getDespesasAccess } from "../accesses/minhasFinancasAccess";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
 import { getBalance } from "./minhasFinancasObserver";
 
@@ -55,8 +57,8 @@ export const getDashboardObserver = async (
       monthlyExpense: expenses?.values,
       //TODO remover o recent e filtrar 5 pelo front
       monthlyFixed: monthlyFixedValue,
-      lastYearTransactions: await getLastYearTransactions(),
-      yourExpenses: expenses?.currentMonthDetails,
+      // lastYearTransactions: await getCurrentYearTransactions(),
+      // yourExpenses: expenses?.currentMonthDetails,
       recentTransactions: await getRecentTransactions(),
     };
 
@@ -64,50 +66,7 @@ export const getDashboardObserver = async (
   });
 };
 
-// export const getBalance = async (dashboardInfo: DashboardType) => {
-//   const balance = await getDoc(doc(db, "saldos", dashboardInfo.balance?.id));
-//   return balance.data()?.balance;
-// };
-
-// export const compareExpense = async () => {
-//   //TODO
-//   const user = auth.currentUser;
-
-//   const currentMonth = dayjs()..format("YYYY-MM");
-//   const previousMonth = dayjs().endOf("year").format("YYYY-MM-DD");
-
-//   try {
-//     const lastYearTransactionsCollection = collection(
-//       db,
-//       "historicoTransacoes"
-//     );
-//     const lastYearTransactionsQuery = query(
-//       lastYearTransactionsCollection,
-//       where("uid", "==", user?.uid),
-//       where("date", ">=", startYear),
-//       where("date", "<=", endYear),
-//       where("type", "==", "descontar")
-//     );
-//     const querySnapshot = await getDocs(lastYearTransactionsQuery);
-//     const data = querySnapshot.docs.map((doc) => ({
-//       date: doc.data().date,
-//       value: doc.data().value,
-//     }));
-
-//     const monthlyArr = Array(12).fill(0);
-
-//     data.forEach((item) => {
-//       const date = dayjs(item.date).month();
-//       monthlyArr[date] += item.value;
-//     });
-
-//     return monthlyArr;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-const getLastYearTransactions = async () => {
+export const getCurrentYearTransactions = async (): Promise<number[]> => {
   const user = auth.currentUser;
 
   const startYear = dayjs().startOf("year").format("YYYY-MM-DD");
@@ -141,29 +100,7 @@ const getLastYearTransactions = async () => {
     return monthlyArr;
   } catch (error) {
     console.error(error);
-  }
-};
-
-const getRecentTransactions = async () => {
-  const user = auth.currentUser;
-
-  try {
-    const recentTransactionsRef = collection(db, "historicoTransacoes");
-    const transactionsQuery = query(
-      recentTransactionsRef,
-      where("uid", "==", user?.uid),
-      orderBy("updated_at", "desc"),
-      limit(5)
-    );
-    const querySnapshot = await getDocs(transactionsQuery);
-    const recentTransactions = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    return recentTransactions;
-  } catch (error) {
-    console.error(error);
+    return Array(12).fill(0);
   }
 };
 
@@ -211,7 +148,7 @@ const groupExpensesByCategory = (
   }, {});
 };
 
-const getExpenses = async () => {
+export const getExpenses = async (): Promise<GetExpensesType> => {
   const user = auth.currentUser;
 
   try {
@@ -261,51 +198,35 @@ const getExpenses = async () => {
     };
   } catch (error) {
     console.error(error);
+    return {
+      currentMonthDetails: [{ label: "", value: 0 }],
+      values: {
+        currentMonthValue: 0,
+        previousMonthValue: 0,
+      },
+    };
   }
 };
 
-// export const addDashboardData = async (body, id) => {
-//   const gastosCollectionRef = collection(db, "gastosUltimoAno");
+const getRecentTransactions = async () => {
+  const user = auth.currentUser;
 
-//   const user = auth.currentUser;
+  try {
+    const recentTransactionsRef = collection(db, "historicoTransacoes");
+    const transactionsQuery = query(
+      recentTransactionsRef,
+      where("uid", "==", user?.uid),
+      orderBy("updated_at", "desc"),
+      limit(5)
+    );
+    const querySnapshot = await getDocs(transactionsQuery);
+    const recentTransactions = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-//   await addDoc(gastosCollectionRef, {
-//     uid: user?.uid,
-//     transactions: [
-//       12324, 2354, 234, 34325, 5436, 1234, 345, 425, 234, 123, 345,
-//     ],
-//   });
-// };
-
-// export const addDashboardData = async () => {
-//   const gastosCollectionRef = collection(db, "historicoTransacoes");
-
-//   const user = auth.currentUser;
-
-//   const data: TransactionType = {
-//     uid: user?.uid,
-//     // type: "descontar",
-//     // category: "lazer",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Netflix",
-//     // value: 300,
-//     // type: "adicionar",
-//     // category: "salario",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Salário",
-//     // value: 100,
-//     // type: "adicionar",
-//     // category: "freelance",
-//     // date: dayjs().format("YYYY-MM-DD"),
-//     // description: "Freelance",
-//     // value: 3000,
-//     type: "descontar",
-//     category: "freelance",
-//     date: dayjs().format("YYYY-MM-DD HH:mm"),
-//     description: "Teste4",
-//     value: 1000,
-//     created_at: dayjs().toDate(),
-//   };
-
-//   await addDoc(gastosCollectionRef, data);
-// };
+    return recentTransactions;
+  } catch (error) {
+    console.error(error);
+  }
+};

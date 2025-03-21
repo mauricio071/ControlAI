@@ -7,10 +7,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../config/firebaseConfig";
 import dayjs from "dayjs";
 
-export const getAllTransactionsAccess = async () => {
+import { TransactionType } from "../interfaces/dashboardInterfaces";
+import { auth, db } from "../../config/firebaseConfig";
+
+export const getAllTransactionsAccess = async (): Promise<
+  TransactionType[]
+> => {
   const user = auth.currentUser;
 
   try {
@@ -21,14 +25,18 @@ export const getAllTransactionsAccess = async () => {
       orderBy("updated_at", "desc")
     );
     const querySnapshot = await getDocs(transactionsQuery);
-    const transactions = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    const transactions = querySnapshot.docs.map(
+      (doc) =>
+        ({
+          ...doc.data(),
+          id: doc.id,
+        } as TransactionType)
+    );
 
     return transactions;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
@@ -42,7 +50,9 @@ export const deleteTransactionAccess = async (id: string) => {
   }
 };
 
-export const getAllExpensesAccess = async (year: number) => {
+export const getAllExpensesAccess = async (
+  year?: number
+): Promise<number[]> => {
   const user = auth.currentUser;
 
   try {
@@ -70,5 +80,6 @@ export const getAllExpensesAccess = async (year: number) => {
     return monthlyArr;
   } catch (error) {
     console.error(error);
+    return Array(12).fill(0);
   }
 };

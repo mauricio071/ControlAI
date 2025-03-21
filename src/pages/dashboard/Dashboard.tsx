@@ -2,26 +2,30 @@ import {
   Box,
   Grid2 as Grid,
   Icon,
+  Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
-import dayjs from "dayjs";
 
 import {
   DashboardType,
   ExpenseType,
   TransactionType,
 } from "../../services/interfaces/dashboardInterfaces";
-import { getDashboardObserver } from "../../services/observers/dashboardObserver";
+import {
+  getDashboardObserver,
+  getExpenses,
+} from "../../services/observers/dashboardObserver";
 import { CLink, GridCard, TitleContainer } from "../../shared/components";
 import { Loading } from "../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
 import { LayoutBase } from "../../shared/layouts";
 import { DashboardMiniCard } from "./components/DashboardMiniCard";
+import { CurrentYearGraph } from "./components/CurrentYearGraph";
+import { YourExpensesGraph } from "./components/YourExpensesGraph";
 
 interface Dashboard {
   balance: number;
@@ -31,46 +35,25 @@ interface Dashboard {
 }
 
 export const Dashboard = () => {
-  const [balance, setBalance] = useState(0);
-  const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
-  const [previousMonthlyExpense, setPreviousMnthlyExpense] = useState(0);
-  const [monthlyFixed, setMonthlyFixed] = useState(0);
-  const [savings, setSavings] = useState(0);
-
-  const [pData, setPdata] = useState<number[]>([]);
-
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
-  const xLabels = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ];
+  const [balance, setBalance] = useState(0);
+  const [monthlyFixed, setMonthlyFixed] = useState(0);
+  const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
+  const [previousMonthlyExpense, setPreviousMnthlyExpense] = useState(0);
+
+  const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const [lastTransactions, setLastTransactions] = useState<TransactionType[]>(
     []
   );
 
-  const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
-
   const handleDashboardData = (data: DashboardType) => {
     setLoading(true);
     setBalance(data.balance);
+    setMonthlyFixed(data.monthlyFixed);
     setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
     setPreviousMnthlyExpense(data.monthlyExpense.previousMonthValue);
-    setMonthlyFixed(data.monthlyFixed);
-    setSavings(data.savings);
-    setPdata(data.lastYearTransactions);
-    setYourExpenses(data.yourExpenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
   };
@@ -87,6 +70,13 @@ export const Dashboard = () => {
 
   useEffect(() => {
     getDashboardObserver(handleDashboardData);
+
+    const fetchData = async () => {
+      const { currentMonthDetails } = await getExpenses();
+      setYourExpenses(currentMonthDetails);
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -105,7 +95,7 @@ export const Dashboard = () => {
           <DashboardMiniCard
             icon="credit_card"
             color="linear-gradient(195deg, #FFB6C1, #FF1493)"
-            title="Despesas fixos mensal"
+            title="Gasto mensal"
             value={monthlyFixed}
             to="/minhas-financas"
             loading={loading}
@@ -130,108 +120,17 @@ export const Dashboard = () => {
             value={compareValue(currentMonthExpense, previousMonthlyExpense)}
             to="/historico"
             loading={loading}
-          >
-            {/* {compareValue(currentMonthExpense, previousMonthlyExpense) > 0 ? (
-              <Icon color="error">arrow_upward</Icon>
-            ) : (
-              <Icon color="success">arrow_downward</Icon>
-            )}
-
-            <Typography
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {FormatarMoeda(
-                compareValue(currentMonthExpense, previousMonthlyExpense)
-              )}
-              <Typography variant="caption" marginLeft="0.25rem">
-                comparado ao mês anterior
-              </Typography>
-            </Typography> */}
-          </DashboardMiniCard>
+          />
         </Grid>
       </Box>
       <Box>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, xl: 7 }}>
-            <GridCard titleContainer>
-              <TitleContainer title={`Seus gastos de ${dayjs().year()}`} />
-              {loading ? (
-                <Loading width="285px" height="285px" />
-              ) : (
-                <BarChart
-                  slotProps={{ legend: { hidden: true } }}
-                  height={300}
-                  borderRadius={6}
-                  margin={{ left: 100, right: 20, top: 20, bottom: 30 }}
-                  series={[
-                    {
-                      data: pData,
-                      label: "Gastou",
-                      id: "id",
-                      valueFormatter: (value) =>
-                        `${FormatarMoeda(Number(value))}`,
-                    },
-                  ]}
-                  xAxis={[
-                    {
-                      data: xLabels,
-                      scaleType: "band",
-                    },
-                  ]}
-                  yAxis={[
-                    {
-                      valueFormatter: (value) =>
-                        `${FormatarMoeda(Number(value))}`,
-                    },
-                  ]}
-                />
-              )}
-            </GridCard>
+            <CurrentYearGraph />
           </Grid>
 
           <Grid size={{ xs: 12, xl: 5 }}>
-            <GridCard titleContainer>
-              <TitleContainer title="Seus gastos deste mês" />
-              {loading ? (
-                <Loading width="285px" height="285px" />
-              ) : yourExpenses.length > 0 ? (
-                <PieChart
-                  series={[
-                    {
-                      data: yourExpenses,
-                      valueFormatter: (data) =>
-                        `${FormatarMoeda(Number(data.value))}`,
-                      arcLabel: (data) =>
-                        `${FormatarMoeda(Number(data.value))}`,
-                      arcLabelMinAngle: 35,
-                      arcLabelRadius: "60%",
-                      highlightScope: { fade: "global", highlight: "item" },
-                      faded: {
-                        additionalRadius: -30,
-                        color: "gray",
-                      },
-                    },
-                  ]}
-                  sx={{
-                    [`& .${pieArcLabelClasses.root}`]: {
-                      fill: "white",
-                    },
-                  }}
-                  height={300}
-                />
-              ) : (
-                <Box
-                  height={300}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Typography>Nenhum dado disponível</Typography>
-                </Box>
-              )}
-            </GridCard>
+            <YourExpensesGraph yourExpenses={yourExpenses} loading={loading} />
           </Grid>
         </Grid>
       </Box>

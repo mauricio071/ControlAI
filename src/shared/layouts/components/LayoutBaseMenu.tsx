@@ -3,7 +3,6 @@ import { signOut } from "firebase/auth";
 import { useState } from "react";
 
 import { auth } from "../../../config/firebaseConfig";
-import { useAppThemeContext } from "../../contexts";
 
 export const LayoutBaseMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

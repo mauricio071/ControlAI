@@ -6,13 +6,9 @@ import {
   useTheme,
   Divider,
   List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Icon,
   Typography,
 } from "@mui/material";
-import { useAppThemeContext, useDrawerContext } from "../../contexts";
+import { useDrawerContext } from "../../contexts";
 import { ListItemLink } from "./ListItemLink";
 import { GraphIcon } from "../icons/GraphIcon";
 import { CLink } from "../cLink/CLink";
@@ -24,8 +20,6 @@ interface SidebarProps {
 export const Sidebar = ({ children }: SidebarProps) => {
   const theme = useTheme();
   const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
-
-  const { toggleTheme } = useAppThemeContext();
 
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
 
@@ -85,7 +79,6 @@ export const Sidebar = ({ children }: SidebarProps) => {
                   icon={drawerOption.icon}
                   label={drawerOption.label}
                   onClick={lgDown ? toggleDrawerOpen : undefined}
-                  action={drawerOption.action}
                 />
               ))}
             </List>
