@@ -8,35 +8,32 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
+import { BalanceType } from "../../services/interfaces/minhasFinancas";
+import { getBalance } from "../../services/accesses/getBalanceAccess";
+import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { DespesaTable } from "./components/tables/DespesaTable";
-import { RendaTable } from "./components/tables/RendaTable";
 import { SaldoModal } from "./components/modals/SaldoModal";
+import { RendaTable } from "./components/tables/RendaTable";
 import { GridCard } from "../../shared/components";
 import { LayoutBase } from "../../shared/layouts";
-import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
-import { getMinhasFinancasObserver } from "../../services/observers/minhasFinancasObserver";
-import {
-  BalanceType,
-  MinhasFinancasType,
-} from "../../services/interfaces/minhasFinancas";
-import { getRendaTotalAction } from "../../services/actions/minhasFinancasActions";
 
 export const MinhasFinancas = () => {
   const [addSaldoModal, setAddSaldoModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState<BalanceType>({} as BalanceType);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
 
-  const handleMinhasFinancasData = (data: MinhasFinancasType) => {
-    setLoading(true);
-    setBalance(data.balance);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    getMinhasFinancasObserver(handleMinhasFinancasData);
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await getBalance();
+      setBalance(data);
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -69,9 +66,9 @@ export const MinhasFinancas = () => {
                       whiteSpace="nowrap"
                       overflow="hidden"
                       textOverflow="ellipsis"
-                      color={balance < 0 ? "error" : ""}
+                      color={balance.balance < 0 ? "error" : ""}
                     >
-                      {FormatarMoeda(balance)}
+                      {FormatarMoeda(balance.balance)}
                     </Typography>
                   )}
                 </Box>

@@ -1,23 +1,23 @@
-import { Controller, useForm } from "react-hook-form";
 import {
   Box,
   Button,
+  InputBaseComponentProps,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
 } from "@mui/material";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
 import { forwardRef, useState } from "react";
+import { enqueueSnackbar } from "notistack";
 import * as yup from "yup";
 
-import { CModal } from "../../../../shared/components";
-import { NumericFormat } from "react-number-format";
-import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { enqueueSnackbar } from "notistack";
-import { CInput } from "../../../../shared/components/cInput/CInput";
 import { updateBalanceAction } from "../../../../services/actions/minhasFinancasActions";
 import { BalanceType } from "../../../../services/interfaces/minhasFinancas";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
+import { CInput } from "../../../../shared/components/cInput/CInput";
+import { CModal } from "../../../../shared/components";
 
 interface SaldoModalProps {
   balance: BalanceType;
@@ -28,7 +28,7 @@ interface SaldoModalProps {
 type EditSaldoType = "adicionar" | "descontar";
 
 export interface SaldoFormData {
-  type: string;
+  type: EditSaldoType;
   value: number;
 }
 
@@ -73,7 +73,6 @@ export const SaldoModal = ({
         enqueueSnackbar("Saldo insuficiente", {
           variant: "error",
         });
-        setLoading(false);
         return;
       }
       await updateBalanceAction(newBalance);
@@ -87,12 +86,14 @@ export const SaldoModal = ({
         variant: "error",
       });
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const NumberFormatCustom = forwardRef((props, ref) => (
-    <NumericFormat {...props} getInputRef={ref} />
-  ));
+  const NumberFormatCustom = forwardRef<HTMLInputElement, NumericFormatProps>(
+    (props, ref) => <NumericFormat {...props} getInputRef={ref} />
+  );
 
   const onClose = () => {
     setAddSaldoModal(false);
@@ -101,8 +102,8 @@ export const SaldoModal = ({
 
   const clearForm = () => {
     reset({
-      type: "",
-      value: "0",
+      type: "adicionar",
+      value: 0,
     });
   };
 
@@ -118,7 +119,7 @@ export const SaldoModal = ({
           <Controller
             name="type"
             control={control}
-            defaultValue=""
+            defaultValue="adicionar"
             rules={{ required: "Este campo é obrigatório" }}
             render={({ field, fieldState: { error } }) => (
               <CInput error={error}>
@@ -185,7 +186,8 @@ export const SaldoModal = ({
                     field.onChange(rawValue);
                   }}
                   InputProps={{
-                    inputComponent: NumberFormatCustom as any,
+                    inputComponent:
+                      NumberFormatCustom as React.ComponentType<InputBaseComponentProps>,
                     inputProps: {
                       thousandSeparator: ".",
                       decimalSeparator: ",",

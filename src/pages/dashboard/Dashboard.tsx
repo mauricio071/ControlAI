@@ -7,25 +7,21 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 
 import {
   DashboardType,
   ExpenseType,
   TransactionType,
 } from "../../services/interfaces/dashboardInterfaces";
-import {
-  getDashboardObserver,
-  getExpenses,
-} from "../../services/observers/dashboardObserver";
+import { getDashboardAction } from "../../services/actions/dashboardAction";
 import { CLink, GridCard, TitleContainer } from "../../shared/components";
+import { DashboardMiniCard } from "./components/DashboardMiniCard";
+import { YourExpensesGraph } from "./components/YourExpensesGraph";
 import { Loading } from "../../shared/components/loading/Loading";
+import { CurrentYearGraph } from "./components/CurrentYearGraph";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../shared/utils/FormatarData";
 import { LayoutBase } from "../../shared/layouts";
-import { DashboardMiniCard } from "./components/DashboardMiniCard";
-import { CurrentYearGraph } from "./components/CurrentYearGraph";
-import { YourExpensesGraph } from "./components/YourExpensesGraph";
 
 interface Dashboard {
   balance: number;
@@ -40,8 +36,9 @@ export const Dashboard = () => {
   const [balance, setBalance] = useState(0);
   const [monthlyFixed, setMonthlyFixed] = useState(0);
   const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
-  const [previousMonthlyExpense, setPreviousMnthlyExpense] = useState(0);
+  const [previousMonthlyExpense, setPreviousMonthlyExpense] = useState(0);
 
+  const [pData, setPdata] = useState<number[]>([]);
   const [yourExpenses, setYourExpenses] = useState<ExpenseType[]>([]);
 
   const [lastTransactions, setLastTransactions] = useState<TransactionType[]>(
@@ -50,10 +47,12 @@ export const Dashboard = () => {
 
   const handleDashboardData = (data: DashboardType) => {
     setLoading(true);
-    setBalance(data.balance);
+    setBalance(Number(data.balance.balance));
     setMonthlyFixed(data.monthlyFixed);
     setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
-    setPreviousMnthlyExpense(data.monthlyExpense.previousMonthValue);
+    setPreviousMonthlyExpense(data.monthlyExpense.previousMonthValue);
+    setPdata(data.lastYearTransactions);
+    setYourExpenses(data.yourExpenses);
     setLastTransactions(data.recentTransactions);
     setLoading(false);
   };
@@ -69,14 +68,7 @@ export const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDashboardObserver(handleDashboardData);
-
-    const fetchData = async () => {
-      const { currentMonthDetails } = await getExpenses();
-      setYourExpenses(currentMonthDetails);
-    };
-
-    fetchData();
+    getDashboardAction(handleDashboardData);
   }, []);
 
   return (
@@ -126,7 +118,7 @@ export const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, xl: 7 }}>
-            <CurrentYearGraph />
+            <CurrentYearGraph pData={pData} loading={loading} />
           </Grid>
 
           <Grid size={{ xs: 12, xl: 5 }}>

@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 
-import { getCurrentYearTransactions } from "../../../services/observers/dashboardObserver";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { Loading } from "../../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 
-export const CurrentYearGraph = () => {
+interface CurrentYearGraphProps {
+  pData: number[];
+  loading: boolean;
+}
+
+export const CurrentYearGraph = ({ pData, loading }: CurrentYearGraphProps) => {
   const xLabels = [
     "Jan",
     "Fev",
@@ -22,21 +25,6 @@ export const CurrentYearGraph = () => {
     "Nov",
     "Dez",
   ];
-
-  const [pData, setPdata] = useState<number[]>([]);
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await getCurrentYearTransactions();
-      setPdata(data);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <GridCard titleContainer>

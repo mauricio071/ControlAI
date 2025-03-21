@@ -9,12 +9,13 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../config/firebaseConfig";
 import dayjs from "dayjs";
 
 import { RendaFormData } from "../../pages/minhasFinancas/components/modals/RendaFormModal";
 import { DespesaFormData } from "../../pages/minhasFinancas/components/modals/DespesaFormModal";
+import { TransactionType } from "../interfaces/dashboardInterfaces";
 import { BalanceType } from "../interfaces/minhasFinancas";
+import { auth, db } from "../../config/firebaseConfig";
 
 export const updateBalanceAccess = async (newBalance: BalanceType) => {
   try {
@@ -31,7 +32,7 @@ export const updateBalanceAccess = async (newBalance: BalanceType) => {
   }
 };
 
-export const getRendasAccess = async () => {
+export const getRendasAccess = async (): Promise<TransactionType[]> => {
   const user = auth.currentUser;
 
   try {
@@ -46,9 +47,11 @@ export const getRendasAccess = async () => {
       ...doc.data(),
       id: doc.id,
     }));
-    return incomes;
+
+    return incomes as TransactionType[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
@@ -98,7 +101,7 @@ export const deleteRendaAccess = async (id: string) => {
   }
 };
 
-export const getDespesasAccess = async () => {
+export const getDespesasAccess = async (): Promise<TransactionType[]> => {
   const user = auth.currentUser;
 
   try {
@@ -114,9 +117,10 @@ export const getDespesasAccess = async () => {
       id: doc.id,
     }));
 
-    return expenses;
+    return expenses as TransactionType[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 

@@ -1,8 +1,7 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getMinhasFinancasObserver } from "../../../services/observers/minhasFinancasObserver";
-import { MinhasFinancasType } from "../../../services/interfaces/minhasFinancas";
+import { getBalance } from "../../../services/accesses/getBalanceAccess";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 import { GridCard } from "../../../shared/components";
 
@@ -11,14 +10,15 @@ export const BalanceCard = () => {
 
   const [balanceLoading, setBalanceLoading] = useState(true);
 
-  const handleMinhasFinancasData = (data: MinhasFinancasType) => {
-    setBalanceLoading(true);
-    setBalance(data.balance);
-    setBalanceLoading(false);
-  };
-
   useEffect(() => {
-    getMinhasFinancasObserver(handleMinhasFinancasData);
+    const fetchData = async () => {
+      setBalanceLoading(true);
+      const data = await getBalance();
+      setBalance(data.balance);
+      setBalanceLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   return (

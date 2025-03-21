@@ -1,5 +1,7 @@
+import { BalanceType } from "./minhasFinancas";
+
 export interface DashboardType {
-  balance: number;
+  balance: BalanceType;
   monthlyFixed: number;
   monthlyExpense: MonthlyExpenseType;
   lastYearTransactions: number[];
@@ -29,4 +31,9 @@ export interface TransactionType {
   description: string;
   category: string;
   value: number;
+}
+export interface TransactionGraphType {
+  value: number;
+  label: string;
+  date: string;
 }

@@ -1,36 +1,42 @@
-import { Box, Button, MenuItem, TextField } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@mui/x-date-pickers";
+import {
+  Box,
+  Button,
+  InputBaseComponentProps,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
+import { DatePicker } from "@mui/x-date-pickers";
 import * as yup from "yup";
 import dayjs from "dayjs";
 
-import { CATEGORIAS_DESPESA } from "../../../../shared/constants/Categorias";
-import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
-import { CModal } from "../../../../shared/components";
-import { CategoriaBadge } from "../CategoriaBadge";
-import { NumericFormat } from "react-number-format";
-import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   addDespesaAction,
   updateDespesaAction,
 } from "../../../../services/actions/minhasFinancasActions";
-import { enqueueSnackbar } from "notistack";
+import { CATEGORIAS_DESPESA } from "../../../../shared/constants/Categorias";
+import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
+import { CModal } from "../../../../shared/components";
+import { CategoriaBadge } from "../CategoriaBadge";
+import { enqueueSnackbar } from "notistack";
 
 interface DespesaFormModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   data?: DespesaFormData;
-  fetchData: () => Promise<TransactionType>;
+  fetchData: () => Promise<void>;
 }
 
 export interface DespesaFormData {
-  date: string | null;
+  id?: string;
+  date: string;
   description: string;
   category: string;
-  value: string;
+  value: number;
 }
 
 export const DespesaFormModal = ({
@@ -46,10 +52,9 @@ export const DespesaFormModal = ({
     value: yup.number().required("Valor é obrigatório"),
   });
 
-  const { register, handleSubmit, reset, control, setValue } =
-    useForm<DespesaFormData>({
-      resolver: yupResolver(schema),
-    });
+  const { handleSubmit, reset, control, setValue } = useForm<DespesaFormData>({
+    resolver: yupResolver(schema),
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -104,16 +109,16 @@ export const DespesaFormModal = ({
 
   const clearForm = () => {
     reset({
-      date: null,
+      date: "",
       description: "",
       category: "",
-      value: "0",
+      value: 0,
     });
   };
 
-  const NumberFormatCustom = forwardRef((props, ref) => (
-    <NumericFormat {...props} getInputRef={ref} />
-  ));
+  const NumberFormatCustom = forwardRef<HTMLInputElement, NumericFormatProps>(
+    (props, ref) => <NumericFormat {...props} getInputRef={ref} />
+  );
 
   return (
     <CModal title="Adicionar gasto" open={open} onClose={onClose}>
@@ -194,7 +199,8 @@ export const DespesaFormModal = ({
                     field.onChange(rawValue);
                   }}
                   InputProps={{
-                    inputComponent: NumberFormatCustom as any,
+                    inputComponent:
+                      NumberFormatCustom as React.ComponentType<InputBaseComponentProps>,
                     inputProps: {
                       thousandSeparator: ".",
                       decimalSeparator: ",",

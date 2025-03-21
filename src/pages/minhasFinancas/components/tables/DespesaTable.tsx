@@ -1,22 +1,22 @@
 import { Box, Button, Icon, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
-import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
-import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
-import { FormatarData } from "../../../../shared/utils/FormatarData";
 import {
   CModal,
   GridCard,
   TitleContainer,
 } from "../../../../shared/components";
-import { CategoriaBadge } from "../CategoriaBadge";
-import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
-import { enqueueSnackbar } from "notistack";
 import {
   deleteDespesaAction,
   getDespesasAction,
 } from "../../../../services/actions/minhasFinancasActions";
+import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
+import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
+import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
+import { FormatarData } from "../../../../shared/utils/FormatarData";
+import { CategoriaBadge } from "../CategoriaBadge";
 
 interface DespesaTableProps {
   setTotalExpense: (totalExpense: number) => void;
