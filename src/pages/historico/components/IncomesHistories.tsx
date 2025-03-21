@@ -4,18 +4,16 @@ import { BarChart } from "@mui/x-charts";
 import dayjs, { Dayjs } from "dayjs";
 import { Box } from "@mui/material";
 
-import { getAllExpensesAction } from "../../../services/actions/historicoAction";
+import { getAllIncomesAction } from "../../../services/actions/historicoAction";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { Loading } from "../../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 
-interface ExpensesHistoriesProps {
+interface IncomesHistoriesProps {
   refreshToggle: boolean;
 }
 
-export const ExpensesHistories = ({
-  refreshToggle,
-}: ExpensesHistoriesProps) => {
+export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
   const xLabels = [
     "Jan",
     "Fev",
@@ -40,7 +38,7 @@ export const ExpensesHistories = ({
   useEffect(() => {
     const getHistoryExpense = async () => {
       setGraphLoading(true);
-      const data = await getAllExpensesAction(year?.year());
+      const data = await getAllIncomesAction(year?.year());
       setPdata(data);
       setGraphLoading(false);
     };
@@ -50,7 +48,7 @@ export const ExpensesHistories = ({
 
   return (
     <GridCard titleContainer>
-      <TitleContainer title="Histórico de gastos" />
+      <TitleContainer title="Histórico de rendas" />
       <Box display="flex" justifyContent="center" marginBottom="4rem">
         <DatePicker
           views={["year"]}

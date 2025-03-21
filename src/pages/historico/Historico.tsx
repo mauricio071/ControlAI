@@ -1,7 +1,9 @@
+import { useState } from "react";
+
 import { TransactionsHistories } from "./components/TransactionsHistories";
 import { ExpensesHistories } from "./components/ExpensesHistories";
+import { IncomesHistories } from "./components/IncomesHistories";
 import { LayoutBase } from "../../shared/layouts";
-import { useState } from "react";
 
 export const Historico = () => {
   const [refreshToggle, setRefreshToggle] = useState(false);
@@ -15,6 +17,7 @@ export const Historico = () => {
       <TransactionsHistories refreshData={refreshData} />
 
       <ExpensesHistories refreshToggle={refreshToggle} />
+      <IncomesHistories refreshToggle={refreshToggle} />
     </LayoutBase>
   );
 };

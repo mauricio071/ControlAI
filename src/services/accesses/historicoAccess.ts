@@ -83,3 +83,35 @@ export const getAllExpensesAccess = async (
     return Array(12).fill(0);
   }
 };
+
+export const getAllIncomesAccess = async (year?: number): Promise<number[]> => {
+  const user = auth.currentUser;
+
+  try {
+    const expensesHistoryRef = collection(db, "historicoTransacoes");
+    const expensesHistoryQuery = query(
+      expensesHistoryRef,
+      where("uid", "==", user?.uid),
+      where("date", ">=", `${year}-01-01`),
+      where("date", "<=", `${year}-12-31`),
+      where("type", "==", "adicionar")
+    );
+    const querySnapshot = await getDocs(expensesHistoryQuery);
+    const data = querySnapshot.docs.map((doc) => ({
+      date: doc.data().date,
+      value: doc.data().value,
+    }));
+
+    const monthlyArr = Array(12).fill(0);
+
+    data.forEach((item) => {
+      const date = dayjs(item.date).month();
+      monthlyArr[date] += item.value;
+    });
+
+    return monthlyArr;
+  } catch (error) {
+    console.error(error);
+    return Array(12).fill(0);
+  }
+};

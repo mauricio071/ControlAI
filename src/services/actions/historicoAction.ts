@@ -1,6 +1,7 @@
 import {
   deleteTransactionAccess,
   getAllExpensesAccess,
+  getAllIncomesAccess,
   getAllTransactionsAccess,
 } from "../accesses/historicoAccess";
 import { TransactionType } from "../interfaces/dashboardInterfaces";
@@ -21,5 +22,10 @@ export const getAllExpensesAction = async (
   year?: number
 ): Promise<number[]> => {
   const data = await getAllExpensesAccess(year);
+  return data;
+};
+
+export const getAllIncomesAction = async (year?: number): Promise<number[]> => {
+  const data = await getAllIncomesAccess(year);
   return data;
 };

@@ -14,7 +14,7 @@ import {
   TransactionGraphType,
 } from "../interfaces/dashboardInterfaces";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
-import { getBalance } from "./getBalanceAccess";
+import { getBalance } from "../actions/getBalanceAction";
 import { auth, db } from "../../config/firebaseConfig";
 
 export const getDashboardAccess = async (

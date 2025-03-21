@@ -1,7 +1,7 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getBalance } from "../../../services/accesses/getBalanceAccess";
+import { getBalance } from "../../../services/actions/getBalanceAction";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 import { GridCard } from "../../../shared/components";
 

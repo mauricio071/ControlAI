@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { BalanceType } from "../../services/interfaces/minhasFinancas";
-import { getBalance } from "../../services/accesses/getBalanceAccess";
+import { getBalance } from "../../services/actions/getBalanceAction";
 import { FormatarMoeda } from "../../shared/utils/FormatarMoeda";
 import { DespesaTable } from "./components/tables/DespesaTable";
 import { SaldoModal } from "./components/modals/SaldoModal";
