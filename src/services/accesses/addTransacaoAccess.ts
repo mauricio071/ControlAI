@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { updateBalanceAction } from "../actions/minhasFinancasActions";
 import { TransactionType } from "../interfaces/dashboardInterfaces";
 import { auth, db } from "../../config/firebaseConfig";
+import { BalanceType } from "../interfaces/minhasFinancas";
 
 export const addTransacaoAccess = async (body: TransactionType) => {
   const user = auth.currentUser;
@@ -21,7 +22,7 @@ export const addTransacaoAccess = async (body: TransactionType) => {
       id: doc.id,
     }));
 
-    await updateBalanceAction(balance[0]);
+    await updateBalanceAction(balance[0] as BalanceType);
 
     const data = {
       uid: user?.uid,

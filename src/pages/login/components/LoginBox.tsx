@@ -82,7 +82,8 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
 
       navigate("/dashboard");
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
+      const err = error as { code?: string };
+      if (err.code === "auth/popup-closed-by-user") {
         return;
       } else {
         enqueueSnackbar("Erro ao fazer login. Tente novamente.", {
