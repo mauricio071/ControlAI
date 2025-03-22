@@ -28,7 +28,7 @@ export const LightTheme = createTheme({
       default: "#FDF8F3",
     },
     cGray: {
-      main: "#808080",
+      main: "#6D6D6D",
       light: "#D3D3D3",
       dark: "#505050",
       contrastText: "#ffffff",

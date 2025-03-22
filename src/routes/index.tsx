@@ -1,14 +1,15 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 
-import { useDrawerContext } from "../shared/contexts";
 import {
   AdicionarTransacao,
   Dashboard,
   Historico,
   Login,
   MinhasFinancas,
+  PageNotFound,
 } from "../pages";
+import { useDrawerContext } from "../shared/contexts";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRoutes = () => {
@@ -48,7 +49,7 @@ export const AppRoutes = () => {
         <Route path="/adicionar-transacao" element={<AdicionarTransacao />} />
         <Route path="/historico" element={<Historico />} />
       </Route>
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };

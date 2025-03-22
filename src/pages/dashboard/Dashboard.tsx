@@ -199,6 +199,7 @@ export const Dashboard = () => {
                     display="flex"
                     alignItems="center"
                     gap="0.5rem"
+                    sx={{ color: (theme) => theme.palette.secondary.main }}
                   >
                     <Icon>history</Icon>
                     Histórico completo
