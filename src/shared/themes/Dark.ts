@@ -19,6 +19,12 @@ export const DarkTheme = createTheme({
       paper: "#2A2D32",
       default: "#1E2125",
     },
+    cGray: {
+      main: "#ffffff",
+      light: "#D3D3D3",
+      dark: "#505050",
+      contrastText: "#ffffff",
+    },
   },
   typography: {
     allVariants: { color: "white" },

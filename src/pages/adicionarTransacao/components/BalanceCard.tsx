@@ -31,7 +31,10 @@ export const BalanceCard = () => {
           gap="0.75rem"
           width="100%"
         >
-          <Typography textAlign="start" color="gray">
+          <Typography
+            textAlign="start"
+            sx={{ color: (theme) => theme.palette.cGray.main }}
+          >
             Saldo atual
           </Typography>
           <Box display="flex" gap="0.5rem" width="100%">

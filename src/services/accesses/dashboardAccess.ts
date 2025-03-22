@@ -10,12 +10,14 @@ import dayjs from "dayjs";
 
 import {
   DashboardType,
+  ExpenseType,
   GetExpensesType,
   TransactionGraphType,
 } from "../interfaces/dashboardInterfaces";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
 import { getBalance } from "../actions/getBalanceAction";
 import { auth, db } from "../../config/firebaseConfig";
+import { CATEGORIAS_DESPESA } from "../../shared/constants/Categorias";
 
 export const getDashboardAccess = async (
   callBack: (data: DashboardType) => void
@@ -142,11 +144,16 @@ export const getExpenses = async (): Promise<GetExpensesType> => {
     const previousMonthExpenses = groupExpensesByCategory(previousMonthData);
 
     const currentMonthDetails = Object.entries(currentMonthExpenses).map(
-      ([label, value]) => ({
-        label,
-        value,
-      })
-    );
+      ([label, value]) => {
+        const categoryLabel = CATEGORIAS_DESPESA.find(
+          (category) => category.value === label
+        );
+        return {
+          label: categoryLabel?.label,
+          value,
+        };
+      }
+    ) as ExpenseType[];
 
     const currentMonthValue = Object.values(currentMonthExpenses).reduce(
       (total, value) => total + value,

@@ -44,7 +44,10 @@ export const DashboardMiniCard = ({
           minHeight={148}
         >
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography textAlign="start" color="gray">
+            <Typography
+              textAlign="start"
+              sx={{ color: (theme) => theme.palette.cGray.main }}
+            >
               {title}
             </Typography>
             <Box

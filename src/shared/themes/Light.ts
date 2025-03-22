@@ -1,4 +1,13 @@
-import { createTheme } from "@mui/material";
+import { createTheme, PaletteColor, PaletteColorOptions } from "@mui/material";
+
+declare module "@mui/material/styles" {
+  interface Palette {
+    cGray: PaletteColor;
+  }
+  interface PaletteOptions {
+    cGray?: PaletteColorOptions;
+  }
+}
 
 export const LightTheme = createTheme({
   palette: {
@@ -17,6 +26,12 @@ export const LightTheme = createTheme({
     background: {
       paper: "#ffffff",
       default: "#FDF8F3",
+    },
+    cGray: {
+      main: "#808080",
+      light: "#D3D3D3",
+      dark: "#505050",
+      contrastText: "#ffffff",
     },
   },
   typography: {

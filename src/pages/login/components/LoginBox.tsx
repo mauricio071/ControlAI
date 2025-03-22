@@ -140,7 +140,7 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
         >
           Entrar
         </Button>
-        <Typography textAlign="start" marginTop="-1rem" sx={{ color: "gray" }}>
+        <Typography textAlign="start" marginTop="-1rem">
           Não tem uma conta?
           <Typography
             onClick={() => setFormType("registrar")}
@@ -158,7 +158,6 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
           onClick={signGoogle}
           variant="outlined"
           size="large"
-          color="inherit"
           style={{
             textTransform: "none",
             color: "gray",
@@ -170,7 +169,7 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
           }}
         >
           <GoogleIcon width="25px" height="25px" />
-          Fazer login com o Google
+          <Typography>Fazer login com o Google</Typography>
         </Button>
       </Box>
     </form>

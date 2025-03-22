@@ -1,4 +1,4 @@
-import { Box, Typography, useMediaQuery, Theme } from "@mui/material";
+import { Box, Typography, useMediaQuery, Theme, Card } from "@mui/material";
 
 import loginBanner from "../../assets/loginBanner.png";
 import { SignInBox } from "./components/SignInBox";
@@ -32,20 +32,22 @@ export const Login = () => {
         alignItems="center"
         gap="1rem"
       >
-        <Box
-          width="100%"
-          maxWidth="35rem"
-          bgcolor="white"
-          textAlign="center"
-          boxShadow="0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-          borderRadius="0.5rem"
+        <Card
+          sx={{
+            width: "100%",
+            maxWidth: "35rem",
+            textAlign: "center",
+            boxShadow:
+              "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+            borderRadius: "0.5rem",
+          }}
         >
           {formType === "login" ? (
             <LoginBox setFormType={setFormType} />
           ) : (
             <SignInBox setFormType={setFormType} />
           )}
-        </Box>
+        </Card>
         <Typography>&#169; ControlAÍ</Typography>
       </Box>
     </Box>
