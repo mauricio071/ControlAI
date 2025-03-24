@@ -5,7 +5,11 @@ import { getBalance } from "../../../services/actions/getBalanceAction";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 import { GridCard } from "../../../shared/components";
 
-export const BalanceCard = () => {
+interface BalanceCardProps {
+  reqLoading: boolean;
+}
+
+export const BalanceCard = ({ reqLoading }: BalanceCardProps) => {
   const [balance, setBalance] = useState(0);
 
   const [balanceLoading, setBalanceLoading] = useState(true);
@@ -19,7 +23,7 @@ export const BalanceCard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [reqLoading]);
 
   return (
     <GridCard>

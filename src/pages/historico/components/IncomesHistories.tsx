@@ -71,7 +71,7 @@ export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
           series={[
             {
               data: pData,
-              label: "Gastou",
+              label: "Recebeu",
               id: "id",
               valueFormatter: (value) => `${FormatarMoeda(Number(value))}`,
             },

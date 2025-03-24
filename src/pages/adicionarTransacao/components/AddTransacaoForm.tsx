@@ -11,7 +11,7 @@ import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DatePicker } from "@mui/x-date-pickers";
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import * as yup from "yup";
 import dayjs from "dayjs";
@@ -27,7 +27,11 @@ import { FormatarParaMoeda } from "../../../shared/utils/FormatarMoeda";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { CInput } from "../../../shared/components/cInput/CInput";
 
-export const AddTransacaoForm = () => {
+interface AddTransacaoFormProps {
+  setReqLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
   const [tipoTransacao, setTipoTransacao] = useState<"adicionar" | "descontar">(
     "adicionar"
   );
@@ -59,6 +63,7 @@ export const AddTransacaoForm = () => {
       enqueueSnackbar("Transação registrada com sucesso!", {
         variant: "success",
       });
+      setReqLoading((prev) => !prev);
       clearForm();
       setLoading(false);
     } catch (error) {
