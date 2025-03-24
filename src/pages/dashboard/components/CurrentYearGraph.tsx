@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { Loading } from "../../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
-import { Box } from "@mui/material";
 
 interface CurrentYearGraphProps {
   pData: number[];
