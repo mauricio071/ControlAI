@@ -79,7 +79,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             <Box
               display="flex"
               alignItems="center"
-              justifyContent={smDown ? "start" : "end"}
+              justifyContent="end"
               width="100%"
             >
               <Typography
