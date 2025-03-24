@@ -31,7 +31,9 @@ interface Dashboard {
 }
 
 export const Dashboard = () => {
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+  const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
 
   const [balance, setBalance] = useState(0);
   const [monthlyFixed, setMonthlyFixed] = useState(0);
@@ -122,7 +124,12 @@ export const Dashboard = () => {
           </Grid>
 
           <Grid size={{ xs: 12, xl: 5 }}>
-            <YourExpensesGraph yourExpenses={yourExpenses} loading={loading} />
+            <YourExpensesGraph
+              smDown={smDown}
+              lgDown={lgDown}
+              yourExpenses={yourExpenses}
+              loading={loading}
+            />
           </Grid>
         </Grid>
       </Box>
@@ -149,9 +156,10 @@ export const Dashboard = () => {
                   >
                     <Box
                       display="flex"
+                      flexDirection={smDown ? "column" : "row"}
                       alignItems="center"
                       justifyContent="space-between"
-                      gap="1"
+                      gap="1rem"
                     >
                       <Box display="flex" alignItems="center" gap="1rem">
                         {transaction.type === "adicionar" ? (

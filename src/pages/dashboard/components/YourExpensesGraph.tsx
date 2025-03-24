@@ -7,11 +7,15 @@ import { Loading } from "../../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
 
 interface YourExpensesGraph {
+  smDown: boolean;
+  lgDown: boolean;
   yourExpenses: ExpenseType[];
   loading: boolean;
 }
 
 export const YourExpensesGraph = ({
+  smDown,
+  lgDown,
   yourExpenses,
   loading,
 }: YourExpensesGraph) => {
@@ -22,6 +26,13 @@ export const YourExpensesGraph = ({
         <Loading width="285px" height="285px" />
       ) : yourExpenses.length > 0 ? (
         <PieChart
+          margin={
+            smDown
+              ? { top: 0, bottom: 0, left: -0, right: 0 }
+              : lgDown
+              ? { top: 0, bottom: 0, left: -120, right: 20 }
+              : { top: 18, bottom: 17, left: -140, right: 20 }
+          }
           series={[
             {
               data: yourExpenses,
@@ -41,11 +52,12 @@ export const YourExpensesGraph = ({
               fill: "white",
             },
           }}
-          height={300}
+          slotProps={{ legend: { hidden: smDown && true } }}
+          height={310}
         />
       ) : (
         <Box
-          height={300}
+          height={310}
           display="flex"
           alignItems="center"
           justifyContent="center"

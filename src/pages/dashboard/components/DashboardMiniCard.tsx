@@ -46,6 +46,9 @@ export const DashboardMiniCard = ({
           <Box display="flex" justifyContent="space-between" width="100%">
             <Typography
               textAlign="start"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
               sx={{ color: (theme) => theme.palette.cGray.main }}
             >
               {title}
@@ -76,32 +79,41 @@ export const DashboardMiniCard = ({
               gap="0.15rem"
               width="100%"
             >
-              <Typography
-                variant="h4"
-                fontWeight="600"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                color={textColor}
-                display="flex"
-                alignItems="center"
-                gap="0.25rem"
-              >
-                {icon !== "trending_up" || value === 0 ? (
-                  ""
-                ) : value < 0 ? (
-                  <Icon color="success" fontSize="large">
-                    arrow_downward
-                  </Icon>
-                ) : (
-                  <Icon color="error" fontSize="large">
-                    arrow_upward
-                  </Icon>
-                )}
-                {icon === "trending_up" && value < 0
-                  ? FormatarMoeda(value * -1)
-                  : FormatarMoeda(value)}
-              </Typography>
+              <Box display="flex" alignItems="center" gap="0.25rem">
+                <Typography
+                  variant="h4"
+                  fontWeight="600"
+                  color={textColor}
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  display="flex"
+                >
+                  {icon !== "trending_up" || value === 0 ? (
+                    ""
+                  ) : value < 0 ? (
+                    <Icon color="success" fontSize="large">
+                      arrow_downward
+                    </Icon>
+                  ) : (
+                    <Icon color="error" fontSize="large">
+                      arrow_upward
+                    </Icon>
+                  )}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  fontWeight="600"
+                  color={textColor}
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                >
+                  {icon === "trending_up" && value < 0
+                    ? FormatarMoeda(value * -1)
+                    : FormatarMoeda(value)}
+                </Typography>
+              </Box>
               <Box
                 display="flex"
                 alignItems="center"

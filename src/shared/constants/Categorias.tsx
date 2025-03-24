@@ -120,12 +120,6 @@ export const CATEGORIAS_DESPESA = [
     bgColor: "#FF5722",
   },
   {
-    value: "operacaoBancaria",
-    label: "Operação bancária",
-    icon: <AccountBalance fontSize="small" />,
-    bgColor: "#2196F3",
-  },
-  {
     value: "pix",
     label: "Pix",
     icon: <AttachMoney fontSize="small" />,

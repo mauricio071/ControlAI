@@ -63,7 +63,7 @@ export const ExpensesHistories = ({
       </Box>
 
       {graphLoading ? (
-        <Loading width="285px" height="285px" />
+        <Loading width="200px" height="200px" />
       ) : (
         <BarChart
           slotProps={{ legend: { hidden: true } }}

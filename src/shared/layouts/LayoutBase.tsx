@@ -43,26 +43,20 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
         paddingBottom="4rem"
       >
         <Box
-          height={theme.spacing(14)}
           display="flex"
-          alignItems={mdDown ? "start" : "center"}
-          gap={1}
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap={mdDown ? "wrap" : "nowrap"}
+          gap="1rem"
+          width="100%"
+          height={theme.spacing(14)}
         >
-          {lgDown && (
-            <IconButton onClick={toggleDrawerOpen}>
-              <Icon fontSize={smDown ? "medium" : "large"}>menu</Icon>
-            </IconButton>
-          )}
-
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            flexWrap={mdDown ? "wrap" : "nowrap"}
-            gap="1rem"
-            width="100%"
-            height="100%"
-          >
+          <Box display="flex" alignItems="center" gap={1}>
+            {lgDown && (
+              <IconButton onClick={toggleDrawerOpen}>
+                <Icon fontSize={smDown ? "medium" : "large"}>menu</Icon>
+              </IconButton>
+            )}
             <Typography
               variant={smDown ? "h5" : "h4"}
               whiteSpace="nowrap"
@@ -73,24 +67,46 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
             >
               {titulo}
             </Typography>
+          </Box>
+          <Box
+            display="flex"
+            flexDirection={smDown ? "column-reverse" : "row"}
+            alignItems="center"
+            gap="0.75rem"
+            justifyContent="end"
+            width="100%"
+          >
             <Box
               display="flex"
               alignItems="center"
-              gap={smDown ? "0rem" : "0.25rem"}
-              justifyContent="end"
+              justifyContent={smDown ? "start" : "end"}
               width="100%"
             >
               <Typography
                 variant="h5"
                 fontWeight="bold"
                 color="primary"
-                marginRight={smDown ? "0.25rem" : "0rem"}
+                marginRight="0.25rem"
               >
                 Olá,
               </Typography>
-              <Typography variant="h5" fontWeight="bold">
-                {user?.displayName}!
+              <Typography
+                maxWidth="250px"
+                variant="h5"
+                fontWeight="bold"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {user?.displayName?.split(" ")[0]}!
               </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="end"
+              marginLeft="auto"
+            >
               <MaterialUISwitch
                 checked={themeName === "dark"}
                 onChange={toggleTheme}
@@ -100,7 +116,13 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
           </Box>
         </Box>
 
-        <Box flex={1} display="flex" flexDirection="column" gap={4}>
+        <Box
+          flex={1}
+          display="flex"
+          flexDirection="column"
+          gap={4}
+          marginTop="2rem"
+        >
           {children}
         </Box>
       </Box>

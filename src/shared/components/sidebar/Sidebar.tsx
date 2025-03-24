@@ -46,7 +46,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
         }}
       >
         <Box
-          width={theme.spacing(36)}
+          width={theme.spacing(34)}
           height="100vh"
           display="flex"
           flexDirection="column"
@@ -94,7 +94,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
         </Box>
       </Drawer>
 
-      <Box minHeight="100vh" marginLeft={lgDown ? 0 : theme.spacing(38)}>
+      <Box minHeight="100vh" marginLeft={lgDown ? 0 : theme.spacing(36)}>
         {children}
       </Box>
     </>

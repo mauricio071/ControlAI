@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { Loading } from "../../../shared/components/loading/Loading";
 import { FormatarMoeda } from "../../../shared/utils/FormatarMoeda";
+import { Box } from "@mui/material";
 
 interface CurrentYearGraphProps {
   pData: number[];
@@ -34,7 +35,7 @@ export const CurrentYearGraph = ({ pData, loading }: CurrentYearGraphProps) => {
       ) : (
         <BarChart
           slotProps={{ legend: { hidden: true } }}
-          height={300}
+          height={310}
           borderRadius={6}
           margin={{ left: 100, right: 20, top: 20, bottom: 30 }}
           series={[
