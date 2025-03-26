@@ -76,7 +76,15 @@ export const ChatForm = ({
                   },
                 }}
               >
-                <Icon sx={{ color: "white" }}>arrow_upward</Icon>
+                <Icon
+                  sx={{
+                    color: "white",
+                    fontSize: "1.3rem",
+                    padding: "0.15rem",
+                  }}
+                >
+                  send
+                </Icon>
               </IconButton>
             </InputAdornment>
           ),
@@ -84,7 +92,7 @@ export const ChatForm = ({
       }}
       sx={{
         "& .MuiOutlinedInput-root": {
-          borderRadius: "2rem",
+          borderRadius: "1.75rem",
         },
       }}
       autoComplete="off"

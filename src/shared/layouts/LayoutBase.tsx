@@ -2,8 +2,6 @@ import {
   Box,
   Icon,
   IconButton,
-  SpeedDial,
-  SpeedDialIcon,
   Typography,
   useMediaQuery,
   useTheme,
@@ -17,6 +15,7 @@ import { auth } from "../../config/firebaseConfig";
 import { Sidebar } from "../components";
 import { Chatbot } from "../../chatbot/Chatbot";
 import { ChatbotIcon } from "../../chatbot/components/ChatbotIcon";
+import { CloseIcon } from "../../chatbot/components/icon/CloseIcon";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -133,29 +132,37 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
           gap={4}
           marginTop="2rem"
         >
-          {/* <SpeedDial
-            onClick={() => setShowChatbot((prev) => !prev)}
-            ariaLabel="SpeedDial basic example"
-            sx={{ position: "fixed", bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
-          ></SpeedDial> */}
           <IconButton
             onClick={toggleChatbotVisibility}
             sx={{
               position: "fixed",
-              bottom: 16,
-              right: 16,
+              bottom: smDown ? 10 : 35,
+              right: smDown ? 10 : 50,
+              zIndex: 10,
               bgcolor: (theme) => theme.palette.primary.main,
+              boxShadow:
+                "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+              border: "2px solid",
+              borderColor: (theme) => theme.palette.primary.dark,
               "&:hover": {
                 background: (theme) => theme.palette.primary.dark,
               },
             }}
           >
-            <ChatbotIcon sx={{ fill: "#fff", height: "40px", width: "40px" }} />
+            {showChatbot ? (
+              <CloseIcon showChatbot={showChatbot} />
+            ) : (
+              <ChatbotIcon
+                sx={{ fill: "#fff", height: "40px", width: "40px" }}
+              />
+            )}
           </IconButton>
-          {showChatbot && (
-            <Chatbot toggleChatbotVisibility={toggleChatbotVisibility} />
-          )}
+
+          <Chatbot
+            smDown={smDown}
+            showChatbot={showChatbot}
+            toggleChatbotVisibility={toggleChatbotVisibility}
+          />
           {children}
         </Box>
       </Box>
