@@ -4,7 +4,15 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
@@ -15,6 +23,7 @@ import * as yup from "yup";
 import { auth, googleProvider } from "../../../config/firebaseConfig";
 import { GoogleIcon } from "../../../shared/components/icons/GoogleIcon";
 import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -103,6 +112,12 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
     },
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <form onSubmit={handleSubmit(handleSubmitForm)}>
       <Box display="flex" flexDirection="column" gap="2.5rem" padding="2rem">
@@ -127,9 +142,20 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
           {...register("password")}
           label="Digite a sua senha"
           variant="outlined"
-          type="password"
+          type={showPassword ? "text" : "password"}
           error={!!errors.password}
           helperText={errors.password?.message}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
         />
         <Button
           type="submit"

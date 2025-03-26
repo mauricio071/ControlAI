@@ -22,7 +22,7 @@ export const DarkTheme = createTheme({
     cGray: {
       main: "#D3D3D3",
       light: "#D3D3D3",
-      dark: "#505050",
+      dark: "#333333",
       contrastText: "#ffffff",
     },
   },

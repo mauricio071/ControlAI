@@ -13,7 +13,7 @@ export const LightTheme = createTheme({
   palette: {
     primary: {
       main: "#F4A261",
-      dark: "#C7861B",
+      dark: "#e48f52",
       light: "#F4B844",
       contrastText: "#ffffff",
     },
@@ -30,7 +30,7 @@ export const LightTheme = createTheme({
     cGray: {
       main: "#6D6D6D",
       light: "#D3D3D3",
-      dark: "#505050",
+      dark: "#333333",
       contrastText: "#ffffff",
     },
   },

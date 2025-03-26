@@ -2,17 +2,21 @@ import {
   Box,
   Icon,
   IconButton,
+  SpeedDial,
+  SpeedDialIcon,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 import { useAppThemeContext, useDrawerContext } from "../contexts";
 import { MaterialUISwitch } from "./components/MaterialUISwitch";
 import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
 import { auth } from "../../config/firebaseConfig";
 import { Sidebar } from "../components";
+import { Chatbot } from "../../chatbot/Chatbot";
+import { ChatbotIcon } from "../../chatbot/components/ChatbotIcon";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -30,6 +34,12 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
   const { toggleTheme, themeName } = useAppThemeContext();
 
   const user = auth.currentUser;
+
+  const [showChatbot, setShowChatbot] = useState(false);
+
+  const toggleChatbotVisibility = () => {
+    setShowChatbot((prev) => !prev);
+  };
 
   return (
     <Sidebar>
@@ -123,6 +133,29 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
           gap={4}
           marginTop="2rem"
         >
+          {/* <SpeedDial
+            onClick={() => setShowChatbot((prev) => !prev)}
+            ariaLabel="SpeedDial basic example"
+            sx={{ position: "fixed", bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+          ></SpeedDial> */}
+          <IconButton
+            onClick={toggleChatbotVisibility}
+            sx={{
+              position: "fixed",
+              bottom: 16,
+              right: 16,
+              bgcolor: (theme) => theme.palette.primary.main,
+              "&:hover": {
+                background: (theme) => theme.palette.primary.dark,
+              },
+            }}
+          >
+            <ChatbotIcon sx={{ fill: "#fff", height: "40px", width: "40px" }} />
+          </IconButton>
+          {showChatbot && (
+            <Chatbot toggleChatbotVisibility={toggleChatbotVisibility} />
+          )}
           {children}
         </Box>
       </Box>
