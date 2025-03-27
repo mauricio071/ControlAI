@@ -6,16 +6,17 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
+import { CloseIcon } from "../../chatbot/components/icon/CloseIcon";
 import { useAppThemeContext, useDrawerContext } from "../contexts";
+import { ChatbotIcon } from "../../chatbot/components/ChatbotIcon";
 import { MaterialUISwitch } from "./components/MaterialUISwitch";
+import { useChatbotContext } from "../contexts/ChatbotContext";
 import { LayoutBaseMenu } from "./components/LayoutBaseMenu";
 import { auth } from "../../config/firebaseConfig";
-import { Sidebar } from "../components";
 import { Chatbot } from "../../chatbot/Chatbot";
-import { ChatbotIcon } from "../../chatbot/components/ChatbotIcon";
-import { CloseIcon } from "../../chatbot/components/icon/CloseIcon";
+import { Sidebar } from "../components";
 
 interface LayoutBaseProps {
   children: ReactNode;
@@ -34,11 +35,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
 
   const user = auth.currentUser;
 
-  const [showChatbot, setShowChatbot] = useState(false);
-
-  const toggleChatbotVisibility = () => {
-    setShowChatbot((prev) => !prev);
-  };
+  const { showChatbot, toggleChatbotVisibility } = useChatbotContext();
 
   return (
     <Sidebar>

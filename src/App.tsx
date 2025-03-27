@@ -10,6 +10,7 @@ import {
 } from "./shared/contexts";
 import { SnackbarCloseButton } from "./shared/components/snackbarCloseButton/SnackbarCloseButton";
 import { AppRoutes } from "./routes";
+import { ChatbotProvider } from "./shared/contexts/ChatbotContext";
 
 export const App = () => {
   return (
@@ -23,9 +24,11 @@ export const App = () => {
       <AppThemeProvider>
         <AppLocalizationProvider>
           <DrawerProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
+            <ChatbotProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </ChatbotProvider>
           </DrawerProvider>
         </AppLocalizationProvider>
       </AppThemeProvider>

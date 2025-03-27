@@ -1,11 +1,11 @@
 import { Box, Grow, Icon, IconButton, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-import { ChatForm, ChatType } from "./components/ChatForm";
+import { useChatbotContext } from "../shared/contexts/ChatbotContext";
 import { ChatbotIcon } from "./components/ChatbotIcon";
 import { ChatMessage } from "./components/ChatMessage";
+import { ChatForm } from "./components/ChatForm";
 import { auth } from "../config/firebaseConfig";
-import { aiBaseData } from "./data/aiBaseData";
 
 interface ChatbotProps {
   smDown: boolean;
@@ -18,52 +18,10 @@ export const Chatbot = ({
   showChatbot,
   toggleChatbotVisibility,
 }: ChatbotProps) => {
-  const [chatHistory, setChatHistory] = useState<ChatType[]>([
-    {
-      hideInChat: true,
-      role: "model",
-      text: aiBaseData,
-    },
-  ]);
+  const { chatHistory, setChatHistory, generateBotResponse } =
+    useChatbotContext();
+
   const chatbodyRef = useRef<HTMLDivElement>(null);
-
-  const generateBotResponse = async (history: ChatType[]) => {
-    const updateHistory = (text: string, isError = false) => {
-      setChatHistory((prev) => [
-        ...prev.filter((msg) => msg.text !== "...."),
-        { role: "model", text, isError },
-      ]);
-    };
-
-    const chatBody = history.map(({ role, text }) => ({
-      role,
-      parts: [{ text }],
-    }));
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: chatBody }),
-    };
-
-    try {
-      const res = await fetch(import.meta.env.VITE_API_URL, requestOptions);
-      const data = await res.json();
-      if (!res.ok) {
-        console.error(data.error.message || "Algo de errado aconteceu");
-      }
-
-      const apiResponseText = data.candidates[0].content.parts[0].text
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .trim();
-
-      updateHistory(apiResponseText);
-    } catch (error) {
-      if (error instanceof Error) {
-        updateHistory(error.message, true);
-      }
-    }
-  };
 
   useEffect(() => {
     chatbodyRef.current?.scrollTo({
@@ -75,7 +33,7 @@ export const Chatbot = ({
   const user = auth.currentUser;
 
   return (
-    <Grow in={showChatbot}>
+    <Grow in={showChatbot} appear={false}>
       <Box
         position="fixed"
         width={smDown ? "unset" : "100%"}
