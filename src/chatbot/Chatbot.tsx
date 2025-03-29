@@ -18,6 +18,8 @@ export const Chatbot = ({
   showChatbot,
   toggleChatbotVisibility,
 }: ChatbotProps) => {
+  const user = auth.currentUser;
+
   const { chatHistory, setChatHistory, generateBotResponse } =
     useChatbotContext();
 
@@ -26,11 +28,9 @@ export const Chatbot = ({
   useEffect(() => {
     chatbodyRef.current?.scrollTo({
       top: chatbodyRef.current.scrollHeight,
-      behavior: "smooth",
+      // behavior: "smooth",
     });
   }, [chatHistory]);
-
-  const user = auth.currentUser;
 
   return (
     <Grow in={showChatbot} appear={false}>

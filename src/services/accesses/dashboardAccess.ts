@@ -13,15 +13,14 @@ import {
   ExpenseType,
   GetExpensesType,
   TransactionGraphType,
+  TransactionType,
 } from "../interfaces/dashboardInterfaces";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
 import { getBalance } from "../actions/getBalanceAction";
 import { auth, db } from "../../config/firebaseConfig";
 import { CATEGORIAS_DESPESA } from "../../shared/constants/Categorias";
 
-export const getDashboardAccess = async (
-  callBack: (data: DashboardType) => void
-) => {
+export const getDashboardAccess = async (): Promise<DashboardType> => {
   const balance = await getBalance();
   const expenses = await getExpenses();
   const monthlyFixedArr = await getDespesasAction();
@@ -30,7 +29,7 @@ export const getDashboardAccess = async (
     0
   );
 
-  const finalData = {
+  return {
     balance: balance,
     monthlyFixed: monthlyFixedValue,
     monthlyExpense: expenses?.values,
@@ -38,8 +37,6 @@ export const getDashboardAccess = async (
     yourExpenses: expenses?.currentMonthDetails,
     recentTransactions: await getRecentTransactions(),
   };
-
-  callBack(finalData as DashboardType);
 };
 
 export const getCurrentYearTransactions = async (): Promise<number[]> => {
@@ -191,7 +188,7 @@ export const getExpenses = async (): Promise<GetExpensesType> => {
   }
 };
 
-const getRecentTransactions = async () => {
+const getRecentTransactions = async (): Promise<TransactionType[]> => {
   const user = auth.currentUser;
 
   try {
@@ -208,8 +205,9 @@ const getRecentTransactions = async () => {
       id: doc.id,
     }));
 
-    return recentTransactions;
+    return recentTransactions as TransactionType[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };

@@ -9,7 +9,6 @@ import {
 import { useEffect, useState } from "react";
 
 import {
-  DashboardType,
   ExpenseType,
   TransactionType,
 } from "../../services/interfaces/dashboardInterfaces";
@@ -47,18 +46,6 @@ export const Dashboard = () => {
     []
   );
 
-  const handleDashboardData = (data: DashboardType) => {
-    setLoading(true);
-    setBalance(Number(data.balance.balance));
-    setMonthlyFixed(data.monthlyFixed);
-    setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
-    setPreviousMonthlyExpense(data.monthlyExpense.previousMonthValue);
-    setPdata(data.lastYearTransactions);
-    setYourExpenses(data.yourExpenses);
-    setLastTransactions(data.recentTransactions);
-    setLoading(false);
-  };
-
   const compareValue = (
     currentMonthValue: number,
     previousMonthValue: number
@@ -70,7 +57,20 @@ export const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDashboardAction(handleDashboardData);
+    const handleDashboardData = async () => {
+      const data = await getDashboardAction();
+      setLoading(true);
+      setBalance(Number(data.balance.balance));
+      setMonthlyFixed(data.monthlyFixed);
+      setCurrentMonthExpense(data.monthlyExpense.currentMonthValue);
+      setPreviousMonthlyExpense(data.monthlyExpense.previousMonthValue);
+      setPdata(data.lastYearTransactions);
+      setYourExpenses(data.yourExpenses);
+      setLastTransactions(data.recentTransactions);
+      setLoading(false);
+    };
+
+    handleDashboardData();
   }, []);
 
   return (

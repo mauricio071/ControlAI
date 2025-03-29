@@ -1,7 +1,15 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { ChatType } from "../../chatbot/components/ChatForm";
 import { aiBaseData } from "../../chatbot/data/aiBaseData";
+import { auth } from "../../config/firebaseConfig";
+import { getDashboardAction } from "../../services/actions/dashboardAction";
 
 interface ChatbotContextData {
   showChatbot: boolean;
@@ -35,6 +43,34 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
       text: aiBaseData,
     },
   ]);
+
+  useEffect(() => {
+    const fetchUserBalance = async () => {
+      const verifyLogin = auth.onAuthStateChanged(async () => {
+        try {
+          const dashboardData = await getDashboardAction();
+          setChatHistory((prev) => [
+            {
+              hideInChat: true,
+              role: "model",
+              text:
+                aiBaseData +
+                ` De acordo com esse objeto fornecido, interpretar as informações corretamente: ${JSON.stringify(
+                  dashboardData
+                )}`,
+            },
+            ...prev,
+          ]);
+        } catch (error) {
+          console.error("Erro ao obter saldo:", error);
+        }
+      });
+
+      return () => verifyLogin();
+    };
+
+    fetchUserBalance();
+  }, []);
 
   const generateBotResponse = async (history: ChatType[]) => {
     const updateHistory = (text: string, isError = false) => {
