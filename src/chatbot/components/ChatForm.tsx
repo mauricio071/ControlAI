@@ -1,5 +1,6 @@
 import { Icon, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useRef, useState } from "react";
+import { useChatbotContext } from "../../shared/contexts/ChatbotContext";
 
 export interface ChatType {
   role: string;
@@ -8,20 +9,13 @@ export interface ChatType {
   hideInChat?: boolean;
 }
 
-interface ChatFormProps {
-  chatHistory: ChatType[];
-  setChatHistory: React.Dispatch<React.SetStateAction<ChatType[]>>;
-  generateBotResponse: (history: ChatType[]) => Promise<void>;
-}
-
-export const ChatForm = ({
-  chatHistory,
-  setChatHistory,
-  generateBotResponse,
-}: ChatFormProps) => {
+export const ChatForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [thinking, setThinking] = useState(false);
+
+  const { setChatHistory, chatHistory, generateBotResponse } =
+    useChatbotContext();
 
   const handleFormSubmit = () => {
     if (!inputRef.current) return;

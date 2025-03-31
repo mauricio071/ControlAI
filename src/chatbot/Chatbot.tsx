@@ -20,8 +20,7 @@ export const Chatbot = ({
 }: ChatbotProps) => {
   const user = auth.currentUser;
 
-  const { chatHistory, setChatHistory, generateBotResponse } =
-    useChatbotContext();
+  const { chatHistory } = useChatbotContext();
 
   const chatbodyRef = useRef<HTMLDivElement>(null);
 
@@ -151,11 +150,7 @@ export const Chatbot = ({
           boxSizing="border-box"
           bgcolor={(theme) => theme.palette.background.default}
         >
-          <ChatForm
-            chatHistory={chatHistory}
-            setChatHistory={setChatHistory}
-            generateBotResponse={generateBotResponse}
-          />
+          <ChatForm />
         </Box>
       </Box>
     </Grow>

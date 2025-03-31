@@ -23,7 +23,7 @@ interface ChatbotContextData {
   setChatHistory: React.Dispatch<React.SetStateAction<ChatType[]>>;
   generateBotResponse: (
     history: ChatType[],
-    hideInChatModel: boolean
+    hideInChatModel?: boolean
   ) => Promise<void>;
 }
 
@@ -61,10 +61,14 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
           const rendasData = await getRendasAction();
           const despesasData = await getDespesasAction();
 
+          console.log(rendasData);
+
           const userData =
             JSON.stringify(dashboardData) +
-            ` Renda fixa mensal: ${JSON.stringify(rendasData)}` +
-            ` Despesa fixa mensal: ${JSON.stringify(despesasData)}`;
+            ` Renda fixa mensal (recorrente): ${JSON.stringify(rendasData)}` +
+            ` Despesa fixa mensal (recorrente): ${JSON.stringify(
+              despesasData
+            )}`;
 
           setChatHistory((prev) => [
             {
