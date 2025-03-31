@@ -61,8 +61,6 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
           const rendasData = await getRendasAction();
           const despesasData = await getDespesasAction();
 
-          console.log(rendasData);
-
           const userData =
             JSON.stringify(dashboardData) +
             ` Renda fixa mensal (recorrente): ${JSON.stringify(rendasData)}` +
