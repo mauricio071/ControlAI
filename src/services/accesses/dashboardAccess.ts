@@ -15,19 +15,19 @@ import {
   TransactionGraphType,
   TransactionType,
 } from "../interfaces/dashboardInterfaces";
+import { CATEGORIAS_DESPESA } from "../../shared/constants/Categorias";
 import { getDespesasAction } from "../actions/minhasFinancasActions";
 import { getBalance } from "../actions/getBalanceAction";
 import { auth, db } from "../../config/firebaseConfig";
-import { CATEGORIAS_DESPESA } from "../../shared/constants/Categorias";
 
 export const getDashboardAccess = async (): Promise<DashboardType> => {
   const balance = await getBalance();
-  const expenses = await getExpenses();
   const monthlyFixedArr = await getDespesasAction();
   const monthlyFixedValue = monthlyFixedArr?.reduce(
     (total, item) => item.value + total,
     0
   );
+  const expenses = await getExpenses();
 
   return {
     balance: balance,

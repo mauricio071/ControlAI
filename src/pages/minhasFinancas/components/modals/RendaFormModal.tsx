@@ -23,6 +23,7 @@ import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 interface RendaFormModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -57,11 +58,26 @@ export const RendaFormModal = ({
 
   const [loading, setLoading] = useState(false);
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleSubmitForm = async (formData: RendaFormData) => {
     if (data?.id) {
       try {
         setLoading(true);
-        await updateRendaAction(formData, data.id);
+        const response = await updateRendaAction(formData, data.id);
+        await generateBotResponse(
+          [
+            ...chatHistory,
+            {
+              hideInChat: true,
+              role: "user",
+              text: `Renda id:${data.id} atualizada: ${JSON.stringify(
+                response
+              )}`,
+            },
+          ],
+          true
+        );
         enqueueSnackbar("Renda atualizada com sucesso!", {
           variant: "success",
         });
@@ -76,7 +92,18 @@ export const RendaFormModal = ({
     } else {
       try {
         setLoading(true);
-        await addRendaAction(formData);
+        const response = await addRendaAction(formData);
+        await generateBotResponse(
+          [
+            ...chatHistory,
+            {
+              hideInChat: true,
+              role: "user",
+              text: `Nova renda mensal : ${JSON.stringify(response)}`,
+            },
+          ],
+          true
+        );
         enqueueSnackbar("Renda nova registrada com sucesso!", {
           variant: "success",
         });

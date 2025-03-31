@@ -28,7 +28,6 @@ export const Chatbot = ({
   useEffect(() => {
     chatbodyRef.current?.scrollTo({
       top: chatbodyRef.current.scrollHeight,
-      // behavior: "smooth",
     });
   }, [chatHistory]);
 
@@ -107,7 +106,35 @@ export const Chatbot = ({
                 color: "black",
               }}
             >
-              Olá {user?.displayName?.split(" ")[0]}, como posso te ajudar?
+              Olá, {user?.displayName?.split(" ")[0]}! Sou seu assistente
+              financeiro virtual e estou aqui para te ajudar com informações
+              sobre suas finanças. Posso te ajudar a entender seus gastos e até
+              mesmo sugerir melhorias.
+            </Typography>
+          </Box>
+
+          <Box display="flex" gap="0.625rem" alignItems="center">
+            <ChatbotIcon
+              sx={{
+                fill: "#fff",
+                alignSelf: "flex-end",
+                marginBottom: "2px",
+                background: "#F4A261",
+              }}
+            />
+            <Typography
+              padding="0.75rem 1rem"
+              maxWidth="75%"
+              whiteSpace="pre-line"
+              fontSize="0.95rem"
+              bgcolor="#fceddb"
+              borderRadius="13px 13px 13px 3px"
+              sx={{
+                wordWrap: "break-word",
+                color: "black",
+              }}
+            >
+              Em que posso te ajudar?
             </Typography>
           </Box>
 

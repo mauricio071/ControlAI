@@ -18,6 +18,7 @@ import { BalanceType } from "../../../../services/interfaces/minhasFinancas";
 import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface SaldoModalProps {
   balance: BalanceType;
@@ -56,6 +57,8 @@ export const SaldoModal = ({
 
   const [loading, setLoading] = useState(false);
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleSubmitForm = async (data: SaldoFormData) => {
     try {
       setLoading(true);
@@ -75,7 +78,19 @@ export const SaldoModal = ({
         });
         return;
       }
-      await updateBalanceAction(newBalance);
+      const response = await updateBalanceAction(newBalance);
+
+      await generateBotResponse(
+        [
+          ...chatHistory,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Saldo atualizado (priorizar!): ${response.balance}`,
+          },
+        ],
+        true
+      );
       enqueueSnackbar("Saldo atualizado com sucesso!", {
         variant: "success",
       });

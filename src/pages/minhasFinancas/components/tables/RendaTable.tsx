@@ -17,6 +17,7 @@ import { RendaFormData, RendaFormModal } from "../modals/RendaFormModal";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface RendaTableProps {
   setTotalIncome: (totalIncome: number) => void;
@@ -121,9 +122,23 @@ export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
     setSelectedId(id);
   };
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleDelete = async () => {
     try {
       await deleteRendaAction(selectedId);
+
+      await generateBotResponse(
+        [
+          ...chatHistory,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Essa renda fixa foi apagada!: ${selectedId}`,
+          },
+        ],
+        true
+      );
       enqueueSnackbar("Deletado com sucesso!", {
         variant: "success",
       });
@@ -143,7 +158,7 @@ export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
 
   return (
     <GridCard titleContainer>
-      <TitleContainer title="Renda mensal" />
+      <TitleContainer title="Renda fixa mensal" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button

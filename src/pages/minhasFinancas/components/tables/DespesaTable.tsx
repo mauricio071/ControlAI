@@ -17,6 +17,7 @@ import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { CategoriaBadge } from "../CategoriaBadge";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface DespesaTableProps {
   setTotalExpense: (totalExpense: number) => void;
@@ -121,9 +122,23 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
     setSelectedId(id);
   };
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleDelete = async () => {
     try {
       await deleteDespesaAction(selectedId);
+
+      await generateBotResponse(
+        [
+          ...chatHistory,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Essa despesa fixa foi apagada!: ${selectedId}`,
+          },
+        ],
+        true
+      );
       enqueueSnackbar("Deletado com sucesso!", {
         variant: "success",
       });
@@ -143,7 +158,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
 
   return (
     <GridCard titleContainer>
-      <TitleContainer title="Gasto mensal" />
+      <TitleContainer title="Gasto fixo mensal" />
 
       <Box display="flex" justifyContent="end" marginBottom="1.5rem">
         <Button

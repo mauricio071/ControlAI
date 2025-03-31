@@ -105,7 +105,7 @@ export const MinhasFinancas = () => {
                   textAlign="start"
                   sx={{ color: (theme) => theme.palette.cGray.main }}
                 >
-                  Renda mensal total
+                  Renda fixa total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
                   {loading ? (
@@ -141,7 +141,7 @@ export const MinhasFinancas = () => {
                   textAlign="start"
                   sx={{ color: (theme) => theme.palette.cGray.main }}
                 >
-                  Gasto mensal total
+                  Gasto fixo total
                 </Typography>
                 <Box display="flex" gap="0.5rem" width="100%">
                   {loading ? (

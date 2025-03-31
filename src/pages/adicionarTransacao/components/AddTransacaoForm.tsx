@@ -26,6 +26,7 @@ import { CategoriaBadge } from "../../minhasFinancas/components/CategoriaBadge";
 import { FormatarParaMoeda } from "../../../shared/utils/FormatarMoeda";
 import { GridCard, TitleContainer } from "../../../shared/components";
 import { CInput } from "../../../shared/components/cInput/CInput";
+import { useChatbotContext } from "../../../shared/contexts/ChatbotContext";
 
 interface AddTransacaoFormProps {
   setReqLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,10 +57,39 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
     resolver: yupResolver(schema),
   });
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleSubmitForm = async (data: TransactionType) => {
     try {
       setLoading(true);
-      await addTransacaoAction(data);
+      const { newBalance, transaction } = await addTransacaoAction(data);
+
+      await generateBotResponse(
+        [
+          ...chatHistory,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Saldo atualizado (priorizar!): ${newBalance.balance}`,
+          },
+        ],
+        true
+      );
+
+      await generateBotResponse(
+        [
+          ...chatHistory,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Transação nova (não somar com fixa mensal): ${JSON.stringify(
+              transaction
+            )}`,
+          },
+        ],
+        true
+      );
+
       enqueueSnackbar("Transação registrada com sucesso!", {
         variant: "success",
       });
@@ -71,6 +101,7 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
         variant: "error",
       });
       console.error(error);
+      setLoading(false);
     }
   };
 

@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -17,18 +18,23 @@ import { TransactionType } from "../interfaces/dashboardInterfaces";
 import { BalanceType } from "../interfaces/minhasFinancas";
 import { auth, db } from "../../config/firebaseConfig";
 
-export const updateBalanceAccess = async (newBalance: BalanceType) => {
+export const updateBalanceAccess = async (
+  newBalance: BalanceType
+): Promise<BalanceType> => {
   try {
     const balanceDoc = doc(db, "saldos", newBalance.id);
     const newBody = {
+      ...newBalance,
       balance: newBalance.balance,
       updated_at: dayjs().toDate(),
     };
-    const response = await updateDoc(balanceDoc, newBody);
+    await updateDoc(balanceDoc, newBody);
+    const snapData = await getDoc(balanceDoc);
 
-    return response;
+    return snapData.data() as BalanceType;
   } catch (error) {
     console.error(error);
+    return {} as BalanceType;
   }
 };
 
@@ -69,8 +75,9 @@ export const addRendaAccess = async (body: RendaFormData) => {
       ...body,
     };
     const response = await addDoc(addRendasCollectionRef, data);
+    const snapData = await getDoc(response);
 
-    return response;
+    return snapData.data();
   } catch (error) {
     console.error(error);
   }
@@ -83,9 +90,10 @@ export const updateRendaAccess = async (body: RendaFormData, id: string) => {
       ...body,
       updated_at: dayjs().toDate(),
     };
-    const response = await updateDoc(renda, newBody);
+    await updateDoc(renda, newBody);
+    const snapData = await getDoc(renda);
 
-    return response;
+    return snapData.data();
   } catch (error) {
     console.error(error);
   }
@@ -95,6 +103,7 @@ export const deleteRendaAccess = async (id: string) => {
   try {
     const renda = doc(db, "rendas", id);
     const response = await deleteDoc(renda);
+
     return response;
   } catch (error) {
     console.error(error);
@@ -138,8 +147,9 @@ export const addDespesaAccess = async (body: DespesaFormData) => {
       ...body,
     };
     const response = await addDoc(addDespesasCollectionRef, data);
+    const snapData = await getDoc(response);
 
-    return response;
+    return snapData.data();
   } catch (error) {
     console.error(error);
   }
@@ -155,9 +165,10 @@ export const updateDespesaAccess = async (
       ...body,
       updated_at: dayjs().toDate(),
     };
-    const response = await updateDoc(despesa, newBody);
+    await updateDoc(despesa, newBody);
+    const snapData = await getDoc(despesa);
 
-    return response;
+    return snapData.data();
   } catch (error) {
     console.error(error);
   }

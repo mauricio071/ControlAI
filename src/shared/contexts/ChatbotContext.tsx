@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   ReactNode,
   useContext,
@@ -10,13 +10,21 @@ import { ChatType } from "../../chatbot/components/ChatForm";
 import { aiBaseData } from "../../chatbot/data/aiBaseData";
 import { auth } from "../../config/firebaseConfig";
 import { getDashboardAction } from "../../services/actions/dashboardAction";
+import {
+  getDespesasAction,
+  getRendasAction,
+} from "../../services/actions/minhasFinancasActions";
 
 interface ChatbotContextData {
   showChatbot: boolean;
+  setShowChatbot: React.Dispatch<React.SetStateAction<boolean>>;
   toggleChatbotVisibility: () => void;
   chatHistory: ChatType[];
   setChatHistory: React.Dispatch<React.SetStateAction<ChatType[]>>;
-  generateBotResponse: (history: ChatType[]) => void;
+  generateBotResponse: (
+    history: ChatType[],
+    hideInChatModel: boolean
+  ) => Promise<void>;
 }
 
 const ChatbotContext = createContext({} as ChatbotContextData);
@@ -39,6 +47,7 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
   const [chatHistory, setChatHistory] = useState<ChatType[]>([
     {
       hideInChat: true,
+      isError: false,
       role: "model",
       text: aiBaseData,
     },
@@ -46,37 +55,48 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
 
   useEffect(() => {
     const fetchUserBalance = async () => {
-      const verifyLogin = auth.onAuthStateChanged(async () => {
+      const dataRequest = auth.onAuthStateChanged(async () => {
         try {
           const dashboardData = await getDashboardAction();
+          const rendasData = await getRendasAction();
+          const despesasData = await getDespesasAction();
+
+          const userData =
+            JSON.stringify(dashboardData) +
+            ` Renda fixa mensal: ${JSON.stringify(rendasData)}` +
+            ` Despesa fixa mensal: ${JSON.stringify(despesasData)}`;
+
           setChatHistory((prev) => [
             {
               hideInChat: true,
               role: "model",
               text:
                 aiBaseData +
-                ` De acordo com esse objeto fornecido, interpretar as informações corretamente: ${JSON.stringify(
-                  dashboardData
+                ` De acordo com esse objeto fornecido, interpretar as informações: ${JSON.stringify(
+                  userData
                 )}`,
             },
             ...prev,
           ]);
         } catch (error) {
-          console.error("Erro ao obter saldo:", error);
+          console.error("Erro ao obter as informações:", error);
         }
       });
 
-      return () => verifyLogin();
+      return () => dataRequest();
     };
 
     fetchUserBalance();
   }, []);
 
-  const generateBotResponse = async (history: ChatType[]) => {
+  const generateBotResponse = async (
+    history: ChatType[],
+    hideInChatModel = false
+  ): Promise<void> => {
     const updateHistory = (text: string, isError = false) => {
       setChatHistory((prev) => [
         ...prev.filter((msg) => msg.text !== "...."),
-        { role: "model", text, isError },
+        { hideInChat: hideInChatModel, role: "model", text, isError },
       ]);
     };
 
@@ -114,6 +134,7 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
     <ChatbotContext.Provider
       value={{
         showChatbot,
+        setShowChatbot,
         toggleChatbotVisibility,
         chatHistory,
         setChatHistory,

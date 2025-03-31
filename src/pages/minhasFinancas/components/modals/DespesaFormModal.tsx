@@ -23,6 +23,7 @@ import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 import { enqueueSnackbar } from "notistack";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface DespesaFormModalProps {
   open: boolean;
@@ -58,11 +59,26 @@ export const DespesaFormModal = ({
 
   const [loading, setLoading] = useState(false);
 
+  const { chatHistory, generateBotResponse } = useChatbotContext();
+
   const handleSubmitForm = async (formData: DespesaFormData) => {
     if (data?.id) {
       try {
         setLoading(true);
-        await updateDespesaAction(formData, data.id);
+        const response = await updateDespesaAction(formData, data.id);
+        await generateBotResponse(
+          [
+            ...chatHistory,
+            {
+              hideInChat: true,
+              role: "user",
+              text: `Despesa id:${data.id} atualizada: ${JSON.stringify(
+                response
+              )}`,
+            },
+          ],
+          true
+        );
         enqueueSnackbar("Gasto atualizado com sucesso!", {
           variant: "success",
         });
@@ -77,7 +93,18 @@ export const DespesaFormModal = ({
     } else {
       try {
         setLoading(true);
-        await addDespesaAction(formData);
+        const response = await addDespesaAction(formData);
+        await generateBotResponse(
+          [
+            ...chatHistory,
+            {
+              hideInChat: true,
+              role: "user",
+              text: `Nova despesa mensal : ${JSON.stringify(response)}`,
+            },
+          ],
+          true
+        );
         enqueueSnackbar("Gasto novo registrada com sucesso!", {
           variant: "success",
         });

@@ -3,10 +3,13 @@ import { signOut } from "firebase/auth";
 import { useState } from "react";
 
 import { auth } from "../../../config/firebaseConfig";
+import { useChatbotContext } from "../../contexts/ChatbotContext";
 
 export const LayoutBaseMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const { setChatHistory, setShowChatbot } = useChatbotContext();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -19,6 +22,8 @@ export const LayoutBaseMenu = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      setChatHistory([]);
+      setShowChatbot(false);
     } catch (error) {
       console.error(error);
     }

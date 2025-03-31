@@ -13,7 +13,9 @@ import {
 } from "../accesses/minhasFinancasAccess";
 import { BalanceType } from "../interfaces/minhasFinancas";
 
-export const updateBalanceAction = async (body: BalanceType) => {
+export const updateBalanceAction = async (
+  body: BalanceType
+): Promise<BalanceType> => {
   const data = await updateBalanceAccess(body);
   return data;
 };

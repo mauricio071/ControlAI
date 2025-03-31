@@ -1,5 +1,5 @@
 import { Icon, IconButton, InputAdornment, TextField } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export interface ChatType {
   role: string;
@@ -11,7 +11,7 @@ export interface ChatType {
 interface ChatFormProps {
   chatHistory: ChatType[];
   setChatHistory: React.Dispatch<React.SetStateAction<ChatType[]>>;
-  generateBotResponse: (history: ChatType[]) => void;
+  generateBotResponse: (history: ChatType[]) => Promise<void>;
 }
 
 export const ChatForm = ({
@@ -20,6 +20,8 @@ export const ChatForm = ({
   generateBotResponse,
 }: ChatFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [thinking, setThinking] = useState(false);
 
   const handleFormSubmit = () => {
     if (!inputRef.current) return;
@@ -34,19 +36,23 @@ export const ChatForm = ({
       { role: "user", text: userMessage },
     ]);
 
-    setTimeout(() => {
+    setThinking(true);
+
+    setTimeout(async () => {
       setChatHistory((history) => [
         ...history,
         { role: "model", text: "...." },
       ]);
 
-      generateBotResponse([
+      await generateBotResponse([
         ...chatHistory,
         {
           role: "user",
           text: `Usando os detalhes fornecidos acima, responda a esta pergunta: ${userMessage}`,
         },
       ]);
+
+      setThinking(false);
     }, 600);
   };
 
@@ -56,6 +62,7 @@ export const ChatForm = ({
       placeholder="Faça a sua pergunta..."
       variant="outlined"
       type="text"
+      disabled={thinking}
       fullWidth
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -69,10 +76,14 @@ export const ChatForm = ({
             <InputAdornment position="end">
               <IconButton
                 onClick={handleFormSubmit}
+                disabled={thinking}
                 sx={{
                   bgcolor: (theme) => theme.palette.primary.main,
                   "&:hover": {
                     bgcolor: (theme) => theme.palette.primary.dark,
+                  },
+                  "&:disabled": {
+                    bgcolor: (theme) => theme.palette.cGray.light,
                   },
                 }}
               >

@@ -37,7 +37,7 @@ export const ChatMessage = ({ chat }: ChatMessageProps) => {
           }
           sx={{
             color: `${chat.role === "user" ? "#fff" : "black"}`,
-            background: `${chat.role === "model" ? "#fff5ea" : "#F4A261"}`,
+            background: `${chat.role === "model" ? "#fceddb" : "#F4A261"}`,
             wordWrap: "break-word",
           }}
         >
