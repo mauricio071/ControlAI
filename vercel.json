@@ -2,22 +2,22 @@
   "version": 2,
   "builds": [
     {
+      "src": "client/index.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/gemini.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "client/*",
-      "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "/api/(.*)",
+      "dest": "/api/gemini.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/client/index.html"
+      "src": "/(.*)",
+      "dest": "/client/$1"
     }
   ]
 }
