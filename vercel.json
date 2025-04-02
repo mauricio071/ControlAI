@@ -2,8 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/index.html",
-      "use": "@vercel/static"
+      "src": "client/package.json",
+      "use": "@vercel/react"
     },
     {
       "src": "api/gemini.js",
