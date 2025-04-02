@@ -4,9 +4,6 @@
   "scripts": {
     "client": "cd client && yarn dev",
     "server": "cd server && yarn start",
-    "dev": "concurrently \"yarn run client\" \"yarn run server\""
-  },
-  "dependencies": {
-    "concurrently": "^9.1.2"
+    "dev": "yarn run client & yarn run server"
   }
 }
