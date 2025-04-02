@@ -1,20 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "client/index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "server/api/gemini.js",
-      "use": "@vercel/node"
-    }
-  ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/api/gemini.js"
-    },
     {
       "source": "/(.*)",
       "destination": "/client/index.html"
