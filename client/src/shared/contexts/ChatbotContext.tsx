@@ -6,14 +6,14 @@ import React, {
   useState,
 } from "react";
 
-import { ChatType } from "../../chatbot/components/ChatForm";
-import { aiBaseData } from "../../chatbot/data/aiBaseData";
-import { auth } from "../../config/firebaseConfig";
-import { getDashboardAction } from "../../services/actions/dashboardAction";
 import {
   getDespesasAction,
   getRendasAction,
 } from "../../services/actions/minhasFinancasActions";
+import { getDashboardAction } from "../../services/actions/dashboardAction";
+import { ChatType } from "../../chatbot/components/ChatForm";
+import { aiBaseData } from "../../chatbot/data/aiBaseData";
+import { auth } from "../../config/firebaseConfig";
 
 interface ChatbotContextData {
   showChatbot: boolean;
@@ -114,7 +114,10 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
     };
 
     try {
-      const res = await fetch(import.meta.env.VITE_API_URL, requestOptions);
+      const res = await fetch(
+        `${import.meta.env.VITE_GEMINI_API}`,
+        requestOptions
+      );
       const data = await res.json();
       if (!res.ok) {
         console.error(data.error.message || "Algo de errado aconteceu");
