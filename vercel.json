@@ -6,18 +6,14 @@
       "use": "@vercel/node"
     },
     {
-      "src": "client/**/*",
-      "use": "@vercel/static-build"
+      "src": "client/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/gemini",
       "dest": "/api/gemini.js"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/client/assets/$1"
     },
     {
       "src": "/(.*)",
