@@ -4,6 +4,7 @@
   "scripts": {
     "client": "cd client && yarn dev",
     "server": "cd server && yarn start",
-    "dev": "yarn run client & yarn run server"
+    "dev": "yarn run client & yarn run server",
+    "cypress": "cd client && yarn cypress"
   }
 }

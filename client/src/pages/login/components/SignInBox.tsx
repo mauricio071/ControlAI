@@ -15,6 +15,7 @@ import * as yup from "yup";
 
 import { auth } from "../../../config/firebaseConfig";
 import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
+import { FirebaseError } from "firebase/app";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -63,10 +64,19 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
       });
       setFormType("login");
     } catch (error) {
-      enqueueSnackbar("Erro ao criar conta. Tente novamente.", {
-        variant: "error",
-      });
-      console.error(error);
+      if (error instanceof FirebaseError) {
+        const errorMessage =
+          error.code.includes("email-already-in-use") &&
+          "Esse email já está sendo utilizado!";
+
+        enqueueSnackbar(
+          errorMessage || "Erro ao criar conta. Tente novamente.",
+          {
+            variant: "error",
+          }
+        );
+        console.error(error);
+      }
     } finally {
       setLoading(false);
     }
