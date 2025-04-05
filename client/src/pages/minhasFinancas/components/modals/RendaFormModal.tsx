@@ -104,7 +104,7 @@ export const RendaFormModal = ({
           ],
           true
         );
-        enqueueSnackbar("Renda nova registrada com sucesso!", {
+        enqueueSnackbar("Nova renda registrada com sucesso!", {
           variant: "success",
         });
         onClose();
@@ -147,7 +147,11 @@ export const RendaFormModal = ({
   );
 
   return (
-    <CModal title="Adicionar renda" open={open} onClose={onClose}>
+    <CModal
+      title={data?.id ? "Editar renda" : "Adicionar renda"}
+      open={open}
+      onClose={onClose}
+    >
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         <Box
           display="flex"

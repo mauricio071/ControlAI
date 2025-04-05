@@ -1,6 +1,5 @@
 describe("Register", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:5173/");
     cy.get("p").contains("Registre-se").click();
     cy.get("h4").contains("Registrar");
   });
@@ -16,7 +15,7 @@ describe("Register", () => {
 
     cy.findByLabelText("Digite o seu nome").type("Maurício");
     cy.findByLabelText("Digite o seu email").type("testefake0123@gmail.com");
-    cy.findByLabelText("Digite a sua senha").type("teste123");
+    cy.findByLabelText("Digite a sua senha").type("testeE2E123");
 
     cy.get("button").click();
     cy.wait("@registerMock").its("response.body").should("be.equal", "Teste!");
@@ -35,7 +34,7 @@ describe("Register", () => {
   it("should show snackbar with error message when email has been duplicated", () => {
     cy.findByLabelText("Digite o seu nome").type("Maurício");
     cy.findByLabelText("Digite o seu email").type("teste@gmail.com");
-    cy.findByLabelText("Digite a sua senha").type("teste123");
+    cy.findByLabelText("Digite a sua senha").type("testeE2E123");
 
     cy.get("button").click();
 

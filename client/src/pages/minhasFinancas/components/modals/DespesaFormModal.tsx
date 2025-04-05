@@ -105,7 +105,7 @@ export const DespesaFormModal = ({
           ],
           true
         );
-        enqueueSnackbar("Gasto novo registrada com sucesso!", {
+        enqueueSnackbar("Novo gasto registrado com sucesso!", {
           variant: "success",
         });
         onClose();
@@ -148,7 +148,11 @@ export const DespesaFormModal = ({
   );
 
   return (
-    <CModal title="Adicionar gasto" open={open} onClose={onClose}>
+    <CModal
+      title={data?.id ? "Editar gasto" : "Adicionar gasto"}
+      open={open}
+      onClose={onClose}
+    >
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         <Box
           display="flex"

@@ -36,14 +36,14 @@ export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
   const [graphLoading, setGraphLoading] = useState(true);
 
   useEffect(() => {
-    const getHistoryExpense = async () => {
+    const getHistoryIncome = async () => {
       setGraphLoading(true);
       const data = await getAllIncomesAction(year?.year());
       setPdata(data);
       setGraphLoading(false);
     };
 
-    getHistoryExpense();
+    getHistoryIncome();
   }, [year, refreshToggle]);
 
   return (
@@ -57,6 +57,14 @@ export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
           onChange={(newYear) => setYear(newYear)}
           minDate={dayjs("2000-01-01")}
           maxDate={dayjs()}
+          slotProps={{
+            textField: {
+              inputProps: {
+                readOnly: true,
+              },
+              "aria-label": "Ano do histórico de rendas",
+            },
+          }}
         />
       </Box>
 

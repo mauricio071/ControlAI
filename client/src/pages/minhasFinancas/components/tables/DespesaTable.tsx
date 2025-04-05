@@ -72,7 +72,11 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <IconButton color="primary" onClick={() => handleEdit(params.row)}>
+          <IconButton
+            onClick={() => handleEdit(params.row)}
+            color="primary"
+            aria-label="Editar despesa"
+          >
             <Icon>edit</Icon>
           </IconButton>
           <IconButton

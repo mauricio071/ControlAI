@@ -59,6 +59,14 @@ export const ExpensesHistories = ({
           onChange={(newYear) => setYear(newYear)}
           minDate={dayjs("2000-01-01")}
           maxDate={dayjs()}
+          slotProps={{
+            textField: {
+              inputProps: {
+                readOnly: true,
+              },
+              "aria-label": "Ano do histórico de despesas",
+            },
+          }}
         />
       </Box>
 

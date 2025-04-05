@@ -18,4 +18,5 @@ import "./commands";
 
 beforeEach(() => {
   cy.viewport("macbook-16");
+  cy.visit("http://localhost:5173/");
 });
