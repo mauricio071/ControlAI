@@ -1,10 +1,18 @@
 {
   "name": "ControlAI",
   "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "client": "cd client && yarn dev",
     "server": "cd server && yarn start",
-    "dev": "yarn run client & yarn run server",
+    "dev": "concurrently \"yarn run client\" \"yarn run server\"",
     "cypress": "cd client && yarn cypress"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

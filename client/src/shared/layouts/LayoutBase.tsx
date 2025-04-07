@@ -145,6 +145,7 @@ export const LayoutBase = ({ children, titulo }: LayoutBaseProps) => {
                 background: (theme) => theme.palette.primary.dark,
               },
             }}
+            aria-label="chatbot-btn"
           >
             {showChatbot ? (
               <CloseIcon showChatbot={showChatbot} />

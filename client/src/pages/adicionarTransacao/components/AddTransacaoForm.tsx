@@ -70,24 +70,14 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
           {
             hideInChat: true,
             role: "user",
-            text: `Saldo atualizado (priorizar!): ${newBalance.balance}`,
-          },
-        ],
-        true
-      );
-
-      await generateBotResponse(
-        [
-          ...chatHistory,
-          {
-            hideInChat: true,
-            role: "user",
-            text: `Transação nova (não somar com fixa mensal): ${JSON.stringify(
+            text: `Saldo atualizado (priorizar!): ${
+              newBalance.balance
+            } e Transação nova (não somar com fixa mensal): ${JSON.stringify(
               transaction
             )}`,
           },
         ],
-        true
+        false
       );
 
       enqueueSnackbar("Transação registrada com sucesso!", {

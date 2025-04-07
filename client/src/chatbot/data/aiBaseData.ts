@@ -24,6 +24,8 @@ Se receber algum valor atualizado, priorizar ele.
 
 Sem ficar citando os IDs.
 
+Sempre priorizar as últimas atualizações!
+
 Receber alertas sobre gastos excessivos.
 
 Sempre perguntar se gostaria de receber alguma sugestão ou melhoria.

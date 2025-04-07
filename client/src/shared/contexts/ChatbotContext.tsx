@@ -25,6 +25,7 @@ interface ChatbotContextData {
     history: ChatType[],
     hideInChatModel?: boolean
   ) => Promise<void>;
+  firstRequest: boolean;
 }
 
 const ChatbotContext = createContext({} as ChatbotContextData);
@@ -44,14 +45,9 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
     setShowChatbot((prev) => !prev);
   };
 
-  const [chatHistory, setChatHistory] = useState<ChatType[]>([
-    {
-      hideInChat: true,
-      isError: false,
-      role: "model",
-      text: aiBaseData,
-    },
-  ]);
+  const [chatHistory, setChatHistory] = useState<ChatType[]>([] as ChatType[]);
+
+  const [firstRequest, setFirstRequest] = useState(true);
 
   useEffect(() => {
     const fetchUserBalance = async () => {
@@ -82,6 +78,8 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
           ]);
         } catch (error) {
           console.error("Erro ao obter as informações:", error);
+        } finally {
+          setFirstRequest(false);
         }
       });
 
@@ -118,6 +116,7 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
         `${import.meta.env.VITE_GEMINI_API}`,
         requestOptions
       );
+
       const data = await res.json();
       if (!res.ok) {
         console.error(data.error.message || "Algo de errado aconteceu");
@@ -144,6 +143,7 @@ export const ChatbotProvider = ({ children }: ChatbotProviderProps) => {
         chatHistory,
         setChatHistory,
         generateBotResponse,
+        firstRequest,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import { Icon, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useRef, useState } from "react";
+
 import { useChatbotContext } from "../../shared/contexts/ChatbotContext";
 
 export interface ChatType {
@@ -14,7 +15,7 @@ export const ChatForm = () => {
 
   const [thinking, setThinking] = useState(false);
 
-  const { setChatHistory, chatHistory, generateBotResponse } =
+  const { setChatHistory, chatHistory, generateBotResponse, firstRequest } =
     useChatbotContext();
 
   const handleFormSubmit = () => {
@@ -56,7 +57,7 @@ export const ChatForm = () => {
       placeholder="Faça a sua pergunta..."
       variant="outlined"
       type="text"
-      disabled={thinking}
+      disabled={thinking || firstRequest}
       fullWidth
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -70,7 +71,7 @@ export const ChatForm = () => {
             <InputAdornment position="end">
               <IconButton
                 onClick={handleFormSubmit}
-                disabled={thinking}
+                disabled={thinking || firstRequest}
                 sx={{
                   bgcolor: (theme) => theme.palette.primary.main,
                   "&:hover": {
@@ -80,6 +81,7 @@ export const ChatForm = () => {
                     bgcolor: (theme) => theme.palette.cGray.light,
                   },
                 }}
+                aria-label="enviar mensagem"
               >
                 <Icon
                   sx={{
