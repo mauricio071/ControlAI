@@ -15,7 +15,7 @@ describe("Minhas financas", () => {
     cy.findByRole("button", { name: /minhas finanças/i }).click();
   });
 
-  describe.skip("Gerenciamento de saldo", () => {
+  describe("Gerenciamento de saldo", () => {
     it("should update balance with positive value", () => {
       let initialBalance = 0;
 
@@ -105,8 +105,10 @@ describe("Minhas financas", () => {
       cy.contains("button", /adicionar renda/i)
         .click()
         .then(() => {
-          cy.contains("h2", "Adicionar renda");
-          cy.findByLabelText("Data de início do recebimento").type(date);
+          cy.get("h2").contains("Adicionar renda").should("exist");
+          cy.findByLabelText("Data de início do recebimento", {
+            timeout: 300,
+          }).type(date);
           cy.findByLabelText("Descrição").type("Teste");
           cy.findByLabelText("Categoria").click();
           cy.contains("li", "Salário")
@@ -126,11 +128,12 @@ describe("Minhas financas", () => {
     });
 
     it("should edit an existent monthly income", () => {
-      cy.findByLabelText("Editar despesa")
+      cy.findAllByLabelText("Editar renda")
+        .first()
         .click()
         .then(() => {
-          cy.contains("h2", "Editar renda");
-          cy.findByLabelText("Data de início do recebimento", { timeout: 200 })
+          cy.get("h2").contains("Editar renda").should("exist");
+          cy.findByLabelText("Data de início do recebimento", { timeout: 300 })
             .clear()
             .type(tomorrowDay);
           cy.findByLabelText("Descrição").clear().type("TesteUpdate");
@@ -168,7 +171,10 @@ describe("Minhas financas", () => {
       cy.contains("button", /adicionar gasto/i)
         .click()
         .then(() => {
-          cy.findByLabelText("Data de início do pagamento").type(date);
+          cy.get("h2").contains("Adicionar gasto").should("exist");
+          cy.findByLabelText("Data de início do pagamento", {
+            timeout: 300,
+          }).type(date);
           cy.findByLabelText("Descrição").type("Teste");
           cy.findByLabelText("Categoria").click();
           cy.contains("li", "Alimentação")
@@ -188,13 +194,12 @@ describe("Minhas financas", () => {
     });
 
     it("should edit an existent monthly expense", () => {
-      cy.get('.MuiDataGrid-row--firstVisible > [data-field="actions"]')
-        .last()
-        .find("button")
-        .contains("edit")
+      cy.findAllByLabelText("Editar gasto")
+        .first()
         .click()
         .then(() => {
-          cy.findByLabelText("Data de início do pagamento", { timeout: 200 })
+          cy.get("h2").contains("Editar gasto").should("exist");
+          cy.findByLabelText("Data de início do pagamento", { timeout: 300 })
             .clear()
             .type(tomorrowDay);
           cy.findByLabelText("Descrição").clear().type("TesteUpdate");

@@ -75,7 +75,7 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
           <IconButton
             onClick={() => handleEdit(params.row)}
             color="primary"
-            aria-label="Editar despesa"
+            aria-label="Editar gasto"
           >
             <Icon>edit</Icon>
           </IconButton>
