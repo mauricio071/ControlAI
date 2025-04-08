@@ -5,10 +5,10 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { forwardRef, useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
-import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers";
 import * as yup from "yup";
 import dayjs from "dayjs";
@@ -17,13 +17,13 @@ import {
   addDespesaAction,
   updateDespesaAction,
 } from "../../../../services/actions/minhasFinancasActions";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 import { CATEGORIAS_DESPESA } from "../../../../shared/constants/Categorias";
 import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
 import { enqueueSnackbar } from "notistack";
-import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface DespesaFormModalProps {
   open: boolean;
@@ -59,26 +59,23 @@ export const DespesaFormModal = ({
 
   const [loading, setLoading] = useState(false);
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleSubmitForm = async (formData: DespesaFormData) => {
     if (data?.id) {
       try {
         setLoading(true);
         const response = await updateDespesaAction(formData, data.id);
-        await generateBotResponse(
-          [
-            ...chatHistory,
-            {
-              hideInChat: true,
-              role: "user",
-              text: `Despesa id:${data.id} atualizada: ${JSON.stringify(
-                response
-              )}`,
-            },
-          ],
-          true
-        );
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Gasto fixo id:${data.id} atualizada: ${JSON.stringify(
+              response
+            )}`,
+          },
+        ]);
         enqueueSnackbar("Gasto atualizado com sucesso!", {
           variant: "success",
         });
@@ -94,17 +91,14 @@ export const DespesaFormModal = ({
       try {
         setLoading(true);
         const response = await addDespesaAction(formData);
-        await generateBotResponse(
-          [
-            ...chatHistory,
-            {
-              hideInChat: true,
-              role: "user",
-              text: `Nova despesa mensal : ${JSON.stringify(response)}`,
-            },
-          ],
-          true
-        );
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Novo gasto fixo mensal : ${JSON.stringify(response)}`,
+          },
+        ]);
         enqueueSnackbar("Novo gasto registrado com sucesso!", {
           variant: "success",
         });

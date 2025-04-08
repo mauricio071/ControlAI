@@ -126,23 +126,19 @@ export const RendaTable = ({ setTotalIncome }: RendaTableProps) => {
     setSelectedId(id);
   };
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleDelete = async () => {
     try {
       await deleteRendaAction(selectedId);
-
-      await generateBotResponse(
-        [
-          ...chatHistory,
-          {
-            hideInChat: true,
-            role: "user",
-            text: `Essa renda fixa foi apagada!: ${selectedId}`,
-          },
-        ],
-        true
-      );
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          hideInChat: true,
+          role: "user",
+          text: `Essa renda fixa foi apagada!: ${selectedId}`,
+        },
+      ]);
       enqueueSnackbar("Deletado com sucesso!", {
         variant: "success",
       });

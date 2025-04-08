@@ -57,7 +57,7 @@ export const SaldoModal = ({
 
   const [loading, setLoading] = useState(false);
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleSubmitForm = async (data: SaldoFormData) => {
     try {
@@ -79,18 +79,14 @@ export const SaldoModal = ({
         return;
       }
       const response = await updateBalanceAction(newBalance);
-
-      await generateBotResponse(
-        [
-          ...chatHistory,
-          {
-            hideInChat: true,
-            role: "user",
-            text: `Saldo atualizado (priorizar!): ${response.balance}`,
-          },
-        ],
-        true
-      );
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          hideInChat: true,
+          role: "user",
+          text: `Saldo atualizado (priorizar!): ${response.balance}`,
+        },
+      ]);
       enqueueSnackbar("Saldo atualizado com sucesso!", {
         variant: "success",
       });

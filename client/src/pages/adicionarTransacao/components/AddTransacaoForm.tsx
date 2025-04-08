@@ -57,28 +57,23 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
     resolver: yupResolver(schema),
   });
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleSubmitForm = async (data: TransactionType) => {
     try {
       setLoading(true);
       const { newBalance, transaction } = await addTransacaoAction(data);
 
-      await generateBotResponse(
-        [
-          ...chatHistory,
-          {
-            hideInChat: true,
-            role: "user",
-            text: `Saldo atualizado (priorizar!): ${
-              newBalance.balance
-            } e Transação nova (não somar com fixa mensal): ${JSON.stringify(
-              transaction
-            )}`,
-          },
-        ],
-        false
-      );
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          hideInChat: true,
+          role: "user",
+          text: `Transação nova (não somar com fixa mensal): ${JSON.stringify(
+            transaction
+          )} e Saldo atualizado (considerar esse): ${newBalance.balance}`,
+        },
+      ]);
 
       enqueueSnackbar("Transação registrada com sucesso!", {
         variant: "success",

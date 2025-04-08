@@ -14,10 +14,10 @@ import {
 } from "../../../../services/actions/minhasFinancasActions";
 import { TransactionType } from "../../../../services/interfaces/dashboardInterfaces";
 import { DespesaFormData, DespesaFormModal } from "../modals/DespesaFormModal";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 import { FormatarMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { FormatarData } from "../../../../shared/utils/FormatarData";
 import { CategoriaBadge } from "../CategoriaBadge";
-import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface DespesaTableProps {
   setTotalExpense: (totalExpense: number) => void;
@@ -126,23 +126,19 @@ export const DespesaTable = ({ setTotalExpense }: DespesaTableProps) => {
     setSelectedId(id);
   };
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleDelete = async () => {
     try {
       await deleteDespesaAction(selectedId);
-
-      await generateBotResponse(
-        [
-          ...chatHistory,
-          {
-            hideInChat: true,
-            role: "user",
-            text: `Essa despesa fixa foi apagada!: ${selectedId}`,
-          },
-        ],
-        true
-      );
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          hideInChat: true,
+          role: "user",
+          text: `Esse gasto fixo foi deletado!: ${selectedId}`,
+        },
+      ]);
       enqueueSnackbar("Deletado com sucesso!", {
         variant: "success",
       });

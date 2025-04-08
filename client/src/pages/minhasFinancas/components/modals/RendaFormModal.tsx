@@ -58,26 +58,21 @@ export const RendaFormModal = ({
 
   const [loading, setLoading] = useState(false);
 
-  const { chatHistory, generateBotResponse } = useChatbotContext();
+  const { setChatHistory } = useChatbotContext();
 
   const handleSubmitForm = async (formData: RendaFormData) => {
     if (data?.id) {
       try {
         setLoading(true);
         const response = await updateRendaAction(formData, data.id);
-        await generateBotResponse(
-          [
-            ...chatHistory,
-            {
-              hideInChat: true,
-              role: "user",
-              text: `Renda id:${data.id} atualizada: ${JSON.stringify(
-                response
-              )}`,
-            },
-          ],
-          true
-        );
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Renda id:${data.id} atualizada: ${JSON.stringify(response)}`,
+          },
+        ]);
         enqueueSnackbar("Renda atualizada com sucesso!", {
           variant: "success",
         });
@@ -93,17 +88,14 @@ export const RendaFormModal = ({
       try {
         setLoading(true);
         const response = await addRendaAction(formData);
-        await generateBotResponse(
-          [
-            ...chatHistory,
-            {
-              hideInChat: true,
-              role: "user",
-              text: `Nova renda mensal : ${JSON.stringify(response)}`,
-            },
-          ],
-          true
-        );
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            hideInChat: true,
+            role: "user",
+            text: `Nova renda mensal : ${JSON.stringify(response)}`,
+          },
+        ]);
         enqueueSnackbar("Nova renda registrada com sucesso!", {
           variant: "success",
         });
