@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
@@ -20,10 +21,9 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import * as yup from "yup";
 
-import { auth, googleProvider } from "../../../config/firebaseConfig";
-import { GoogleIcon } from "../../../shared/components/icons/GoogleIcon";
 import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { auth, db, googleProvider } from "../../../config/firebaseConfig";
+import { GoogleIcon } from "../../../shared/components/icons/GoogleIcon";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -86,7 +86,7 @@ export const LoginBox = ({ setFormType }: LoginBoxProps) => {
         result.user.metadata.creationTime ===
         result.user.metadata.lastSignInTime
       ) {
-        await createAllDocuments();
+        await createAllDocuments(db, result.user.uid);
       }
 
       navigate("/dashboard");

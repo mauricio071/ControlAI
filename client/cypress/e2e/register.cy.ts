@@ -4,21 +4,14 @@ describe("Register", () => {
     cy.get("h4").contains("Registrar");
   });
 
-  it.skip("should simulate a successful user registration", () => {
-    cy.intercept(
-      "POST",
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=    CHAVE",
-      {
-        body: {},
-      }
-    ).as("registerMock");
+  it("should simulate a successful user registration", () => {
+    const date = Date.now().toString();
 
     cy.findByLabelText("Digite o seu nome").type("Maurício");
-    cy.findByLabelText("Digite o seu email").type("testefake0123@gmail.com");
+    cy.findByLabelText("Digite o seu email").type(`testefake${date}@gmail.com`);
     cy.findByLabelText("Digite a sua senha").type("testeE2E123");
 
     cy.get("button").click();
-    cy.wait("@registerMock").its("response.body").should("be.equal", "Teste!");
 
     cy.get("#notistack-snackbar").contains("Conta criada com sucesso!");
   });

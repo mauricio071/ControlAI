@@ -43,74 +43,30 @@ describe("Histórico", () => {
   });
 
   it("should consult expense history graph for a different year", () => {
-    cy.findByRole("button", { name: /adicionar transação/i }).click();
+    cy.findByRole("button", { name: /histórico/i }).click();
 
-    cy.get(".MuiToggleButtonGroup-lastButton").click();
+    cy.findByLabelText("Ano do histórico de despesas").find("button").click();
 
-    cy.findByLabelText("Selecione a data").type(date);
-    cy.findByLabelText("Descrição").type("Teste");
-    cy.findByLabelText("Categoria").click();
-    cy.contains("li", "Alimentação")
+    cy.contains(".MuiPickersYear-yearButton", currentYear - 1)
       .click()
       .then(() => {
-        cy.findByLabelText("Valor").type("1000");
-      });
-
-    cy.get("button")
-      .contains(/salvar/i)
-      .click();
-
-    cy.get("#notistack-snackbar")
-      .contains("Transação registrada com sucesso!")
-      .then(() => {
-        cy.findByRole("button", { name: /histórico/i }).click();
-
         cy.findByLabelText("Ano do histórico de despesas")
-          .find("button")
-          .click();
-
-        cy.contains(".MuiPickersYear-yearButton", currentYear - 1)
-          .click()
-          .then(() => {
-            cy.findByLabelText("Ano do histórico de despesas")
-              .find("input")
-              .should("have.value", (currentYear - 1).toString());
-          });
+          .find("input")
+          .should("have.value", (currentYear - 1).toString());
       });
   });
 
   it("should consult income history graph for a different year", () => {
-    cy.findByRole("button", { name: /adicionar transação/i }).click();
+    cy.findByRole("button", { name: /histórico/i }).click();
 
-    cy.get(".MuiToggleButtonGroup-firstButton").click();
+    cy.findByLabelText("Ano do histórico de rendas").find("button").click();
 
-    cy.findByLabelText("Selecione a data").type(date);
-    cy.findByLabelText("Descrição").type("Teste");
-    cy.findByLabelText("Categoria").click();
-    cy.contains("li", "Salário")
+    cy.contains(".MuiPickersYear-yearButton", currentYear - 1)
       .click()
       .then(() => {
-        cy.findByLabelText("Valor").type("1000");
-      });
-
-    cy.get("button")
-      .contains(/salvar/i)
-      .click();
-
-    cy.get("#notistack-snackbar")
-      .contains("Transação registrada com sucesso!")
-      .then(() => {
-        cy.findByRole("button", { name: /histórico/i }).click();
-
-        cy.findByLabelText("Ano do histórico de rendas").find("button").click();
-
-        cy.contains(".MuiPickersYear-yearButton", currentYear - 1)
-          .click()
-          .then(() => {
-            cy.findByLabelText("Ano do histórico de rendas")
-              .find("input")
-              .should("have.value", (currentYear - 1).toString());
-          });
+        cy.findByLabelText("Ano do histórico de rendas")
+          .find("input")
+          .should("have.value", (currentYear - 1).toString());
       });
   });
 });

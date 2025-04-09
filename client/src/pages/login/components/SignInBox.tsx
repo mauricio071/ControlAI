@@ -6,16 +6,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { deleteApp, FirebaseError, initializeApp } from "firebase/app";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getFirestore } from "firebase/firestore";
 import { enqueueSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import * as yup from "yup";
 
-import { auth } from "../../../config/firebaseConfig";
 import { createAllDocuments } from "../../../services/actions/createAllDocumentsAction";
-import { FirebaseError } from "firebase/app";
 
 interface LoginBoxProps {
   setFormType: (type: "login" | "registrar") => void;
@@ -47,18 +52,49 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
 
   const [loading, setLoading] = useState(false);
 
+  const env = import.meta.env;
+
+  const secondaryAppConfig = {
+    apiKey: env.VITE_FIREBASE_API_KEY,
+    authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: env.VITE_FIREBASE_PROJECT_ID,
+    appId: env.VITE_FIREBASE_APP_ID,
+  };
+
+  const createUserWithoutLogin = async (
+    email: string,
+    password: string,
+    name: string
+  ) => {
+    const secondaryApp = initializeApp(secondaryAppConfig, "Secondary");
+
+    const secondaryAuth = getAuth(secondaryApp);
+
+    const secondaryDb = getFirestore(secondaryApp);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        secondaryAuth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredential.user, { displayName: name });
+
+      await createAllDocuments(secondaryDb, userCredential.user.uid);
+
+      await signOut(secondaryAuth);
+
+      return userCredential;
+    } finally {
+      await deleteApp(secondaryApp);
+    }
+  };
+
   const handleSubmitForm = async (data: FormData) => {
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      await updateProfile(userCredential.user, {
-        displayName: data.name,
-      });
-      await createAllDocuments();
+      await createUserWithoutLogin(data.email, data.password, data.name);
       enqueueSnackbar("Conta criada com sucesso!", {
         variant: "success",
       });
@@ -75,8 +111,8 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
             variant: "error",
           }
         );
-        console.error(error);
       }
+      console.error(error);
     } finally {
       setLoading(false);
     }

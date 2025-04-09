@@ -1,14 +1,28 @@
 import { Box, Typography, useMediaQuery, Theme, Card } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import loginBanner from "../../assets/loginBanner.png";
+import { auth } from "../../config/firebaseConfig";
 import { SignInBox } from "./components/SignInBox";
 import { LoginBox } from "./components/LoginBox";
-import { useState } from "react";
 
 export const Login = () => {
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
 
   const [formType, setFormType] = useState<"login" | "registrar">("login");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyLogin = auth.onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        navigate("/dashboard", { replace: true });
+      }
+    });
+
+    return () => verifyLogin();
+  }, []);
 
   return (
     <Box display="flex" padding="1rem">

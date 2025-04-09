@@ -121,7 +121,7 @@ describe("Minhas financas", () => {
             .contains(/salvar/i)
             .click();
 
-          cy.get("#notistack-snackbar").contains(
+          cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
             "Nova renda registrada com sucesso!"
           );
         });
@@ -148,7 +148,7 @@ describe("Minhas financas", () => {
             .contains(/salvar/i)
             .click();
 
-          cy.get("#notistack-snackbar").contains(
+          cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
             "Renda atualizada com sucesso!"
           );
         });
@@ -162,7 +162,9 @@ describe("Minhas financas", () => {
 
       cy.get("button").contains(/sim/i).click();
 
-      cy.get("#notistack-snackbar").contains("Deletado com sucesso!");
+      cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
+        "Deletado com sucesso!"
+      );
     });
   });
 
@@ -187,7 +189,7 @@ describe("Minhas financas", () => {
             .contains(/salvar/i)
             .click();
 
-          cy.get("#notistack-snackbar").contains(
+          cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
             "Novo gasto registrado com sucesso!"
           );
         });
@@ -214,7 +216,7 @@ describe("Minhas financas", () => {
             .contains(/salvar/i)
             .click();
 
-          cy.get("#notistack-snackbar").contains(
+          cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
             "Gasto atualizado com sucesso!"
           );
         });
@@ -229,7 +231,9 @@ describe("Minhas financas", () => {
 
       cy.get("button").contains(/sim/i).click();
 
-      cy.get("#notistack-snackbar").contains("Deletado com sucesso!");
+      cy.get("#notistack-snackbar", { timeout: 2000 }).contains(
+        "Deletado com sucesso!"
+      );
     });
   });
 });
