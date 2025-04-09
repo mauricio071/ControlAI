@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
+import { useAppThemeContext } from "../../shared/contexts";
 import { ChatbotIcon } from "./ChatbotIcon";
 import { ChatType } from "./ChatForm";
 
@@ -8,6 +9,8 @@ interface ChatMessageProps {
 }
 
 export const ChatMessage = ({ chat }: ChatMessageProps) => {
+  const { themeName } = useAppThemeContext();
+
   return (
     !chat.hideInChat && (
       <Box
@@ -23,7 +26,7 @@ export const ChatMessage = ({ chat }: ChatMessageProps) => {
               fill: "#fff",
               alignSelf: "flex-end",
               marginBottom: "2px",
-              background: "#F4A261",
+              background: themeName === "dark" ? "#D8854B" : "#F4A261",
             }}
           />
         )}
@@ -37,7 +40,11 @@ export const ChatMessage = ({ chat }: ChatMessageProps) => {
           }
           sx={{
             color: `${chat.role === "user" ? "#fff" : "black"}`,
-            background: `${chat.role === "model" ? "#fceddb" : "#F4A261"}`,
+            background: `${
+              chat.role === "model"
+                ? "#fceddb"
+                : `${themeName === "dark" ? "#D8854B" : "#F4A261"}`
+            }`,
             wordWrap: "break-word",
           }}
         >

@@ -8,7 +8,7 @@ import {
   List,
   Typography,
 } from "@mui/material";
-import { useDrawerContext } from "../../contexts";
+import { useAppThemeContext, useDrawerContext } from "../../contexts";
 import { ListItemLink } from "./ListItemLink";
 import { GraphIcon } from "../icons/GraphIcon";
 import { CLink } from "../cLink/CLink";
@@ -22,6 +22,8 @@ export const Sidebar = ({ children }: SidebarProps) => {
   const lgDown = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
+
+  const { themeName } = useAppThemeContext();
 
   return (
     <>
@@ -37,9 +39,13 @@ export const Sidebar = ({ children }: SidebarProps) => {
             position: "fixed",
             left: "0",
             top: "0",
+            background: `${
+              themeName === "dark"
+                ? "#d69662"
+                : "linear-gradient(195deg, #F4A261, #e09b63)"
+            }`,
             boxShadow:
               "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-            background: "linear-gradient(195deg, #F4A261, #e09b63)",
             color: theme.palette.primary.contrastText,
             overflowX: "hidden",
           },

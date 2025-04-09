@@ -2,6 +2,7 @@ import { Box, Grow, Icon, IconButton, Typography } from "@mui/material";
 import { useEffect, useRef } from "react";
 
 import { useChatbotContext } from "../shared/contexts/ChatbotContext";
+import { useAppThemeContext } from "../shared/contexts";
 import { ChatbotIcon } from "./components/ChatbotIcon";
 import { ChatMessage } from "./components/ChatMessage";
 import { ChatForm } from "./components/ChatForm";
@@ -19,6 +20,8 @@ export const Chatbot = ({
   toggleChatbotVisibility,
 }: ChatbotProps) => {
   const user = auth.currentUser;
+
+  const { themeName } = useAppThemeContext();
 
   const { chatHistory } = useChatbotContext();
 
@@ -53,7 +56,11 @@ export const Chatbot = ({
           padding="1rem 1.375rem"
           alignItems="center"
           justifyContent="space-between"
-          bgcolor="#F4A261"
+          sx={{
+            background: `linear-gradient(195deg, ${
+              themeName === "dark" ? "#D8854B" : "#F4A261"
+            }, #e09b63)`,
+          }}
         >
           <Box display="flex" gap="0.625rem" alignItems="center">
             <ChatbotIcon sx={{ fill: "#F4A261", background: "#fff" }} />
@@ -90,7 +97,7 @@ export const Chatbot = ({
                 fill: "#fff",
                 alignSelf: "flex-end",
                 marginBottom: "2px",
-                background: "#F4A261",
+                background: themeName === "dark" ? "#D8854B" : "#F4A261",
               }}
             />
             <Typography
@@ -118,7 +125,7 @@ export const Chatbot = ({
                 fill: "#fff",
                 alignSelf: "flex-end",
                 marginBottom: "2px",
-                background: "#F4A261",
+                background: themeName === "dark" ? "#D8854B" : "#F4A261",
               }}
             />
             <Typography
