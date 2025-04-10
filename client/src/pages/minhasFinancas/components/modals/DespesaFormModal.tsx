@@ -79,6 +79,7 @@ export const DespesaFormModal = ({
         enqueueSnackbar("Gasto atualizado com sucesso!", {
           variant: "success",
         });
+        await fetchData();
         onClose();
         setLoading(false);
       } catch (error) {
@@ -102,6 +103,7 @@ export const DespesaFormModal = ({
         enqueueSnackbar("Novo gasto registrado com sucesso!", {
           variant: "success",
         });
+        await fetchData();
         onClose();
         setLoading(false);
       } catch (error) {
@@ -123,7 +125,6 @@ export const DespesaFormModal = ({
   }, [data, setValue]);
 
   const onClose = async () => {
-    await fetchData();
     setOpen(false);
     clearForm();
   };

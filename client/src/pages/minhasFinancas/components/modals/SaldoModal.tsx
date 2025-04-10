@@ -14,11 +14,11 @@ import { enqueueSnackbar } from "notistack";
 import * as yup from "yup";
 
 import { updateBalanceAction } from "../../../../services/actions/minhasFinancasActions";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 import { BalanceType } from "../../../../services/interfaces/minhasFinancas";
 import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
-import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 
 interface SaldoModalProps {
   balance: BalanceType;

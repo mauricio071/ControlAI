@@ -18,12 +18,12 @@ import {
   addRendaAction,
   updateRendaAction,
 } from "../../../../services/actions/minhasFinancasActions";
+import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 import { CATEGORIAS_RENDA } from "../../../../shared/constants/Categorias";
 import { FormatarParaMoeda } from "../../../../shared/utils/FormatarMoeda";
 import { CInput } from "../../../../shared/components/cInput/CInput";
 import { CModal } from "../../../../shared/components";
 import { CategoriaBadge } from "../CategoriaBadge";
-import { useChatbotContext } from "../../../../shared/contexts/ChatbotContext";
 interface RendaFormModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -76,6 +76,7 @@ export const RendaFormModal = ({
         enqueueSnackbar("Renda atualizada com sucesso!", {
           variant: "success",
         });
+        await fetchData();
         onClose();
         setLoading(false);
       } catch (error) {
@@ -99,6 +100,7 @@ export const RendaFormModal = ({
         enqueueSnackbar("Nova renda registrada com sucesso!", {
           variant: "success",
         });
+        await fetchData();
         onClose();
         setLoading(false);
       } catch (error) {
@@ -120,7 +122,6 @@ export const RendaFormModal = ({
   }, [data, setValue]);
 
   const onClose = async () => {
-    await fetchData();
     setOpen(false);
     clearForm();
   };
