@@ -165,6 +165,7 @@ export const DespesaFormModal = ({
                   onChange={(date) =>
                     onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
+                  dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
                   label="Data de início do pagamento"
                 />
               </CInput>

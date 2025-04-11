@@ -1,5 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
+import "dayjs/locale/pt-br";
+import dayjs from "dayjs";
 // @ts-expect-error está funcionando
 import "@fontsource/inter";
 
@@ -9,8 +11,10 @@ import {
   DrawerProvider,
 } from "./shared/contexts";
 import { SnackbarCloseButton } from "./shared/components/snackbarCloseButton/SnackbarCloseButton";
-import { AppRoutes } from "./routes";
 import { ChatbotProvider } from "./shared/contexts/ChatbotContext";
+import { AppRoutes } from "./routes";
+
+dayjs.locale("pt-br");
 
 export const App = () => {
   return (

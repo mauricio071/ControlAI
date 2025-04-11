@@ -10,7 +10,7 @@ export const AppLocalizationProvider = ({
   children,
 }: AppLocalizationProviderProps) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
       {children}
     </LocalizationProvider>
   );

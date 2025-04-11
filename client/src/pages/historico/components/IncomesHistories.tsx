@@ -65,6 +65,7 @@ export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
               "aria-label": "Ano do histórico de rendas",
             },
           }}
+          dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
         />
       </Box>
 

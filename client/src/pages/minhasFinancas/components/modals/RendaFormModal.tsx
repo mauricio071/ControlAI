@@ -162,6 +162,7 @@ export const RendaFormModal = ({
                   onChange={(date) =>
                     onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
+                  dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
                   label="Data de início do recebimento"
                 />
               </CInput>

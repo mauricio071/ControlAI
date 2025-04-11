@@ -67,6 +67,7 @@ export const ExpensesHistories = ({
               "aria-label": "Ano do histórico de despesas",
             },
           }}
+          dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
         />
       </Box>
 

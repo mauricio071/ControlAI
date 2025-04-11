@@ -184,6 +184,7 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
                   onChange={(date) =>
                     onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
+                  dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
                   label="Selecione a data"
                 />
               </CInput>
