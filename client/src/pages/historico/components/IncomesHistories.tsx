@@ -70,7 +70,7 @@ export const IncomesHistories = ({ refreshToggle }: IncomesHistoriesProps) => {
       </Box>
 
       {graphLoading ? (
-        <Loading width="200px" height="200px" />
+        <Loading width="400px" height="400px" />
       ) : (
         <BarChart
           slotProps={{ legend: { hidden: true } }}
