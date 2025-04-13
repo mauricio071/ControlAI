@@ -42,7 +42,7 @@ E o diferencial: o projeto conta com um **chatbot integrado à Gemini**, a IA da
 -   **Node.js** - Ambiente de execução JavaScript no lado do servidor
 -   **JavaScript** - Linguagem de programação para desenvolvimento web
 -   **HTML** - Linguagem de marcação que estrutura o conteúdo na web
--   **CSS** - Linguagem de estilos usada para definir o visual das interfaces web.
+-   **CSS** - Linguagem de estilos usada para definir o visual das interfaces web
 
 ## 🧪 Testes automatizados
 
