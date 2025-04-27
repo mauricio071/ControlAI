@@ -46,7 +46,7 @@ E o diferencial: o projeto conta com um **chatbot integrado à Gemini**, a IA da
 
 ## 🧪 Testes automatizados
 
-Utilizei o Cypress para criar testes end-to-end que simulam a interação real do usuário. Esses testes ajudam a validar os principais fluxos da aplicação, identificando possíveis falhas antes da publicação e contribuindo para a estabilidade e confiabilidade do sistema.
+Utilizei o Cypress para criar testes end-to-end que simulam a interação real do usuário. Esses testes ajudam a validar os principais fluxos da aplicação, identificando possíveis falhas antes da publicação e contribuir para a estabilidade e confiabilidade do sistema.
 
 ## 🔥 Firebase
 
