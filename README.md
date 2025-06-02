@@ -37,12 +37,13 @@ E o diferencial: o projeto conta com um **chatbot integrado à Gemini**, a IA da
 -   **React.js** - Biblioteca JavaScript para construção de interfaces
 -   **Material UI** - Conjunto de componentes de interface baseados no Material Design
 -   **Cypress** - Ferramenta para testes automatizados end-to-end em aplicações web
--   **Vite** - Ferramenta de build rápida para desenvolvimento front-end
--   **Firebase** - Plataforma do Google com serviços para autenticação, banco de dados e hosting
--   **Node.js** - Ambiente de execução JavaScript no lado do servidor
+-   **TypeScript** - Extensão do JavaScript que adiciona tipos estáticos para maior segurança
 -   **JavaScript** - Linguagem de programação para desenvolvimento web
 -   **HTML** - Linguagem de marcação que estrutura o conteúdo na web
 -   **CSS** - Linguagem de estilos usada para definir o visual das interfaces web
+-   **Vite** - Ferramenta de build rápida para desenvolvimento front-end
+-   **Firebase** - Plataforma do Google com serviços para autenticação, banco de dados e hosting
+-   **Node.js** - Ambiente de execução JavaScript no lado do servidor
 
 ## 🧪 Testes automatizados
 
