@@ -217,6 +217,7 @@ export const SaldoModal = ({
             size="large"
             variant="contained"
             disabled={loading}
+            loading={loading}
             disableElevation
             sx={{
               borderRadius: "1rem",

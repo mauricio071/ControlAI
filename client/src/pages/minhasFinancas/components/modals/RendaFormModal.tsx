@@ -244,6 +244,7 @@ export const RendaFormModal = ({
             variant="contained"
             disableElevation
             disabled={loading}
+            loading={loading}
             sx={{
               borderRadius: "1rem",
               maxWidth: "12rem",

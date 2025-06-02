@@ -286,6 +286,7 @@ export const AddTransacaoForm = ({ setReqLoading }: AddTransacaoFormProps) => {
             type="submit"
             size="large"
             disabled={loading}
+            loading={loading}
             variant="contained"
             disableElevation
             sx={{

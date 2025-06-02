@@ -165,6 +165,7 @@ export const SignInBox = ({ setFormType }: LoginBoxProps) => {
           type="submit"
           variant="contained"
           disabled={loading}
+          loading={loading}
           disableElevation
           sx={{ borderRadius: "0.75rem", paddingBlock: "0.5rem" }}
         >

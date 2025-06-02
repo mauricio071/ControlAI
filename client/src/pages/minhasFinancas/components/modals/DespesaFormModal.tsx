@@ -247,6 +247,7 @@ export const DespesaFormModal = ({
             variant="contained"
             disableElevation
             disabled={loading}
+            loading={loading}
             sx={{
               borderRadius: "1rem",
               maxWidth: "12rem",
